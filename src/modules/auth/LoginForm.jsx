@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { validarLogin } from "../../utils/validations"
+import { validarLogin } from "../../utils/validations";
+import { Link } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
 
 export function LoginForm() {
@@ -27,13 +28,15 @@ export function LoginForm() {
         <main>
             <aside>
                 <h2>¿No tienes una cuenta?</h2>
-                <a href="#">Crea una cuenta ahora</a>
+                <Link to="/register">Crea una cuenta ahora</Link>
             </aside>
 
             <section>
                 <h2>Iniciar Sesion</h2>
 
                 <form onSubmit={handleSubmit} noValidate className="bg-yellow-300 w-24 h-24 object-center object-none">
+                    
+                    {/* Email */}
                     <div>
                         <input
                             type="email"
@@ -44,7 +47,8 @@ export function LoginForm() {
                         />
                         {err.correo && <ErrorText>{err.correo}</ErrorText>}
                     </div>
-
+                    
+                    {/* Contraseña */}
                     <div>
                         <input
                             type="password"
