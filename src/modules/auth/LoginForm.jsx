@@ -49,8 +49,7 @@ export function LoginForm() {
                         <div
                             className="top-0 right-0 absolute bg-white w-24 md:w-20 h-full pointer-events-none"
                             style={{
-                                borderTopLeftRadius: '100% 100%',
-                                borderBottomLeftRadius: '100% 100%',
+                                clipPath: 'ellipse(80% 60% at 90% 50%)'
                             }}
                         />
                     </aside>
