@@ -6,6 +6,7 @@
         └── 📁assets
             ├── react.svg
         └── 📁components
+            ├── ErrorText.jsx
             ├── Sidebar.jsx
         └── 📁constants
             ├── authConstans.js
@@ -16,6 +17,7 @@
                 ├── Login.jsx
                 ├── LoginForm.jsx
                 ├── Register.jsx
+                ├── RegisterForm.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
             └── 📁facturas
@@ -25,7 +27,7 @@
         └── 📁routes
             ├── AppRoutes.jsx
         └── 📁services
-            ├── api.js
+            ├── api.jsx
         └── 📁styles
         └── 📁utils
             ├── validations.js
