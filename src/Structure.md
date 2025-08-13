@@ -1,0 +1,46 @@
+```
+└── 📁Facturacion
+    └── 📁public
+        ├── vite.svg
+    └── 📁src
+        └── 📁assets
+            ├── react.svg
+        └── 📁components
+            ├── Sidebar.jsx
+        └── 📁constants
+            ├── authConstans.js
+        └── 📁layouts
+            ├── MainLayout.jsx
+        └── 📁modules
+            └── 📁auth
+                ├── Login.jsx
+                ├── LoginForm.jsx
+                ├── Register.jsx
+            └── 📁clientes
+                ├── ClienteModal.jsx
+            └── 📁facturas
+                ├── FacturaModal.jsx
+            └── 📁productos
+                ├── ProductoModal.jsx
+        └── 📁routes
+            ├── AppRoutes.jsx
+        └── 📁services
+            ├── api.js
+        └── 📁styles
+        └── 📁utils
+            ├── validations.js
+        ├── App.css
+        ├── App.jsx
+        ├── index.css
+        ├── main.jsx
+        ├── Structure.md
+    ├── .gitignore
+    ├── eslint.config.js
+    ├── index.html
+    ├── package-lock.json
+    ├── package.json
+    ├── postcss.config.js
+    ├── README.md
+    ├── tailwind.config.js
+    └── vite.config.js
+```
