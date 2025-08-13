@@ -61,31 +61,7 @@ export function LoginForm() {
                             <h2 className="mb-6 font-semibold text-blue-800 text-2xl text-center">Iniciar Sesión</h2>
 
 
-                            <form onSubmit={handleSubmit} noValidate className="bg-yellow-300 w-24 h-24 object-center object-none">
-
-                                {/* Email */}
-                                <div>
-                                    <input
-                                        type="email"
-                                        name="correo"
-                                        placeholder="Email"
-                                        onChange={handleChange}
-                                        value={form.correo}
-                                    />
-                                    {err.correo && <ErrorText>{err.correo}</ErrorText>}
-                                </div>
-
-                                {/* Contraseña */}
-                                <div>
-                                    <input
-                                        type="password"
-                                        name="clave"
-                                        placeholder="Contraseña"
-                                        onChange={handleChange}
-                                        value={form.clave}
-                                    />
-                                    {err.clave && <ErrorText>{err.clave}</ErrorText>}
-                                </div>
+                            
 
                                 <form onSubmit={handleSubmit} noValidate className="space-y-4">
                                     <div>
@@ -126,7 +102,7 @@ export function LoginForm() {
                                         ¿Olvidaste tu contraseña?
                                     </a>
                                 </form>
-                            </form>
+                            
                         </div>
                     </section>
                 </main>
