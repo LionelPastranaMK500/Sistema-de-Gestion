@@ -24,7 +24,7 @@ export function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate class="object-none object-center bg-yellow-300 w-24 h-24">
             <h2>Iniciar Sesion</h2>
             <div>
                 <input

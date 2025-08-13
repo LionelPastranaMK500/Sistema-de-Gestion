@@ -1,4 +1,4 @@
-const validarLogin = (datos) =>{
+export const validarLogin = (datos) =>{
     const err = {};
 
     if(!datos.correo.trim()) err.correo = "El correo es obligatorio";
