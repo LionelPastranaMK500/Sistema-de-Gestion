@@ -7,9 +7,9 @@ export function LoginForm() {
     const [err, setErr] = useState({});
 
     const handleChange = (e) => {
-        const{name,value} = e.target;
-        setForm((prev) => ({ ...prev, [name]: value}));
-        setErr((prev) => ({ ...prev,[name]: undefined}));
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+        setErr((prev) => ({ ...prev, [name]: undefined }));
     };
 
     const handleSubmit = (e) => {
@@ -24,36 +24,50 @@ export function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate class="object-none object-center bg-yellow-300 w-24 h-24">
-            <h2>Iniciar Sesion</h2>
-            <div>
-                <input
-                    type="email"
-                    name="correo"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    value={form.correo}
-                />
-                {err.correo && <ErrorText>{err.correo}</ErrorText>}
-            </div>
+        <main>
+            <aside>
+                <h2>¿No tienes una cuenta?</h2>
+                <p>Create una para acceder al sistema</p>
+                <a href="#">Crea una cuenta ahora</a>
+            </aside>
 
-            <div>
-                <input
-                    type="password"
-                    name="clave"
-                    placeholder="Contraseña"
-                    onChange={handleChange}
-                    value={form.clave}
-                />
-                {err.clave && <ErrorText>{err.clave}</ErrorText>}
-            </div>
+            <section>
+                <h1></h1>
 
-            <button type="submit">
-                Ingresar
-            </button>
+                <form onSubmit={handleSubmit} noValidate className="bg-yellow-300 w-24 h-24 object-center object-none">
 
-            <a href="http://">¿Olvidaste tu contraseña?</a>
-        </form>
+                    <h2>Iniciar Sesion</h2>
+
+                    <div>
+                        <input
+                            type="email"
+                            name="correo"
+                            placeholder="Email"
+                            onChange={handleChange}
+                            value={form.correo}
+                        />
+                        {err.correo && <ErrorText>{err.correo}</ErrorText>}
+                    </div>
+
+                    <div>
+                        <input
+                            type="password"
+                            name="clave"
+                            placeholder="Contraseña"
+                            onChange={handleChange}
+                            value={form.clave}
+                        />
+                        {err.clave && <ErrorText>{err.clave}</ErrorText>}
+                    </div>
+
+                    <button type="submit">
+                        Ingresar
+                    </button>
+
+                    <a href="http://">¿Olvidaste tu contraseña?</a>
+                </form>
+            </section>
+        </main>
     );
 }
 
