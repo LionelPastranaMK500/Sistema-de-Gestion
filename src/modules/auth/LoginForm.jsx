@@ -27,7 +27,6 @@ export function LoginForm() {
         <main>
             <aside>
                 <h2>¿No tienes una cuenta?</h2>
-                <p>Create una para acceder al sistema</p>
                 <a href="#">Crea una cuenta ahora</a>
             </aside>
 
