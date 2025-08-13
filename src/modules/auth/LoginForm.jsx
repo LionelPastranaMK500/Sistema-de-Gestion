@@ -31,12 +31,9 @@ export function LoginForm() {
             </aside>
 
             <section>
-                <h1></h1>
+                <h2>Iniciar Sesion</h2>
 
                 <form onSubmit={handleSubmit} noValidate className="bg-yellow-300 w-24 h-24 object-center object-none">
-
-                    <h2>Iniciar Sesion</h2>
-
                     <div>
                         <input
                             type="email"
