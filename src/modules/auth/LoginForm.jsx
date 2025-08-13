@@ -15,6 +15,7 @@ function LoginForm(){
         const errVal = validarLogin(from);
         setErr(errVal);
 
+        //Api
         if(Object.keys(errVal).length === 0){
             console.log(form);
         }
@@ -24,16 +25,31 @@ function LoginForm(){
         <form onSubmit={handleShipping} > 
             <h2>Iniciar Sesion</h2>
             <div>
-                <input type="email" name="" id="" />
+                <input 
+                    type="email" 
+                    name="correo"
+                    placeholder="Email" 
+                    id="" 
+                    onChange={handleChange} 
+                    value={form.correo}
+                />
                 {err.correo && <ErrorText>{err.correo}</ErrorText> }
             </div>
 
             <div>
-                <input type="password" name="" id="" />
+                <input 
+                    type="password" 
+                    name="clave" 
+                    id=""
+                    placeholder="Ckave" 
+                    onChange={handleChange} 
+                    value={form.clave}
+                    />
                 {err.clave && <ErrorText>{err.clave}</ErrorText>}
             </div>
-            <button>
-                
+
+            <button type="submit">
+                Iniciar Sesión
             </button>
         </form>
     );
