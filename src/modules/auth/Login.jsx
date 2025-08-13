@@ -1,9 +1,11 @@
 import LoginForm from "./LoginForm";
 
-function Login(){
+export function Login(){
     return (
         <div>
             <LoginForm />
         </div>
     );
 }
+
+export default Login;
