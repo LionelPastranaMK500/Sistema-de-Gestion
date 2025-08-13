@@ -26,8 +26,6 @@ export function LoginForm() {
     return (
         <main>
             <aside>
-                <h2>¿No tienes una cuenta?</h2>
-                <Link to="/register">Crea una cuenta ahora</Link>
                 <main className="relative flex min-h-screen overflow-hidden">
                     {/* Lado izquierdo con curva */}
                     <aside className="hidden relative md:flex flex-col justify-center items-center bg-blue-700 w-1/2 overflow-hidden text-white">
@@ -39,12 +37,12 @@ export function LoginForm() {
                         {/* Contenido (centrado pero desplazado un poco a la izquierda) */}
                         <div className="z-10 relative px-10 text-center -translate-x-6 transform">
                             <h2 className="mb-4 font-bold text-3xl">¿No tienes una cuenta?</h2>
-                            <a
-                                href="#"
+                            <Link
+                                to="/register"
                                 className="hover:bg-white px-6 py-2 border border-white rounded hover:text-blue-700 transition"
                             >
                                 CREA UNA CUENTA AHORA
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Curva de separación (suave y circular) */}
