@@ -1,0 +1,23 @@
+import {
+    HomeIcon,
+    PeopleIcon,
+    InventoryIcon,
+    ReceiptIcon,
+    ShoppingCartIcon,
+    AssessmentIcon,
+    SettingsIcon,
+    SupportAgentIcon,
+    AssignmentIcon
+} from "./icons";
+
+export const menuItems = [
+    { name: "Estadísticas", icon: <HomeIcon /> },
+    { name: "Realizar Venta", icon: <ShoppingCartIcon /> },
+    { name: "Ventas Realizadas", icon: <ReceiptIcon /> },
+    { name: "Proformas", icon: <AssignmentIcon /> },
+    { name: "Reportes", icon: <AssessmentIcon /> },
+    { name: "Clientes y Proveedores", icon: <PeopleIcon /> },
+    { name: "Productos y Servicios", icon: <InventoryIcon /> },
+    { name: "Configuración", icon: <SettingsIcon /> },
+    { name: "Soporte / Ayuda", icon: <SupportAgentIcon /> },
+];
