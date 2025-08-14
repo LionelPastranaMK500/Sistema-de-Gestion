@@ -10,6 +10,8 @@
             ├── Sidebar.jsx
         └── 📁constants
             ├── authConstans.js
+            ├── icons.js
+            ├── menuItems.js
         └── 📁layouts
             ├── MainLayout.jsx
         └── 📁modules
@@ -18,6 +20,8 @@
                 ├── LoginForm.jsx
                 ├── Register.jsx
                 ├── RegisterForm.jsx
+            └── 📁dashboard
+                ├── Dashboard.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
             └── 📁facturas
