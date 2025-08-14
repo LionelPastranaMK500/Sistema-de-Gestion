@@ -7,20 +7,20 @@ export default function Sidebar() {
     const [showConfig, setShowConfig] = useState(false);
 
     return (
-        <aside className="flex flex-col bg-blue-800 text-white w-80 min-h-screen">
+        <aside className="flex flex-col bg-blue-800 text-white w-[30rem] min-h-screen">
             {/* Logo y configuración */}
-            <div className="relative flex items-center justify-between p-6">
+            <div className="relative flex items-center p-6">
                 <img
                     src="/images/Logo_WolfFur.webp"
                     alt="Logo"
-                    className="h-32 object-contain"
+                    className="h-36 object-contain"
                 />
                 <MoreVertIcon
                     onClick={() => setShowConfig(!showConfig)}
-                    className="cursor-pointer text-white"
+                    className="absolute top-6 right-6 cursor-pointer text-white"
                 />
                 {showConfig && (
-                    <div className="absolute top-20 right-4 bg-white text-black rounded shadow-lg p-4 w-56 z-50">
+                    <div className="absolute top-16 right-6 bg-white text-black rounded shadow-lg p-4 w-56 z-50">
                         <h6 className="font-bold mb-2">Empresa Seleccionada</h6>
                         <a href=""><div className="hover:underline">Gestionar plan</div></a>
                         <a href=""><div className="hover:underline">Ordenes de pago</div></a>
@@ -45,8 +45,8 @@ export default function Sidebar() {
                 </div>
             </div>
 
-            {/* Menú */}
-            <nav className="grid grid-cols-2 gap-4 p-6">
+            {/* Menú con scroll independiente */}
+            <nav className="grid grid-cols-2 gap-4 p-6 overflow-y-auto flex-grow">
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
