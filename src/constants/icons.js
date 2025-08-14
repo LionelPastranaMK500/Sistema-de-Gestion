@@ -1,5 +1,5 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import HomeIcon from "@mui/icons-material/Home";
+import PollIcon from '@mui/icons-material/Poll';
 import PeopleIcon from "@mui/icons-material/People";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -11,7 +11,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 
 export {
    MoreVertIcon,
-   HomeIcon,
+   PollIcon,
    PeopleIcon,
    InventoryIcon,
    ReceiptIcon,

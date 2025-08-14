@@ -1,5 +1,5 @@
 import {
-    HomeIcon,
+    PollIcon,
     PeopleIcon,
     InventoryIcon,
     ReceiptIcon,
@@ -11,7 +11,7 @@ import {
 } from "./icons";
 
 export const menuItems = [
-    { name: "Estadísticas", icon: HomeIcon},
+    { name: "Estadísticas", icon: PollIcon},
     { name: "Realizar Venta", icon: ShoppingCartIcon},
     { name: "Ventas Realizadas", icon: ReceiptIcon},
     { name: "Proformas", icon: AssignmentIcon},
