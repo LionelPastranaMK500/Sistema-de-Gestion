@@ -1,9 +1,7 @@
 import RegisterForm from "./RegisterForm";
 
-export function Register() {
+export default function Register() {
     return (
         <RegisterForm />
     )
 }
-
-export default Register;

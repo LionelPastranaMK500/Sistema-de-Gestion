@@ -3,7 +3,7 @@ import { validarLogin } from "../../utils/validations";
 import { Link } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
 
-export function LoginForm() {
+export default function LoginForm() {
     const [form, setForm] = useState({ correo: "", clave: "" });
     const [err, setErr] = useState({});
 
@@ -58,50 +58,45 @@ export function LoginForm() {
                     <section className="flex flex-col justify-center items-center bg-white p-8 w-full md:w-1/2">
                         <div className="w-full max-w-sm">
                             <h2 className="mb-6 font-semibold text-blue-800 text-2xl text-center">Iniciar Sesión</h2>
+                            <form onSubmit={handleSubmit} noValidate className="space-y-4">
+                                <div>
+                                    <input
+                                        type="email"
+                                        name="correo"
+                                        placeholder="Email"
+                                        onChange={handleChange}
+                                        value={form.correo}
+                                        className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                                    />
+                                    {err.correo && <ErrorText>{err.correo}</ErrorText>}
+                                </div>
 
+                                <div>
+                                    <input
+                                        type="password"
+                                        name="clave"
+                                        placeholder="Contraseña"
+                                        onChange={handleChange}
+                                        value={form.clave}
+                                        className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                                    />
+                                    {err.clave && <ErrorText>{err.clave}</ErrorText>}
+                                </div>
 
-                            
+                                <button
+                                    type="submit"
+                                    className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
+                                >
+                                    INGRESA
+                                </button>
 
-                                <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                                    <div>
-                                        <input
-                                            type="email"
-                                            name="correo"
-                                            placeholder="Email"
-                                            onChange={handleChange}
-                                            value={form.correo}
-                                            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                                        />
-                                        {err.correo && <ErrorText>{err.correo}</ErrorText>}
-                                    </div>
-
-                                    <div>
-                                        <input
-                                            type="password"
-                                            name="clave"
-                                            placeholder="Contraseña"
-                                            onChange={handleChange}
-                                            value={form.clave}
-                                            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                                        />
-                                        {err.clave && <ErrorText>{err.clave}</ErrorText>}
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
-                                    >
-                                        INGRESA
-                                    </button>
-
-                                    <a
-                                        href="#"
-                                        className="block text-gray-500 hover:text-blue-600 text-sm text-center"
-                                    >
-                                        ¿Olvidaste tu contraseña?
-                                    </a>
-                                </form>
-                            
+                                <a
+                                    href="#"
+                                    className="block text-gray-500 hover:text-blue-600 text-sm text-center"
+                                >
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            </form>            
                         </div>
                     </section>
                 </main>
@@ -110,4 +105,4 @@ export function LoginForm() {
     );
 };
 
-export default LoginForm;
+

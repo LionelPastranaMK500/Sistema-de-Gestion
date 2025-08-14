@@ -3,7 +3,7 @@ import { validarRegister} from "../../utils/validations";
 import { Link } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
 
-export function RegisterForm() {
+export default function RegisterForm() {
     const[form, setForm] = useState({
         nombres: "",
         apellidoPaterno: "",
@@ -139,7 +139,7 @@ export function RegisterForm() {
                                 checked={form.aceptaTerminos}
                                 onChange={handleChange}
                             />
-                            <label className="text-sm text-gray-600">
+                            <label className="text-gray-600 text-sm">
                                 Acepto los términos y condiciones
                             </label>
                         </div>
@@ -154,7 +154,7 @@ export function RegisterForm() {
                         </button>
 
                         {/* Link a login */}
-                        <div className="text-center text-sm text-gray-500">
+                        <div className="text-gray-500 text-sm text-center">
                             <span>¿Ya tienes una cuenta? </span>
                             <Link to="/" className="hover:text-blue-600">
                                 Iniciar Sesión
@@ -166,5 +166,3 @@ export function RegisterForm() {
         </main>
     );
 }
-
-export default RegisterForm;

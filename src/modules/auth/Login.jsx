@@ -1,6 +1,6 @@
 import LoginForm from "./LoginForm";
 
-export function Login(){
+export default function Login(){
     return (
         <div  >
             <LoginForm />
@@ -8,4 +8,3 @@ export function Login(){
     );
 }
 
-export default Login;
