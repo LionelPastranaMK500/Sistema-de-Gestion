@@ -8,7 +8,7 @@ import {
     SettingsIcon,
     SupportAgentIcon,
     AssignmentIcon
-} from "./icons";
+} from "./iconsConstants";
 
 export const menuItems = [
     { name: "Estadísticas", icon: PollIcon},

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { MoreVertIcon } from "../constants/icons";
-import { menuItems } from "../constants/menuItems";
+import { MoreVertIcon } from "../constants/iconsConstants";
+import { menuItems } from "../constants/menuItemsConstants";
 
 export default function Sidebar() {
     const [showConfig, setShowConfig] = useState(false);
