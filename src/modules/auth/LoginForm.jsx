@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { validarLogin } from "../../utils/validations";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
 
 export default function LoginForm() {
     const [form, setForm] = useState({ correo: "", clave: "" });
     const [err, setErr] = useState({});
-
+    const navigate = useNavigate();
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
@@ -20,6 +21,7 @@ export default function LoginForm() {
 
         if (Object.keys(errVal).length === 0) {
             console.log(form);
+            navigate("/dashboard");
         }
     };
 
