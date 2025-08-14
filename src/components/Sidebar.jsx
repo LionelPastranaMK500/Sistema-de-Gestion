@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState } from "react";
 import { MoreVertIcon } from "../constants/iconsConstants";
 import { menuItems } from "../constants/menuItemsConstants";
 import { buttonColors } from "../constants/colorsConstants";
@@ -46,23 +46,23 @@ export default function Sidebar() {
             </div>
 
             {/* Menú con scroll vertical independiente */}
-<nav className="grid grid-cols-2 gap-4 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
-     style={{ maxHeight: "calc(100vh - 300px)" }}>
-    {menuItems.map((item, index) => {
-        const Icon = item.icon;
-        return (
-            <button
-                key={index}
-                className={`${buttonColors[index]} flex flex-col items-center justify-center p-4 rounded-lg shadow hover:opacity-90`}
-            >
-                <Icon style={{ fontSize: "2rem" }} />
-                <span className="mt-2 text-sm font-medium text-white text-center">
-                    {item.name}
-                </span>
-            </button>
-        );
-    })}
-</nav>
+            <nav className="grid grid-cols-2 gap-4 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
+                style={{ maxHeight: "calc(100vh - 300px)" }}>
+                {menuItems.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                        <button
+                            key={index}
+                            className={`${buttonColors[index]} flex flex-col items-center justify-center p-4 rounded-lg shadow hover:opacity-90`}
+                        >
+                            <Icon style={{ fontSize: "2rem" }} />
+                            <span className="mt-2 text-sm font-medium text-white text-center">
+                                {item.name}
+                            </span>
+                        </button>
+                    );
+                })}
+            </nav>
         </aside>
     );
 }
