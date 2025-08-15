@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { MoreVertIcon } from "../constants/iconsConstants";
+import {
+    MoreVertIcon,
+    BusinessIcon,
+    ReceiptIcon,
+    PeopleIcon,
+    LockIcon,
+    ExitToAppIcon
+} from "../constants/iconsConstants"; // 👈 Aquí traes todos los iconos
 import { menuItems } from "../constants/menuItemsConstants";
 import { buttonColors } from "../constants/colorsConstants";
 
@@ -20,15 +27,47 @@ export default function Sidebar() {
                     className="absolute top-6 right-6 cursor-pointer text-white"
                 />
                 {showConfig && (
-                    <div className="absolute top-16 right-6 bg-white text-black rounded shadow-lg p-4 w-56 z-50">
+                    <div className="absolute top-16 right-6 bg-white text-black rounded-lg shadow-lg p-4 w-64 z-50 border border-gray-200">
                         <h6 className="font-bold mb-2">Empresa Seleccionada</h6>
-                        <a href=""><div className="hover:underline">Gestionar plan</div></a>
-                        <a href=""><div className="hover:underline">Ordenes de pago</div></a>
+
+                        <a href="">
+                            <div className="hover:bg-gray-100 rounded-md p-2 flex items-center gap-2">
+                                <BusinessIcon className="text-blue-600" fontSize="medium" />
+                                Gestionar plan
+                            </div>
+                        </a>
+
+                        <a href="">
+                            <div className="hover:bg-gray-100 rounded-md p-2 flex items-center gap-2">
+                                <ReceiptIcon className="text-green-600" fontSize="medium" />
+                                Ordenes de pago
+                            </div>
+                        </a>
+
                         <hr className="my-2" />
+
                         <h3 className="font-bold mb-2">Usuario</h3>
-                        <a href=""><div className="hover:underline">Registrar nueva empresa</div></a>
-                        <a href=""><div className="hover:underline">Cambiar contraseña</div></a>
-                        <a href=""><div className="hover:underline">Cerrar sesión</div></a>
+
+                        <a href="">
+                            <div className="hover:bg-gray-100 rounded-md p-2 flex items-center gap-2">
+                                <PeopleIcon className="text-purple-600" fontSize="medium" />
+                                Registrar nueva empresa
+                            </div>
+                        </a>
+
+                        <a href="">
+                            <div className="hover:bg-gray-100 rounded-md p-2 flex items-center gap-2">
+                                <LockIcon className="text-orange-600" fontSize="medium" />
+                                Cambiar contraseña
+                            </div>
+                        </a>
+
+                        <a href="">
+                            <div className="hover:bg-gray-100 rounded-md p-2 flex items-center gap-2">
+                                <ExitToAppIcon className="text-red-600" fontSize="medium" />
+                                Cerrar sesión
+                            </div>
+                        </a>
                     </div>
                 )}
             </div>
@@ -46,8 +85,10 @@ export default function Sidebar() {
             </div>
 
             {/* Menú con scroll vertical independiente */}
-            <nav className="grid grid-cols-2 gap-4 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
-                style={{ maxHeight: "calc(100vh - 300px)" }}>
+            <nav
+                className="grid grid-cols-2 gap-4 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
+                style={{ maxHeight: "calc(100vh - 300px)" }}
+            >
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
