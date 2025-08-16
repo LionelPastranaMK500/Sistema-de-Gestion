@@ -1,49 +1,30 @@
-import { useState } from "react";
 import { validarRegister} from "../../utils/validations";
 import { Link, useNavigate} from "react-router-dom";
-import { registerUser } from "../../services/authServices";
 import ErrorText from "../../components/ErrorText";
 import { patternEmail,patternClave} from "../../constants/patternConstants";
+import { handleRegister } from "../../services/auth/registerLogic";
+import { useFormHandler } from "../../utils/formUtils";
 
 export default function RegisterForm() {
-    const[form, setForm] = useState({
-        nombres: "",
-        apellidoPaterno: "",
-        apellidoMaterno:"",
-        correo: "",
-        clave: "",
-        aceptaTerminos: false
-    });
-    const [err, setErr] = useState({});
     const navigate = useNavigate();
 
-    const handleChange = (e) =>{
-        const{name, value, type, checked} = e.target;
-        setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value}));
-        setErr((prev) => ({ ...prev, [name]: undefined}));
-    };
-
-    const handleSubmit = (e) =>{
-        e.preventDefault();
-        const errVal = validarRegister(form);
-        setErr(errVal);
-
-        if(Object.keys(errVal).length === 0){
-            const result = registerUser({
-               nombres: form.nombres.trim(),
-               apellidoPaterno: form.apellidoPaterno.trim(),
-               apellidoMaterno: form.apellidoMaterno.trim(),
-               correo: form.correo.trim(),
-               clave: form.clave.trim() 
-            });
-            if(!result.success){
-                alert(result.message)
-                return
+    const {values,err,handleChange,handleSubmit} = useFormHandler(
+        {
+            nombres: "",
+            apellidoPaterno: "",
+            apellidoMaterno: "",
+            correo: "",
+            clave:"",
+            aceptaTerminos: false,
+        },
+        validarRegister,
+        (form)=>{
+            const res = handleRegister(form,navigate);
+            if(!res.success){
+                alert(res.message);
             }
-            alert("Registro correcto")
-            navigate("/");
-        }       
-    };
+        }
+    );
 
     return (
         <main className="relative flex min-h-screen overflow-hidden">
@@ -87,7 +68,7 @@ export default function RegisterForm() {
                                 name="nombres"
                                 placeholder="Nombres"
                                 onChange={handleChange}
-                                value={form.nombres}
+                                value={values.nombres}
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                             />
                             {err.nombres && <ErrorText>{err.nombres}</ErrorText>}
@@ -100,7 +81,7 @@ export default function RegisterForm() {
                                 name="apellidoPaterno"
                                 placeholder="Apellido paterno"
                                 onChange={handleChange}
-                                value={form.apellidoPaterno}
+                                value={values.apellidoPaterno}
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                             />
                             {err.apellidoPaterno && <ErrorText>{err.apellidoPaterno}</ErrorText>}
@@ -113,7 +94,7 @@ export default function RegisterForm() {
                                 name="apellidoMaterno"
                                 placeholder="Apellido materno"
                                 onChange={handleChange}
-                                value={form.apellidoMaterno}
+                                value={values.apellidoMaterno}
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                             />
                             {err.apellidoMaterno && <ErrorText>{err.apellidoMaterno}</ErrorText>}
@@ -126,7 +107,7 @@ export default function RegisterForm() {
                                 name="correo"
                                 placeholder="Email"
                                 onChange={handleChange}
-                                value={form.correo}
+                                value={values.correo}
                                 pattern={patternEmail}
                                 title="Ingrese un correo electrónico válido, por ejemplo: usuario@example.com"
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
@@ -141,7 +122,7 @@ export default function RegisterForm() {
                                 name="clave"
                                 placeholder="Contraseña"
                                 onChange={handleChange}
-                                value={form.clave}
+                                value={values.clave}
                                 pattern={patternClave}
                                 title="Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
@@ -154,7 +135,7 @@ export default function RegisterForm() {
                             <input
                                 type="checkbox"
                                 name="aceptaTerminos"
-                                checked={form.aceptaTerminos}
+                                checked={values.aceptaTerminos}
                                 onChange={handleChange}
                             />
                             <label className="text-gray-600 text-sm">

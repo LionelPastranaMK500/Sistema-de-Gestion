@@ -1,29 +1,22 @@
-import { useState } from "react";
 import { validarLogin } from "../../utils/validations";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
+import { useFormHandler } from "../../utils/formUtils";
+import { handleLogin } from "../../services/auth/loginLogic";
 
 export default function LoginForm() {
-    const [form, setForm] = useState({ correo: "", clave: "" });
-    const [err, setErr] = useState({});
     const navigate = useNavigate();
     
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-        setErr((prev) => ({ ...prev, [name]: undefined }));
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const errVal = validarLogin(form);
-        setErr(errVal);
-
-        if (Object.keys(errVal).length === 0) {
-            console.log(form);
-            navigate("/dashboard");
+    const {values,err,handleChange,handleSubmit} = useFormHandler(
+        {correo:"",clave:""},
+        validarLogin,
+        (form) => {
+            const res = handleLogin(form, navigate);
+            if(!res.success){
+                alert(res.message);
+            }
         }
-    };
+    );
 
     return (
         <main>
@@ -67,7 +60,7 @@ export default function LoginForm() {
                                         name="correo"
                                         placeholder="Email"
                                         onChange={handleChange}
-                                        value={form.correo}
+                                        value={values.correo}
                                         className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                     />
                                     {err.correo && <ErrorText>{err.correo}</ErrorText>}
@@ -79,7 +72,7 @@ export default function LoginForm() {
                                         name="clave"
                                         placeholder="Contraseña"
                                         onChange={handleChange}
-                                        value={form.clave}
+                                        value={values.clave}
                                         className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                     />
                                     {err.clave && <ErrorText>{err.clave}</ErrorText>}
