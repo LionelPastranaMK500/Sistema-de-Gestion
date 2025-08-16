@@ -9,9 +9,11 @@
             ├── ErrorText.jsx
             ├── Sidebar.jsx
         └── 📁constants
-            ├── authConstans.js
-            ├── icons.js
-            ├── menuItems.js
+            ├── authConstants.js
+            ├── iconsConstants.js
+            ├── menuItemsConstants.js
+            ├── colorsConstants.js
+            ├── patternConstants.js
         └── 📁layouts
             ├── MainLayout.jsx
         └── 📁modules
