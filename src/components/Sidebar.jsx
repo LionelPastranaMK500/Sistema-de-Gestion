@@ -17,7 +17,7 @@ export default function Sidebar() {
     const user = JSON.parse(localStorage.getItem("activeUser")) || {};
     const navigate = useNavigate();
     const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${user.apellidoPaterno?.[0] || ""}`;
-    const handleLogout = () =>{
+    const handleLogout = () => {
         logoutUser();
         navigate("/");
     }
@@ -36,17 +36,23 @@ export default function Sidebar() {
                     className="top-6 right-6 absolute text-white cursor-pointer"
                 />
                 {showConfig && (
-                    <div className="top-16 right-6 z-50 absolute bg-white shadow-lg p-4 border border-gray-200 rounded-lg w-64 text-black">
-
-                        <div>
-                            <div>{initials}</div>
-                            <div>
-                                <p>
-                                    {user.nombres} {user.apellidoPaterno}
-                                </p>
-                                <p>{user.correo}</p>
+                    <div className="absolute top-16 right-6 z-50 bg-white shadow-lg p-4 border border-gray-200 rounded-lg text-black min-w-[16rem] max-w-md">
+                        <div className="flex items-center gap-3 mb-3">
+                            {/* Círculo con iniciales */}
+                            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white font-extrabold text-lg shadow-md flex-shrink-0">
+                                {initials}
                             </div>
-    
+
+                            {/* Nombre, apellido y correo */}
+                            <div className="flex flex-col">
+                                <p className="text-lg font-bold text-gray-900 leading-tight">
+                                    {user.nombres}{" "}
+                                    <span className="font-extrabold text-gray-800">
+                                        {user.apellidoPaterno}
+                                    </span>
+                                </p>
+                                <p className="text-sm text-black break-words">{user.correo}</p>
+                            </div>
                         </div>
 
                         <h6 className="mb-2 font-bold">Empresa Seleccionada</h6>
@@ -83,14 +89,16 @@ export default function Sidebar() {
                             </div>
                         </a>
 
-
-                        <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md" onClick={handleLogout}>
+                        <div
+                            className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+                            onClick={handleLogout}
+                        >
                             <ExitToAppIcon className="text-red-600" fontSize="medium" />
                             Cerrar sesión
                         </div>
-
                     </div>
                 )}
+
             </div>
 
             {/* Datos empresa */}
@@ -107,7 +115,7 @@ export default function Sidebar() {
                     <p className="opacity-80 font-semibold text-sm">Sucursal</p>
                     <select name="" id="">
                         <option>
-                            
+
                         </option>
                     </select>
                 </div>
