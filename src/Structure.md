@@ -1,6 +1,8 @@
 ```
 └── 📁Facturacion
     └── 📁public
+        └── 📁images
+            ├── Logo_WolfFur.webp
         ├── vite.svg
     └── 📁src
         └── 📁assets
@@ -10,9 +12,9 @@
             ├── Sidebar.jsx
         └── 📁constants
             ├── authConstants.js
+            ├── colorsConstants.js
             ├── iconsConstants.js
             ├── menuItemsConstants.js
-            ├── colorsConstants.js
             ├── patternConstants.js
         └── 📁layouts
             ├── MainLayout.jsx
@@ -22,10 +24,10 @@
                 ├── LoginForm.jsx
                 ├── Register.jsx
                 ├── RegisterForm.jsx
-            └── 📁dashboard
-                ├── Dashboard.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
+            └── 📁dashboard
+                ├── Dashboard.jsx
             └── 📁facturas
                 ├── FacturaModal.jsx
             └── 📁productos
@@ -33,9 +35,14 @@
         └── 📁routes
             ├── AppRoutes.jsx
         └── 📁services
+            └── 📁auth
+                ├── loginLogic.js
+                ├── registerLogic.js
             ├── api.jsx
+            ├── authServices.js
         └── 📁styles
         └── 📁utils
+            ├── formUtils.js
             ├── validations.js
         ├── App.css
         ├── App.jsx
