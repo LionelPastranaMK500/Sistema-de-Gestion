@@ -2,6 +2,7 @@ import { useState } from "react";
 import { validarLogin } from "../../utils/validations";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
+import { loginUser } from "../../services/authServices";
 
 export default function LoginForm() {
     const [form, setForm] = useState({ correo: "", clave: "" });
@@ -21,6 +22,14 @@ export default function LoginForm() {
 
         if (Object.keys(errVal).length === 0) {
             console.log(form);
+            const res = loginUser(form.correo,form.clave);
+
+            if(!res.success){
+                alert(res.message)
+                return;
+            }
+
+            
             navigate("/dashboard");
         }
     };
@@ -80,6 +89,7 @@ export default function LoginForm() {
                                         placeholder="Contraseña"
                                         onChange={handleChange}
                                         value={form.clave}
+                                        title="Se requiere de 8 a más"
                                         className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                     />
                                     {err.clave && <ErrorText>{err.clave}</ErrorText>}

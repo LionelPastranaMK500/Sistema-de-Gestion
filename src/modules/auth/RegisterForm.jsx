@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { validarRegister} from "../../utils/validations";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
+import { registerUser } from "../../services/authServices";
 import ErrorText from "../../components/ErrorText";
+import { patternEmail,patternClave} from "../../constants/patternConstants";
 
 export default function RegisterForm() {
     const[form, setForm] = useState({
@@ -12,8 +14,8 @@ export default function RegisterForm() {
         clave: "",
         aceptaTerminos: false
     });
-
     const [err, setErr] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (e) =>{
         const{name, value, type, checked} = e.target;
@@ -27,7 +29,19 @@ export default function RegisterForm() {
         setErr(errVal);
 
         if(Object.keys(errVal).length === 0){
-            console.log(form);
+            const result = registerUser({
+               nombres: form.nombres.trim(),
+               apellidoPaterno: form.apellidoPaterno.trim(),
+               apellidoMaterno: form.apellidoMaterno.trim(),
+               correo: form.correo.trim(),
+               clave: form.clave.trim() 
+            });
+            if(!result.success){
+                alert(result.message)
+                return
+            }
+            alert("Registro correcto")
+            navigate("/");
         }       
     };
 
@@ -113,6 +127,8 @@ export default function RegisterForm() {
                                 placeholder="Email"
                                 onChange={handleChange}
                                 value={form.correo}
+                                pattern={patternEmail}
+                                title="Ingrese un correo electrónico válido, por ejemplo: usuario@example.com"
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                             />
                             {err.correo && <ErrorText>{err.correo}</ErrorText>}
@@ -126,6 +142,8 @@ export default function RegisterForm() {
                                 placeholder="Contraseña"
                                 onChange={handleChange}
                                 value={form.clave}
+                                pattern={patternClave}
+                                title="Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."
                                 className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                             />
                             {err.clave && <ErrorText>{err.clave}</ErrorText>}
