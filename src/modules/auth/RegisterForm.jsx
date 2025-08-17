@@ -4,6 +4,7 @@ import ErrorText from "../../components/ErrorText";
 import { patternEmail,patternClave} from "../../constants/patternConstants";
 import { handleRegister } from "../../services/auth/registerLogic";
 import { useFormHandler } from "../../utils/formUtils";
+import {toast} from "react-toastify";
 
 export default function RegisterForm() {
     const navigate = useNavigate();
@@ -18,10 +19,12 @@ export default function RegisterForm() {
             aceptaTerminos: false,
         },
         validarRegister,
-        (form)=>{
-            const res = handleRegister(form,navigate);
-            if(!res.success){
-                alert(res.message);
+        async(form)=>{
+            const res = await handleRegister(form,navigate);
+            if(res.success){
+                toast.success(res.message);
+            }else{
+                toast.error(res.message);
             }
         }
     );

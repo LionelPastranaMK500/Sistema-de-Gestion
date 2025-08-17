@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "../../components/ErrorText";
 import { useFormHandler } from "../../utils/formUtils";
 import { handleLogin } from "../../services/auth/loginLogic";
+import {toast} from "react-toastify";
 
 export default function LoginForm() {
     const navigate = useNavigate();
@@ -11,10 +12,13 @@ export default function LoginForm() {
         {correo:"",clave:""},
         validarLogin,
         (form) => {
-            const res = handleLogin(form, navigate);
-            if(!res.success){
-                alert(res.message);
+            handleLogin(form, navigate).then((res) =>{
+                if(res.success){
+                toast.success(res.message);
+            }else{
+                toast.error(res.message);
             }
+            });
         }
     );
 
