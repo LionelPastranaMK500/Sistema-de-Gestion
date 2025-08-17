@@ -12,13 +12,13 @@ export function useFormHandler(initialValues, validate, onSubmit) {
         setErr((prev) => ({ ...prev, [name]: undefined }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const validationErrors = validate(values);
         setErr(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            onSubmit(values);
+            await onSubmit(values);
         }
     };
 
