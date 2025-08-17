@@ -32,6 +32,8 @@
                 ├── FacturaModal.jsx
             └── 📁productos
                 ├── ProductoModal.jsx
+            └── 📁ventas
+                ├── VentasView.jsx
         └── 📁routes
             ├── AppRoutes.jsx
         └── 📁services
@@ -42,7 +44,10 @@
             ├── authServices.js
         └── 📁styles
         └── 📁utils
+            ├── configCalendar.js
             ├── formUtils.js
+            ├── menuActions.js
+            ├── redirectWithDelay.js
             ├── validations.js
         ├── App.css
         ├── App.jsx
