@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState } from "react";
 import {
     MoreVertIcon,
     BusinessIcon,
@@ -11,6 +11,7 @@ import { menuItems } from "../constants/menuItemsConstants";
 import { buttonColors } from "../constants/colorsConstants";
 import { logoutUser } from "../services/authServices";
 import { useNavigate } from "react-router-dom";
+import { menuActions } from "../utils/menuActions";
 
 export default function Sidebar() {
     const [showConfig, setShowConfig] = useState(false);
@@ -21,6 +22,12 @@ export default function Sidebar() {
         logoutUser();
         navigate("/");
     }
+
+    const handleMenuAction = (action) => {
+        if (menuActions[action]) {
+            menuActions[action]({navigate});
+        }
+    };
 
     return (
         <aside className="flex flex-col bg-blue-800 w-[30rem] min-h-screen text-white">
@@ -36,22 +43,22 @@ export default function Sidebar() {
                     className="top-6 right-6 absolute text-white cursor-pointer"
                 />
                 {showConfig && (
-                    <div className="absolute top-16 right-6 z-50 bg-white shadow-lg p-4 border border-gray-200 rounded-lg text-black min-w-[16rem] max-w-md">
+                    <div className="top-16 right-6 z-50 absolute bg-white shadow-lg p-4 border border-gray-200 rounded-lg min-w-[16rem] max-w-md text-black">
                         <div className="flex items-center gap-3 mb-3">
                             {/* Círculo con iniciales */}
-                            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-blue-600 text-white font-extrabold text-lg shadow-md flex-shrink-0">
+                            <div className="flex flex-shrink-0 justify-center items-center bg-blue-600 shadow-md rounded-full w-14 h-14 font-extrabold text-white text-lg">
                                 {initials}
                             </div>
 
                             {/* Nombre, apellido y correo */}
                             <div className="flex flex-col">
-                                <p className="text-lg font-bold text-gray-900 leading-tight">
+                                <p className="font-bold text-gray-900 text-lg leading-tight">
                                     {user.nombres}{" "}
                                     <span className="font-extrabold text-gray-800">
                                         {user.apellidoPaterno}
                                     </span>
                                 </p>
-                                <p className="text-sm text-black break-words">{user.correo}</p>
+                                <p className="text-black text-sm break-words">{user.correo}</p>
                             </div>
                         </div>
 
@@ -131,6 +138,7 @@ export default function Sidebar() {
                     return (
                         <button
                             key={index}
+                            onClick={() => handleMenuAction(item.action)}
                             className={`${buttonColors[index]} flex flex-col items-center justify-center p-4 rounded-lg shadow hover:opacity-90`}
                         >
                             <Icon style={{ fontSize: "2rem" }} />
