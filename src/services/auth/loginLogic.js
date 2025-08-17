@@ -1,15 +1,24 @@
 import { loginUser } from "../authServices";
+import { toast } from "react-toastify";
+import { redirectWithDelay } from "../../utils/redirectWithDelay";
 
-export const handleLogin = (form, navigate) => {
-    const payload = {
-        correo: String(form.correo || "").trim().toLowerCase(),
-        clave: String(form.clave || "").trim(),
-    };
+export const handleLogin = async (form, navigate) => {
+    const correo = String(form.correo || "").trim().toLowerCase();
+    const clave = String(form.clave || "").trim();
 
-    const res = loginUser(payload);
+    console.log({correo,clave})
+
+    const res = loginUser(correo, clave);
 
     if (!res.success) {
-        return res;
+        toast.error(res.message || "Error al iniciar sesion",{autoClose:1500});
+        return { success: false, message: res.message };
     }
-    navigate("/dashboard");
+
+    const primerNombre = res.user.nombres.split(" ")[0];
+    const aPaterno = res.user.apellidoPaterno;
+
+    toast.success(`Bienvenido ${primerNombre} ${aPaterno}`,{autoClose: 1500},{hideProgressBar:false});
+    redirectWithDelay(navigate, "/dashboard");
+    return { success: true, user: res.user};
 };

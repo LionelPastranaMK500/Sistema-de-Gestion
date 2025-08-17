@@ -1,18 +1,24 @@
 import { registerUser } from "../authServices";
+import { toast } from "react-toastify";
+import { redirectWithDelay } from "../../utils/redirectWithDelay";
 
-export const handleRegister = (form, navigate) =>{
+export const handleRegister = async (form, navigate) =>{
     const payload ={
-        correo: String(form.correo || "").trim().toLowerCase(),
-        clave: String(form.clave || "").trim(),
         nombres: String(form.nombres || "").trim(),
         apellidoPaterno: String(form.apellidoPaterno || "").trim(),
         apellidoMaterno: String(form.apellidoMaterno || "").trim(),
+        correo: String(form.correo || "").trim().toLowerCase(),
+        clave: String(form.clave || "").trim(),
     };
 
     const res = registerUser(payload);
 
     if(!res.success){
-        return res;
+        toast.error(res.message || "Error al registrar",{autoClose:1500});
+        return { success: false, message: res.message };
     }
-    navigate("/");
+
+    toast.success("Usuario registrado correctamente",{autoClose:1500});
+    redirectWithDelay(navigate,"/");
+    return {success:true,message: "Usuario registrado"};
 }
