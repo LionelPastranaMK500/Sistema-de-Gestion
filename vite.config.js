@@ -16,6 +16,7 @@ export default defineConfig({
       "@utils": path.resolve(process.cwd(), "src/utils"),
       "@hooks": path.resolve(process.cwd(), "src/hooks"),
       "@layouts": path.resolve(process.cwd(), "src/layouts"),
+      "@styles": path.resolve(process.cwd(), "src/styles"),
     },
   },
 })
