@@ -6,12 +6,12 @@ import {
     PeopleIcon,
     LockIcon,
     ExitToAppIcon
-} from "../constants/iconsConstants";
-import { menuItems } from "../constants/menuItemsConstants";
-import { buttonColors } from "../constants/colorsConstants";
-import { logoutUser } from "../services/authServices";
+} from "@constants/iconsConstants";
+import { menuItems } from "@constants/menuItemsConstants";
+import { buttonColors } from "@constants/colorsConstants";
+import { logoutUser } from "@services/auth/authServices";
 import { useNavigate } from "react-router-dom";
-import { menuActions } from "../utils/menuActions";
+import { menuActions } from "@utils/menuActions";
 
 export default function Sidebar() {
     const [showConfig, setShowConfig] = useState(false);

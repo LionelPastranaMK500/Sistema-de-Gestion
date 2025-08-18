@@ -1,8 +1,8 @@
-import { validarLogin } from "../../utils/validations";
+import { validarLogin } from "@services/auth/validations";
 import { Link, useNavigate } from "react-router-dom";
-import ErrorText from "../../components/ErrorText";
-import { useFormHandler } from "../../utils/formUtils";
-import { handleLogin } from "../../services/auth/loginLogic";
+import ErrorText from "@components/ErrorText";
+import { useFormHandler } from "@hooks/useFormHandler";
+import { handleLogin } from "@services/auth/authLogic";
 import {toast} from "react-toastify";
 
 export default function LoginForm() {

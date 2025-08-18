@@ -1,9 +1,9 @@
-import { validarRegister} from "../../utils/validations";
+import { validarRegister} from "@services/auth/validations";
 import { Link, useNavigate} from "react-router-dom";
-import ErrorText from "../../components/ErrorText";
-import { patternEmail,patternClave} from "../../constants/patternConstants";
-import { handleRegister } from "../../services/auth/registerLogic";
-import { useFormHandler } from "../../utils/formUtils";
+import ErrorText from "@components/ErrorText";
+import { patternEmail,patternClave} from "@constants/patternConstants";
+import { handleRegister } from "@services/auth/authLogic";
+import { useFormHandler } from "@hooks/useFormHandler";
 import {toast} from "react-toastify";
 
 export default function RegisterForm() {

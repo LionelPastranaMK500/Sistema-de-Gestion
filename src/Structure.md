@@ -16,6 +16,8 @@
             ├── iconsConstants.js
             ├── menuItemsConstants.js
             ├── patternConstants.js
+        └── 📁hooks
+            ├── useFormHandler.js
         └── 📁layouts
             ├── MainLayout.jsx
         └── 📁modules
@@ -26,29 +28,30 @@
                 ├── RegisterForm.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
+                ├── ClienteView.jsx
             └── 📁dashboard
                 ├── Dashboard.jsx
             └── 📁facturas
                 ├── FacturaModal.jsx
+                ├── FacturasView.jsx
             └── 📁productos
                 ├── ProductoModal.jsx
             └── 📁ventas
+                ├── VentasModal.jsx
                 ├── VentasView.jsx
         └── 📁routes
             ├── AppRoutes.jsx
         └── 📁services
             └── 📁auth
-                ├── loginLogic.js
-                ├── registerLogic.js
-            ├── api.jsx
-            ├── authServices.js
+                ├── authLogic.js
+                ├── authServices.js
+                ├── validations.js
+            ├── api.js
         └── 📁styles
         └── 📁utils
             ├── configCalendar.js
-            ├── formUtils.js
             ├── menuActions.js
             ├── redirectWithDelay.js
-            ├── validations.js
         ├── App.css
         ├── App.jsx
         ├── index.css

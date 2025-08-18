@@ -13,7 +13,7 @@ import {
 export const menuItems = [
     { name: "Estadisticas", icon: PollIcon},
     { name: "Realizar Venta",action: "ventas",icon: ShoppingCartIcon},
-    { name: "Ventas Realizadas", icon: ReceiptIcon},
+    { name: "Ventas Realizadas",action: "ventasRealizadas", icon: ReceiptIcon},
     { name: "Proformas", icon: AssignmentIcon},
     { name: "Reportes", icon: AssessmentIcon},
     { name: "Clientes y Proveedores", icon: PeopleIcon},

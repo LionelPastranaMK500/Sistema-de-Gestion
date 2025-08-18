@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Calendar } from "primereact/calendar";
-import { configCalendar } from "../../utils/configCalendar";
+import { configCalendar } from "@utils/configCalendar";
 
 export default function VentasModal() {
     const [fechaEmision, setFechaEmision] = useState(null);
@@ -12,22 +12,22 @@ export default function VentasModal() {
     }, []);
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-6xl mx-auto">
+        <div className="bg-white shadow-md mx-auto p-6 rounded-lg w-full max-w-6xl">
             {/* ENCABEZADO */}
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-800">Nueva venta</h2>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="font-bold text-gray-800 text-xl">Nueva venta</h2>
                 <label className="flex items-center gap-2 text-gray-700 text-sm">
-                    <input type="checkbox" className="h-4 w-4" />
+                    <input type="checkbox" className="w-4 h-4" />
                     PROFORMA
                 </label>
             </div>
 
             {/* PRIMERA FILA: Cliente + Fechas */}
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="gap-4 grid grid-cols-4 mb-4">
                 <input
                     type="text"
                     placeholder="Cliente"
-                    className="col-span-2 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                    className="col-span-2 px-3 py-2 border border-gray-300 rounded-md text-sm"
                 />
 
                 {/* Calendar - Fecha de emisión */}
@@ -54,20 +54,20 @@ export default function VentasModal() {
             </div>
 
             {/* SEGUNDA FILA: Comprobante, Serie, Operación, Dscto */}
-            <div className="grid grid-cols-4 gap-4 mb-4">
-                <select className="border border-gray-300 rounded-md px-2 py-2 text-sm">
+            <div className="gap-4 grid grid-cols-4 mb-4">
+                <select className="px-2 py-2 border border-gray-300 rounded-md text-sm">
                     <option>BOLETA DE VENTA ELECTRÓNICA</option>
                 </select>
-                <select className="border border-gray-300 rounded-md px-2 py-2 text-sm">
+                <select className="px-2 py-2 border border-gray-300 rounded-md text-sm">
                     <option>BB04</option>
                 </select>
-                <select className="border border-gray-300 rounded-md px-2 py-2 text-sm">
+                <select className="px-2 py-2 border border-gray-300 rounded-md text-sm">
                     <option>VENTA INTERNA</option>
                 </select>
                 <input
                     type="number"
                     placeholder="0.00"
-                    className="border border-gray-300 rounded-md px-2 py-2 text-sm"
+                    className="px-2 py-2 border border-gray-300 rounded-md text-sm"
                 />
             </div>
 
@@ -76,7 +76,7 @@ export default function VentasModal() {
                 {["PLACA", "O. COMPRA", "G. REMISIÓN", "OBSERVACIONES", "COND. PAGO", "OTROS"].map((label) => (
                     <button
                         key={label}
-                        className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white text-sm"
                     >
                         {label}
                     </button>
@@ -84,26 +84,26 @@ export default function VentasModal() {
             </div>
 
             {/* ZONA DE PRODUCTOS */}
-            <div className="bg-gray-50 border border-gray-300 rounded-md p-6 mb-6 text-center text-gray-500 text-sm">
+            <div className="bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md text-gray-500 text-sm text-center">
                 Escanea un producto con un lector de código de barras o búscalo
             </div>
 
             {/* BUSCAR PRODUCTO + TOTAL */}
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex justify-between items-center gap-4">
                 <input
                     type="text"
                     placeholder="Buscar producto..."
-                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
                 />
 
                 <div className="flex items-center gap-4">
-                    <p className="text-lg font-bold text-gray-700">
+                    <p className="font-bold text-gray-700 text-lg">
                         TOTAL <span className="text-black">0.00</span>
                     </p>
-                    <button className="bg-gray-200 px-4 py-2 rounded font-semibold text-gray-700 hover:bg-gray-300">
+                    <button className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700">
                         VISTA PREVIA
                     </button>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700">
+                    <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white">
                         PROCESAR
                     </button>
                 </div>
