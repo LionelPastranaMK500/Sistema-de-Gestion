@@ -9,7 +9,7 @@ export default function MainLayout() {
             <Sidebar />
 
             {/* Contenido dinámico */}
-            <div className="flex-1 p-6">
+            <div className=" p-6">
                 <Outlet />
             </div>
         </div>
