@@ -5,7 +5,7 @@ export function configCalendar() {
     firstDayOfWeek: 1,
     dayNames: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],
     dayNamesShort: ["dom","lun","mar","mié","jue","vie","sáb"],
-    dayNamesMin: ["D","L","M","X","J","V","S"],
+    dayNamesMin: ["D","L","M","M","J","V","S"],
     monthNames: [
       "Enero ","Febrero ","Marzo ","Abril","Mayo","Junio",
       "Julio ","Agosto ","Septiembre ","Octubre ","Noviembre ","Diciembre "
