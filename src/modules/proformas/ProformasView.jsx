@@ -1,7 +1,8 @@
-export default function Dashboard() {
+export default function ProformasView() {
     return (
         <div>
 
         </div>
     );
 }
+

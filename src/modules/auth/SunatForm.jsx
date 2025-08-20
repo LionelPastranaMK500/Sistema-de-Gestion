@@ -8,7 +8,7 @@ import { useSidebar } from "@utils/sidebarState";
 
 export default function SunatForm() {
     const navigate = useNavigate();
-    const setSidebarReady = useSidebar();
+    const {setSidebarReady} = useSidebar();
     const { values, err, handleChange, handleSubmit } = useFormHandler(
         { ruc: "", usuarioSol: "", claveSol: "" },
         validarSunat,
@@ -51,7 +51,7 @@ export default function SunatForm() {
                             onChange={handleChange}
                             placeholder="Usuario SOL"
                         />
-                        {err.usuario && <ErrorText>{err.usuario}</ErrorText>}
+                        {err.usuarioSol && <ErrorText>{err.usuarioSol}</ErrorText>}
                     </div>
                     <div>
                         <input 
@@ -61,11 +61,11 @@ export default function SunatForm() {
                             onChange={handleChange}
                             placeholder="Clave SOL"
                         />
-                        {err.clave && <ErrorText>{err.clave}</ErrorText>}
+                        {err.claveSol && <ErrorText>{err.claveSol}</ErrorText>}
                     </div>
                     <div>
                         <button type="submit">Registrar</button>
-                        <button>Regresar</button>
+                        <button type="button" onClick={() => navigate(-1)}>Regresar</button>
                     </div>
                 </form>
             </div>

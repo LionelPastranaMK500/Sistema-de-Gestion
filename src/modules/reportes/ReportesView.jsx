@@ -1,7 +1,8 @@
-export default function Dashboard() {
+export default function ReportesView() {
     return (
         <div>
 
         </div>
     );
 }
+
