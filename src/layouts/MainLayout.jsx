@@ -9,9 +9,9 @@ export default function MainLayout() {
             <Sidebar />
 
             {/* Contenido dinámico */}
-            <div className="p-6">
+            <main className="flex-1 min-w-0 overflow-auto bg-gray-50 p-6">
                 <Outlet />
-            </div>
+            </main>
         </div>
     );
 }
