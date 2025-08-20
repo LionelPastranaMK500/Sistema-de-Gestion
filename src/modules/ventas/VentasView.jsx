@@ -12,7 +12,7 @@ export default function VentasModal() {
     }, []);
 
     return (
-        <div className="bg-white shadow-md mx-auto p-6 rounded-lg w-full max-w-6xl">
+        <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-full">
             {/* ENCABEZADO */}
             <div className="flex justify-between items-center mb-6">
                 <h2 className="font-bold text-gray-800 text-xl">Nueva venta</h2>
@@ -73,7 +73,14 @@ export default function VentasModal() {
 
             {/* BOTONES DE OPCIONES */}
             <div className="flex flex-wrap gap-2 mb-6">
-                {["PLACA", "O. COMPRA", "G. REMISIÓN", "OBSERVACIONES", "COND. PAGO", "OTROS"].map((label) => (
+                {[
+                    "PLACA",
+                    "O. COMPRA",
+                    "G. REMISIÓN",
+                    "OBSERVACIONES",
+                    "COND. PAGO",
+                    "OTROS",
+                ].map((label) => (
                     <button
                         key={label}
                         className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white text-sm"
@@ -83,29 +90,31 @@ export default function VentasModal() {
                 ))}
             </div>
 
-            {/* ZONA DE PRODUCTOS */}
-            <div className="bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md text-gray-500 text-sm text-center">
+            {/* ZONA DE PRODUCTOS (se expande para ocupar espacio disponible) */}
+            <div className="flex-1 bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md text-gray-500 text-sm text-center overflow-auto">
                 Escanea un producto con un lector de código de barras o búscalo
             </div>
 
-            {/* BUSCAR PRODUCTO + TOTAL */}
-            <div className="flex justify-between items-center gap-4">
-                <input
-                    type="text"
-                    placeholder="Buscar producto..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                />
+            {/* FOOTER FIJO DENTRO DEL MODAL */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-300 pt-4">
+                <div className="flex justify-between items-center gap-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar producto..."
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    />
 
-                <div className="flex items-center gap-4">
-                    <p className="font-bold text-gray-700 text-lg">
-                        TOTAL <span className="text-black">0.00</span>
-                    </p>
-                    <button className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700">
-                        VISTA PREVIA
-                    </button>
-                    <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white">
-                        PROCESAR
-                    </button>
+                    <div className="flex items-center gap-4">
+                        <p className="font-bold text-gray-700 text-lg">
+                            TOTAL <span className="text-black">0.00</span>
+                        </p>
+                        <button className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700">
+                            VISTA PREVIA
+                        </button>
+                        <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white">
+                            PROCESAR
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
