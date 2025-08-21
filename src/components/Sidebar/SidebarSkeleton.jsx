@@ -1,7 +1,29 @@
 export default function SidebarSkeleton() {
     return (
-        <aside>
-           
+         <aside className="flex flex-col bg-blue-800 w-[30rem] min-h-screen text-white p-6">
+            {/* Logo */}
+            <div className="mb-6">
+                <div className="animate-pulse bg-blue-700 rounded-md h-32 w-32 mx-auto"></div>
+            </div>
+
+            {/* Datos empresa */}
+            <div className="space-y-4 mb-6">
+                <div className="animate-pulse bg-blue-700 rounded-md h-14"></div>
+                <div className="animate-pulse bg-blue-700 rounded-md h-14"></div>
+            </div>
+
+            {/* Menú con grid */}
+            <div
+                className="gap-4 grid grid-cols-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300"
+                style={{ maxHeight: "calc(100vh - 300px)" }}
+            >
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="animate-pulse bg-blue-700 rounded-lg h-24"
+                    ></div>
+                ))}
+            </div>
         </aside>
     );
 }
