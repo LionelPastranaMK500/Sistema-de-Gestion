@@ -3,6 +3,7 @@ import { addLocale, locale } from "primereact/api";
 export function configCalendar() {
   addLocale("es", {
     firstDayOfWeek: 1,
+    showMonthAfterYear:  false,
     dayNames: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],
     dayNamesShort: ["dom","lun","mar","mié","jue","vie","sáb"],
     dayNamesMin: ["D","L","M","M","J","V","S"],

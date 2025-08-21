@@ -11,6 +11,9 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessIcon from "@mui/icons-material/Business";
 import LockIcon from "@mui/icons-material/Lock";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 export {
    MoreVertIcon,
@@ -25,5 +28,8 @@ export {
    AssignmentIcon,
    BusinessIcon,
    LockIcon,
-   ExitToAppIcon
+   ExitToAppIcon,
+   SearchIcon,
+   AddIcon,
+   ReceiptLongIcon
 };
