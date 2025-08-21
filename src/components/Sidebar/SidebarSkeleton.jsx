@@ -1,6 +1,6 @@
 export default function SidebarSkeleton() {
     return (
-         <aside className="flex flex-col bg-blue-800 w-[30rem] min-h-screen text-white p-6">
+        <aside className="flex flex-col bg-blue-800 w-[30rem] min-h-screen text-white p-6">
             {/* Logo */}
             <div className="mb-6">
                 <div className="animate-pulse bg-blue-700 rounded-md h-32 w-32 mx-auto"></div>
