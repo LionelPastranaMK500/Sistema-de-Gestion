@@ -39,6 +39,15 @@ export function loginUser(correo, clave) {
     localStorage.setItem("activeUser", JSON.stringify(user));
     return { success: true, user };
 }
+export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
+    if (!ruc || !usuarioSol || !claveSol) {
+        return { success: false, message: "Todo los campos son requeridos" };
+    }
+    if (ruc === "20123456789" && usuarioSol === "EQSIOF0C8" && claveSol === "10s3f4al") {
+        return { success: true, message: "Empresa registrada" };
+    }
+    return {success:false,message:"Credenciales invalidas"};
+}
 export function getActiveUser() {
     return JSON.parse(localStorage.getItem("activeUser"));
 }

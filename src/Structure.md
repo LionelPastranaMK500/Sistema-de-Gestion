@@ -8,8 +8,10 @@
         └── 📁assets
             ├── react.svg
         └── 📁components
+            └── 📁Sidebar
+                ├── Sidebar.jsx
+                ├── SidebarSkeleton.jsx
             ├── ErrorText.jsx
-            ├── Sidebar.jsx
         └── 📁constants
             ├── authConstants.js
             ├── colorsConstants.js
@@ -26,16 +28,26 @@
                 ├── LoginForm.jsx
                 ├── Register.jsx
                 ├── RegisterForm.jsx
+                ├── SunatForm.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
                 ├── ClienteView.jsx
+            └── 📁configuracion
+                ├── ConfiguracionView.jsx
             └── 📁dashboard
                 ├── Dashboard.jsx
+            └── 📁estadisticas
+                ├── EstadisticasView.jsx
             └── 📁facturas
                 ├── FacturaModal.jsx
                 ├── FacturasView.jsx
             └── 📁productos
                 ├── ProductoModal.jsx
+                ├── ProductosView.jsx
+            └── 📁proformas
+                ├── ProformasView.jsx
+            └── 📁reportes
+                ├── ReportesView.jsx
             └── 📁ventas
                 ├── VentasModal.jsx
                 ├── VentasView.jsx
@@ -48,13 +60,15 @@
                 ├── validations.js
             ├── api.js
         └── 📁styles
+            ├── App.css
+            ├── index.css
+            ├── primereact-styles.css
         └── 📁utils
             ├── configCalendar.js
             ├── menuActions.js
             ├── redirectWithDelay.js
-        ├── App.css
+            ├── sidebarState.js
         ├── App.jsx
-        ├── index.css
         ├── main.jsx
         ├── Structure.md
     ├── .gitignore

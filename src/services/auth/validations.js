@@ -43,3 +43,24 @@ export const validarRegister = (datos) => {
 
     return err;
 };
+
+export const validarSunat = (datos) => {
+    const err = {};
+  
+    if (!datos.ruc?.trim()) {
+      err.ruc = "El RUC es obligatorio";
+    } else if (!/^\d{11}$/.test(datos.ruc)) {
+      err.ruc = "El RUC debe tener 11 dígitos numéricos";
+    }
+  
+    if (!datos.usuarioSol?.trim()) {
+      err.usuarioSol = "El usuario SOL es obligatorio";
+    }
+  
+    if (!datos.claveSol?.trim()) {
+      err.claveSol = "La clave SOL es obligatoria";
+    }
+  
+    return err;
+  };
+  

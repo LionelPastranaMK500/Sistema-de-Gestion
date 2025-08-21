@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "@components/Sidebar";
+import Sidebar from "@components/Sidebar/Sidebar";
 
 
 export default function MainLayout() {
@@ -9,7 +9,7 @@ export default function MainLayout() {
             <Sidebar />
 
             {/* Contenido dinámico */}
-            <main className="flex-1 min-w-0 overflow-auto bg-gray-50 p-6">
+            <main className="flex-1 bg-gray-50 p-6 min-w-0 overflow-auto">
                 <Outlet />
             </main>
         </div>
