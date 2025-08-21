@@ -48,7 +48,7 @@ export default function Sidebar() {
     if (!sidebarReady) return null;
 
     return (
-        <aside className="flex flex-col bg-blue-800 w-[34rem] min-h-screen text-white">
+        <aside className="flex flex-col bg-blue-800 w-96 min-h-screen text-white">
             {/* Logo y configuración */}
             <div className="relative flex items-center p-6">
                 <img
