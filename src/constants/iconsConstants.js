@@ -1,5 +1,5 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PollIcon from '@mui/icons-material/Poll';
+import PollIcon from "@mui/icons-material/Poll";
 import PeopleIcon from "@mui/icons-material/People";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -11,9 +11,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessIcon from "@mui/icons-material/Business";
 import LockIcon from "@mui/icons-material/Lock";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 
 export {
    MoreVertIcon,
@@ -31,5 +32,6 @@ export {
    ExitToAppIcon,
    SearchIcon,
    AddIcon,
-   ReceiptLongIcon
+   ReceiptLongIcon,
+   MenuRoundedIcon as MenuIcon, 
 };
