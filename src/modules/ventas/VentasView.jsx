@@ -15,7 +15,7 @@ export default function VentasModal() {
         <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-full">
             {/* ENCABEZADO */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="font-bold text-gray-800 text-xl">Nueva venta</h2>
+                <h2 className="font-bold text-gray-800 text-xl ml-5">Nueva venta</h2>
                 <label className="flex items-center gap-2 text-gray-700 text-sm">
                     <input type="checkbox" className="w-4 h-4" />
                     PROFORMA
