@@ -48,7 +48,7 @@ export default function Sidebar() {
     if (!sidebarReady) return null;
 
     return (
-        <aside className="flex flex-col bg-blue-800 w-[30rem] min-h-screen text-white">
+        <aside className="flex flex-col bg-blue-800 w-[34rem] min-h-screen text-white">
             {/* Logo y configuración */}
             <div className="relative flex items-center p-6">
                 <img
@@ -124,7 +124,7 @@ export default function Sidebar() {
             </div>
 
             {/* Datos empresa */}
-            <div className="space-y-3 px-6">
+            <div className="space-y-4 px-5">
                 <div className="bg-blue-900/50 p-3 rounded-lg">
                     <h2>Empresa</h2>
                     <select
@@ -163,8 +163,8 @@ export default function Sidebar() {
 
             {/* Menú con scroll vertical independiente */}
             <nav
-                className="gap-4 grid grid-cols-2 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
-                style={{ maxHeight: "calc(100vh - 300px)" }}
+                className="gap-3 grid grid-cols-2 p-5 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900"
+                style={{ maxHeight: "calc(100vh - 200px)" }}
             >
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
