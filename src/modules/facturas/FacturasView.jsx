@@ -1,5 +1,5 @@
 import { dataFalsa } from "./dataFalsa";
-import { MoreVertIcon } from "@constants/iconsConstants";
+import { MoreVertIcon,PermIdentityTwoToneIcon,AccessTimeTwoToneIcon} from "@constants/iconsConstants";
 import { useState, useEffect } from "react";
 import { configCalendar } from "@utils/configCalendar";
 import { Calendar } from "primereact/calendar";
@@ -12,12 +12,6 @@ export default function FacturasView() {
   const [selectedFactura, setSelectedFactura] = useState(null);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
 
-  const parseFecha = (str) => {
-    if (!str) return null;
-    const [dia, mes, anio] = str.split("-").map(Number);
-    return new Date(anio, mes - 1, dia);
-  };
-
   const getTituloFecha = (fechaISO) => {
     if (!fechaISO) return "Ventas Realizadas";
     const fecha = new Date(fechaISO);
@@ -29,14 +23,27 @@ export default function FacturasView() {
 
   const facturasFiltradas = fechaSeleccionada
     ? facturas.filter((f) => {
-        const fechaFactura = parseFecha(f.fecha);
-        return (
-          fechaFactura.getDate() === fechaSeleccionada.getDate() &&
-          fechaFactura.getMonth() === fechaSeleccionada.getMonth() &&
-          fechaFactura.getFullYear() === fechaSeleccionada.getFullYear()
-        );
-      })
+      const fechaFactura = new Date(f.fecha);
+      return (
+        fechaFactura.getDate() === fechaSeleccionada.getDate() &&
+        fechaFactura.getMonth() === fechaSeleccionada.getMonth() &&
+        fechaFactura.getFullYear() === fechaSeleccionada.getFullYear()
+      );
+    })
     : [];
+
+  const formatoFechaHora = (fechaISO) => {
+    if (!fechaISO) return "";
+    const fecha = new Date(fechaISO);
+    const opcionesFecha = { day: "numeric", month: "long" };
+    const fechaFormateada = fecha.toLocaleDateString("es-ES", opcionesFecha).replace(/\b\w/, c => c.toUpperCase());
+    const horaFormateada = fecha.toLocaleTimeString("es-ES", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    });
+    return `${fechaFormateada}, ${horaFormateada}`;
+  };
 
   useEffect(() => {
     configCalendar();
@@ -54,7 +61,7 @@ export default function FacturasView() {
   return (
     <div className="flex flex-col w-full h-full">
       {/* HEADER */}
-      <div className="flex justify-between items-center border-b px-6 py-4">
+      <div className="flex justify-between items-center px-6 py-4 border-b">
         {/* Título */}
         <h2 className="font-bold text-gray-800 text-xl">
           {getTituloFecha(fechaSeleccionada)}
@@ -69,13 +76,13 @@ export default function FacturasView() {
             showIcon
           />
           <button
-            className="p-2 hover:bg-gray-200 rounded"
+            className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(-1)}
           >
             {"<"}
           </button>
           <button
-            className="p-2 hover:bg-gray-200 rounded"
+            className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(1)}
           >
             {">"}
@@ -85,11 +92,11 @@ export default function FacturasView() {
             onClick={() => setShowConfig(!showConfig)}
           />
           {showConfig && (
-            <div className="absolute top-14 right-6 bg-white shadow-lg rounded-md p-2">
+            <div className="top-14 right-6 absolute bg-white shadow-lg p-2 rounded-md">
               {menuItemsFactura.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 cursor-pointer"
                 >
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>
@@ -101,7 +108,7 @@ export default function FacturasView() {
       </div>
 
       {/* CONTENIDO */}
-      <div className="flex-1 w-full px-6 py-4 overflow-auto">
+      <div className="flex-1 px-6 py-4 w-full overflow-auto">
         {fechaSeleccionada ? (
           facturasFiltradas.length > 0 ? (
             <div className="flex flex-col gap-4 w-full">
@@ -109,21 +116,21 @@ export default function FacturasView() {
                 <div
                   key={f.id}
                   onClick={() => setSelectedFactura(f)}
-                  className="p-6 bg-white rounded-lg shadow cursor-pointer hover:shadow-md transition w-full"
+                  className="bg-white shadow hover:shadow-md p-6 rounded-lg w-full transition cursor-pointer"
                 >
-                  <p><strong>Número:</strong> {f.numero}</p>
-                  <p><strong>Cliente:</strong> {f.cliente}</p>
-                  <p><strong>Monto:</strong> S/ {f.monto}</p>
-                  <p><strong>Estado:</strong> {f.estado}</p>
+                  <p><strong>{f.tDocumento} &gt;&gt; {f.numero}</strong></p>
+                  <p><PermIdentityTwoToneIcon/>{f.cliente}({f.ruc})</p>
+                  <p><AccessTimeTwoToneIcon/>{formatoFechaHora(f.fecha)}</p>
+                  <p><strong>S/ {f.monto}</strong></p>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full">
+            <div className="flex flex-col justify-center items-center h-full">
               <img
                 src="/assets/personaje.png"
                 alt="Sin ventas"
-                className="w-48 mx-auto mb-4"
+                className="mx-auto mb-4 w-48"
               />
               <p className="text-gray-600">
                 No se encontraron comprobantes realizados en esta fecha
@@ -131,7 +138,7 @@ export default function FacturasView() {
             </div>
           )
         ) : (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex justify-center items-center h-full">
             <p className="text-gray-600">
               Seleccione una fecha para ver las ventas.
             </p>

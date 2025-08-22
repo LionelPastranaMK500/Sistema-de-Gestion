@@ -24,6 +24,6 @@ export const menuActions ={
         navigate("/configuracion");
     },
     ayuda: ({navigate})=>{
-        navigate("/ayuda");
+        navigate("/dashboard");
     },
 };

@@ -1,6 +1,7 @@
 import { loginUser,registerUser, loginSunatUser} from "@services/auth/authServices";
 import { toast } from "react-toastify";
 import { redirectWithDelay } from "@utils/redirectWithDelay";
+// import axios from "axios";
 
 export const handleRegister = async (form, navigate) =>{
     const payload ={
@@ -49,7 +50,7 @@ export const handleSunatAuth = async (form,navigate) =>{
     const usuarioSol = String(form.usuarioSol || "").trim();
     const claveSol = String(form.claveSol || "").trim();
     const res = await loginSunatUser({ruc,usuarioSol,claveSol});
-
+    
     if(!res.success){
         toast.error(res.message || "Error de autenticacion",{autoClose: 1500});
         return{success:false,message: res.message};

@@ -15,6 +15,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import PermIdentityTwoToneIcon from '@mui/icons-material/PermIdentityTwoTone';
+import AccessTimeTwoToneIcon from '@mui/icons-material/AccessTimeTwoTone';
 
 export {
    MoreVertIcon,
@@ -33,5 +35,7 @@ export {
    SearchIcon,
    AddIcon,
    ReceiptLongIcon,
-   MenuRoundedIcon as MenuIcon, 
+   MenuRoundedIcon as MenuIcon,
+   PermIdentityTwoToneIcon,
+   AccessTimeTwoToneIcon 
 };
