@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 const LOGO = "/images/Logo_WolfFur.jpg";
 
 const PAGE_SIZES = {
-    t80mm: { width: 80, height: 150 },
+    ticket80mm: { width: 80, height: 150 },
     A4: { width: 210, height: 297 },
 };
 
@@ -32,7 +32,7 @@ const fetchBase64 = async (url) => {
     }
 };
 
-export async function generarPDFT80(factura, tipo = "t80mm") {
+export async function generarPDFT80(factura, tipo = "ticket80mm") {
     try {
         const { width, height } = PAGE_SIZES[tipo] || PAGE_SIZES.A4;
 
