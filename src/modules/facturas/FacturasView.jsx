@@ -69,18 +69,18 @@ export default function FacturasView() {
 
         {/* Acciones */}
         <div className="flex items-center gap-4">
-          <Calendar
-            value={fechaSeleccionada}
-            onChange={(e) => setFechaSeleccionada(e.value)}
-            dateFormat="dd/mm/yy"
-            showIcon
-          />
           <button
             className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(-1)}
           >
             {"<"}
           </button>
+          <Calendar
+            value={fechaSeleccionada}
+            onChange={(e) => setFechaSeleccionada(e.value)}
+            dateFormat="dd/mm/yy"
+            showIcon showButtonBar
+          />
           <button
             className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(1)}
@@ -121,7 +121,7 @@ export default function FacturasView() {
                   <p><strong>{f.tDocumento} &gt;&gt; {f.numero}</strong></p>
                   <p><PermIdentityTwoToneIcon/>{f.cliente}({f.ruc})</p>
                   <p><AccessTimeTwoToneIcon/>{formatoFechaHora(f.fecha)}</p>
-                  <p><strong>S/ {f.monto}</strong></p>
+                  <p><strong>S/ {f.monto.toFixed(2)}</strong></p>
                 </div>
               ))}
             </div>
@@ -149,7 +149,7 @@ export default function FacturasView() {
       {/* MODAL FACTURA */}
       {selectedFactura && (
         <FacturaModal
-          factura={selectedFactura}
+          f={selectedFactura}
           onClose={() => setSelectedFactura(null)}
         />
       )}

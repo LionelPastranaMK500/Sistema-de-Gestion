@@ -17,9 +17,13 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PermIdentityTwoToneIcon from '@mui/icons-material/PermIdentityTwoTone';
 import AccessTimeTwoToneIcon from '@mui/icons-material/AccessTimeTwoTone';
+import CloseIcon from '@mui/icons-material/Close';
 
 export {
    MoreVertIcon,
+   CloseIcon,
+   PermIdentityTwoToneIcon,
+   AccessTimeTwoToneIcon, 
    PollIcon,
    PeopleIcon,
    InventoryIcon,
@@ -36,6 +40,4 @@ export {
    AddIcon,
    ReceiptLongIcon,
    MenuRoundedIcon as MenuIcon,
-   PermIdentityTwoToneIcon,
-   AccessTimeTwoToneIcon 
 };
