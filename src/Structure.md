@@ -19,6 +19,10 @@
             ├── iconsConstants.js
             ├── menuItemsConstants.js
             ├── patternConstants.js
+        └── 📁data
+            ├── dataFalsa.js
+            ├── guiaRemisionData.js
+            ├── proformasData.js
         └── 📁hooks
             ├── useFormHandler.js
         └── 📁layouts
@@ -46,11 +50,13 @@
             └── 📁estadisticas
                 ├── EstadisticasView.jsx
             └── 📁facturas
-                ├── dataFalsa.js
                 ├── FacturaModal.jsx
                 ├── FacturasView.jsx
             └── 📁guia_remision
+                └── 📁items
+                    ├── AgregarProductoModal.jsx
                 ├── GuiaRemisionModal.jsx
+                ├── GuiaRemisionNuevo.jsx
                 ├── GuiaRemisionView.jsx
             └── 📁productos
                 ├── ProductoModal.jsx
