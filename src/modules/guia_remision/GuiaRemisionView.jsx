@@ -7,17 +7,18 @@ import { useState, useEffect, useRef } from "react";
 import { configCalendar } from "@utils/configCalendar";
 import { Calendar } from "primereact/calendar";
 import GuiaRemisionModal from "./GuiaRemisionModal";
-
+import GuiaRemisionNuevo from "./GuiaRemisionNuevo";
 
 export default function GuiaRemision() {
     const [guia_remision] = useState([]);
     const [selectedGuiaRemision, setSelectedGuiaRemision] = useState(null);
     const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+    const [mostrarNuevo, setMostrarNuevo] = useState(false);
 
     const calendarRef = useRef(null);
 
     const getTituloFecha = (fecha) => {
-        if (!fecha) return "Proformas";
+        if (!fecha) return "Guias de Remision";
         const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
         const dia = fecha.getDate();
         const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
@@ -55,9 +56,7 @@ export default function GuiaRemision() {
     return (
         <div>
             <div>
-                <h2>
-                    {getTituloFecha(fechaSeleccionada)}
-                </h2>
+                <h2>{getTituloFecha(fechaSeleccionada)}</h2>
 
                 <div>
                     <Calendar
@@ -72,7 +71,7 @@ export default function GuiaRemision() {
                         <i></i>
                     </button>
 
-                    <button>
+                    <button onClick={() => setMostrarNuevo(true)}>
                         Registrar Nuevo
                     </button>
 
@@ -131,8 +130,14 @@ export default function GuiaRemision() {
             {selectedGuiaRemision && (
                 <GuiaRemisionModal
                     f={selectedGuiaRemision}
-                    onClose={() => setSelectedGuiaRemision(null)}
+                    onClose={() => setSelectedGuiaRemision(false)}
                 />
+            )}
+
+            {mostrarNuevo && (
+                <div>
+                    <GuiaRemisionNuevo onClose={() => setMostrarNuevo(false)} />
+                </div>
             )}
         </div>
     )

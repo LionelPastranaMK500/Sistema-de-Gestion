@@ -4,23 +4,16 @@ import { CloseIcon } from "@constants/iconsConstants";
 export default function GuiaRemisionModal() {
     return (
         <div>
-            {/* Overlay oscuro */}
-            <div
-            ></div>
-
-            {/* Contenido del modal */}
-            <div >
-                {/* Header */}
-                <div >
-                    <h3 >
+            <div>
+                <div>
+                    <h3>
                         Comprobante electrónico
                     </h3>
                     <CloseIcon
                     />
                 </div>
 
-                {/* Body con scroll */}
-                <div >
+                <div>
                     {/* Documento */}
                     <div>
                         <p>Guia de Remision Remitente Electronica</p>
@@ -41,6 +34,7 @@ export default function GuiaRemisionModal() {
                         <p></p>
                     </div>
 
+                    {/* Usuario*/}
                     <div>
                         <p>Usuario</p>
                         <p></p>
@@ -52,7 +46,6 @@ export default function GuiaRemisionModal() {
                         <p>Aceptado</p>
                     </div>
 
-                    {/* Botonera */}
                     <div>
                         <button>
                             ENVIAR POR EMAIL
@@ -66,7 +59,7 @@ export default function GuiaRemisionModal() {
 
                         <div>
                             <button
-                                //onClick={() => setMostrarFormatos(!mostrarFormatos)}
+                            //onClick={() => setMostrarFormatos(!mostrarFormatos)}
                             >
                                 DESCARGAR PDF
                             </button>
@@ -86,7 +79,7 @@ export default function GuiaRemisionModal() {
                                 </ul>
                             )} */}
                         </div>
-                       
+
                         <button>
                             DESCARGAR XML
                         </button>
@@ -95,9 +88,8 @@ export default function GuiaRemisionModal() {
                         </button>
                     </div>
 
-                    {/* Botón de baja (rojo) */}
                     <button>
-                       ANULAR
+                        ANULAR
                     </button>
                 </div>
             </div>
