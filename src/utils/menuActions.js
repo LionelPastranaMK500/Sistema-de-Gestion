@@ -14,6 +14,9 @@ export const menuActions ={
     reportes: ({navigate})=>{
         navigate("/reportes");
     },
+    guia: ({navigate})=>{
+        navigate("/guia_remision");
+    },
     cliente: ({navigate})=>{
         navigate("/cliente");
     },
@@ -26,4 +29,40 @@ export const menuActions ={
     ayuda: ({navigate})=>{
         navigate("/dashboard");
     },
+};
+
+export const menuActionsConfig = {
+    configurar_empresa: ({ navigate }) => {
+        navigate("/configuracion/empresa");
+    },
+    configurar_usuario: ({ navigate }) => {
+        navigate("/configuracion/usuarios");
+    },
+    configurar_almacen: ({ navigate }) => {
+        navigate("/configuracion/almacenes");
+    },
+    configurar_sucursal: ({ navigate }) => {
+        navigate("/configuracion/sucursales");
+    },
+    configurar_impresion: ({ navigate }) => {
+        navigate("/configuracion/impresion");
+    },
+};
+
+export const menuActionsReportes = {
+    venta_reporte: ({ navigate }) => {
+        navigate("/reportes/ventas_general");
+    },
+    venta_detallado_reporte: ({ navigate }) => {
+        navigate("/reportes/ventas_detallado");
+    },
+    producto_listado: ({ navigate }) => {
+        navigate("/reportes/productos");
+    },
+    cliente_proveedor_listado: ({ navigate }) => {
+        navigate("/reportes/clientes_proveedores");
+    },
+    guia_reporte: ({ navigate }) => {
+        navigate("/reportes/guia_remision");
+    }
 };
