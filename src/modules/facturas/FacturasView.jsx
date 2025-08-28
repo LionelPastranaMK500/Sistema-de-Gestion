@@ -1,4 +1,4 @@
-import { dataFalsa } from "./dataFalsa";
+import { dataFalsa } from "@/data/dataFalsa";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,
@@ -68,14 +68,14 @@ export default function FacturasView() {
     <div className="flex flex-col w-full h-full">
       {/* HEADER */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="font-bold text-gray-800 text-2xl">
           {getTituloFecha(fechaSeleccionada)}
         </h2>
 
         {/* Acciones */}
         <div className="flex items-center gap-4">
           <button
-            className="p-2 rounded hover:bg-gray-200"
+            className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(-1)}
           >
             {"<"}
@@ -93,14 +93,14 @@ export default function FacturasView() {
 
           {/* Botón con ícono de calendario */}
           <button
-            className="p-2 rounded hover:bg-gray-200"
+            className="hover:bg-gray-200 p-2 rounded"
             onClick={() => calendarRef.current.show()}
           >
-            <i className="pi pi-calendar text-gray-700"></i>
+            <i className="text-gray-700 pi pi-calendar"></i>
           </button>
 
           <button
-            className="p-2 rounded hover:bg-gray-200"
+            className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(1)}
           >
             {">"}
@@ -111,11 +111,11 @@ export default function FacturasView() {
             onClick={() => setShowConfig(!showConfig)}
           />
           {showConfig && (
-            <div className="absolute top-14 right-6 rounded-md bg-white p-2 shadow-lg">
+            <div className="top-14 right-6 absolute bg-white shadow-lg p-2 rounded-md">
               {menuItemsFactura.map((item, index) => (
                 <div
                   key={index}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 hover:bg-gray-100"
+                  className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 cursor-pointer"
                 >
                   {item.icon && <item.icon />}
                   <span>{item.name}</span>
@@ -127,10 +127,10 @@ export default function FacturasView() {
       </div>
 
       {/* CONTENIDO */}
-      <div className="scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 flex-1 w-full overflow-y-auto px-6 py-6">
+      <div className="flex-1 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
         {fechaSeleccionada ? (
           facturasFiltradas.length > 0 ? (
-            <div className="flex w-full flex-col gap-6">
+            <div className="flex flex-col gap-6 w-full">
               {facturasFiltradas.map((f) => (
                 <div
                   key={f.id}
@@ -142,17 +142,17 @@ export default function FacturasView() {
                   style={{ minHeight: "110px" }}
                 >
                   {/* Izquierda */}
-                  <div className="flex flex-col gap-1 text-base text-gray-700">
-                    <p className="text-lg font-bold text-gray-900">
+                  <div className="flex flex-col gap-1 text-gray-700 text-base">
+                    <p className="font-bold text-gray-900 text-lg">
                       {f.tDocumento} » {f.numero}
                     </p>
-                    <p className="flex items-center gap-2 text-base text-gray-700">
+                    <p className="flex items-center gap-2 text-gray-700 text-base">
                       <PermIdentityTwoToneIcon fontSize="small" />
                       <span>
                         {f.cliente} ({f.ruc})
                       </span>
                     </p>
-                    <p className="flex items-center gap-2 text-sm text-gray-500">
+                    <p className="flex items-center gap-2 text-gray-500 text-sm">
                       <AccessTimeTwoToneIcon fontSize="small" />
                       {formatoFechaHora(f.fecha)}
                     </p>
@@ -171,11 +171,11 @@ export default function FacturasView() {
               ))}
             </div>
           ) : (
-            <div className="flex h-full flex-col items-center justify-center">
+            <div className="flex flex-col justify-center items-center h-full">
               <img
                 src="/assets/personaje.png"
                 alt="Sin ventas"
-                className="mb-4 w-48 mx-auto"
+                className="mx-auto mb-4 w-48"
               />
               <p className="text-gray-600">
                 No se encontraron comprobantes realizados en esta fecha
@@ -183,7 +183,7 @@ export default function FacturasView() {
             </div>
           )
         ) : (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex justify-center items-center h-full">
             <p className="text-gray-600">
               Seleccione una fecha para ver las ventas.
             </p>
