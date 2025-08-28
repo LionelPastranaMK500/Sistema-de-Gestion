@@ -21,8 +21,6 @@
             ├── patternConstants.js
         └── 📁data
             ├── dataFalsa.js
-            ├── guiaRemisionData.js
-            ├── proformasData.js
         └── 📁hooks
             ├── useFormHandler.js
         └── 📁layouts
@@ -85,6 +83,7 @@
                 ├── validations.js
             └── 📁clientes
             └── 📁facturas
+            └── 📁guia_remision
             └── 📁ventas
             ├── api.js
         └── 📁styles
