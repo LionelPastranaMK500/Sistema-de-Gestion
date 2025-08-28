@@ -2,6 +2,7 @@
 └── 📁Facturacion
     └── 📁public
         └── 📁images
+            ├── Logo_WolfFur.jpg
             ├── Logo_WolfFur.webp
         ├── vite.svg
     └── 📁src
@@ -33,20 +34,38 @@
                 ├── ClienteModal.jsx
                 ├── ClienteView.jsx
             └── 📁configuracion
+                └── 📁items
+                    ├── ConfigurarAlmacen.jsx
+                    ├── ConfigurarEmpresa.jsx
+                    ├── ConfigurarImpresion.jsx
+                    ├── ConfigurarSucursal.jsx
+                    ├── ConfigurarUsuario.jsx
                 ├── ConfiguracionView.jsx
             └── 📁dashboard
                 ├── Dashboard.jsx
             └── 📁estadisticas
                 ├── EstadisticasView.jsx
             └── 📁facturas
+                ├── dataFalsa.js
                 ├── FacturaModal.jsx
                 ├── FacturasView.jsx
+            └── 📁guia_remision
+                ├── GuiaRemisionModal.jsx
+                ├── GuiaRemisionView.jsx
             └── 📁productos
                 ├── ProductoModal.jsx
                 ├── ProductosView.jsx
             └── 📁proformas
+                ├── ProformasModal.jsx
                 ├── ProformasView.jsx
             └── 📁reportes
+                └── 📁items
+                    ├── ReporteClientesProveedores.jsx
+                    ├── ReporteGuias.jsx
+                    ├── ReporteProductos.jsx
+                    ├── ReporteVentasDetallado.jsx
+                    ├── ReporteVentasGeneral.jsx
+                ├── ReportesModal.jsx
                 ├── ReportesView.jsx
             └── 📁ventas
                 ├── VentasModal.jsx
@@ -58,6 +77,9 @@
                 ├── authLogic.js
                 ├── authServices.js
                 ├── validations.js
+            └── 📁clientes
+            └── 📁facturas
+            └── 📁ventas
             ├── api.js
         └── 📁styles
             ├── App.css
@@ -66,6 +88,7 @@
         └── 📁utils
             ├── configCalendar.js
             ├── menuActions.js
+            ├── pdfConfig.js
             ├── redirectWithDelay.js
             ├── sidebarState.js
         ├── App.jsx
