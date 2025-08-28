@@ -22,7 +22,7 @@ export function loginUser(correo, clave) {
     const claveNormalizada = String(clave || "").trim();
 
     if (!correoNormalizado || !claveNormalizada) {
-        return { success: false};
+        return { success: false };
     }
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -44,9 +44,17 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
         return { success: false, message: "Todo los campos son requeridos" };
     }
     if (ruc === "20123456789" && usuarioSol === "EQSIOF0C8" && claveSol === "10s3f4al") {
-        return { success: true, message: "Empresa registrada" };
+        const empresa = {
+            ruc,
+            usuarioSol,
+            razonSocial: "Juan Santos Pimentel",
+            surcursal: "Lubricantes Claudia"
+        };
+        localStorage.setItem("activeCompany", JSON.stringify(empresa));
+
+        return { success: true, message: "Empresa registrada", empresa };
     }
-    return {success:false,message:"Credenciales invalidas"};
+    return { success: false, message: "Credenciales invalidas" };
 }
 export function getActiveUser() {
     return JSON.parse(localStorage.getItem("activeUser"));
@@ -54,3 +62,11 @@ export function getActiveUser() {
 export function logoutUser() {
     localStorage.removeItem("activeUser");
 }
+export function getActiveCompany() {
+    return JSON.parse(localStorage.getItem("activeCompany"));
+}
+
+export function logoutCompany() {
+    localStorage.removeItem("activeCompany");
+}
+
