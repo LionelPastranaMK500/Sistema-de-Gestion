@@ -18,6 +18,11 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PermIdentityTwoToneIcon from '@mui/icons-material/PermIdentityTwoTone';
 import AccessTimeTwoToneIcon from '@mui/icons-material/AccessTimeTwoTone';
 import CloseIcon from '@mui/icons-material/Close';
+import RealEstateAgentIcon from '@mui/icons-material/RealEstateAgent';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import StoreIcon from '@mui/icons-material/Store';
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 
 export {
    MoreVertIcon,
@@ -39,5 +44,10 @@ export {
    SearchIcon,
    AddIcon,
    ReceiptLongIcon,
+   RealEstateAgentIcon,
+   FilePresentIcon,
+   PeopleAltIcon,
+   StoreIcon,
+   LocalPrintshopIcon,
    MenuRoundedIcon as MenuIcon,
 };
