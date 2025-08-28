@@ -11,7 +11,7 @@ export default function FacturaModal({ f, onClose }) {
     const usuario = getActiveUser();
 
     const formatos = [
-        { id: "ticket80mm", label: "80mm" },
+        { id: "t80mm", label: "80mm" },
         { id: "A4", label: "A4" }
     ];
 
@@ -21,7 +21,7 @@ export default function FacturaModal({ f, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="z-50 fixed inset-0 flex justify-center items-center">
             {/* Overlay oscuro */}
             <div
                 className="absolute inset-0 bg-black bg-opacity-50"
@@ -29,10 +29,10 @@ export default function FacturaModal({ f, onClose }) {
             ></div>
 
             {/* Contenido del modal */}
-            <div className="relative z-50 w-full max-w-lg max-h-[80vh] rounded-lg shadow-xl bg-white flex flex-col">
+            <div className="z-50 relative flex flex-col bg-white shadow-xl rounded-lg w-full max-w-lg max-h-[80vh]">
                 {/* Header */}
-                <div className="flex items-center justify-between bg-blue-600 px-4 py-3 rounded-t-lg">
-                    <h3 className="text-white font-bold text-lg">
+                <div className="flex justify-between items-center bg-blue-600 px-4 py-3 rounded-t-lg">
+                    <h3 className="font-bold text-white text-lg">
                         Comprobante electrónico
                     </h3>
                     <CloseIcon
@@ -42,25 +42,25 @@ export default function FacturaModal({ f, onClose }) {
                 </div>
 
                 {/* Body con scroll */}
-                <div className="p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                <div className="space-y-4 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
                     {/* Documento */}
-                    <div className="bg-white rounded-md shadow px-4 py-3 text-center">
+                    <div className="bg-white shadow px-4 py-3 rounded-md text-center">
                         <p className="font-bold text-gray-800 uppercase">{f.tDocumento}</p>
-                        <p className="text-gray-600">{f.numero}</p>
-                        <p className="text-blue-600 font-extrabold text-xl mt-2">
+                        <p className="text-gray-600">{f.serie}-{f.numero}</p>
+                        <p className="mt-2 font-extrabold text-blue-600 text-xl">
                             S/ {f.monto.toFixed(2)}
                         </p>
                     </div>
 
                     {/* Cliente */}
-                    <div className="bg-white rounded-md shadow px-4 py-3">
+                    <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">CLIENTE</strong>
                         <p className="text-gray-700">{f.cliente}</p>
                         <p className="text-gray-500">RUC {f.ruc}</p>
                     </div>
 
                     {/* Usuario */}
-                    <div className="bg-white rounded-md shadow px-4 py-3">
+                    <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">USUARIO</strong>
                         <p className="text-gray-700">
                             {usuario
@@ -73,23 +73,23 @@ export default function FacturaModal({ f, onClose }) {
                     </div>
 
                     {/* Estado SUNAT */}
-                    <div className="bg-white rounded-md shadow px-4 py-3">
+                    <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">ESTADO SUNAT</strong>
-                        <p className="text-green-600 font-medium">ACEPTADO</p>
+                        <p className="font-medium text-green-600">{f.state}</p>
                     </div>
 
                     {/* Botonera */}
-                    <div className="grid grid-cols-2 gap-3 mt-4 relative">
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                    <div className="relative gap-3 grid grid-cols-2 mt-4">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             ENVIAR POR EMAIL
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             ENVIAR POR WHATSAPP
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             IMPRIMIR
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             VISUALIZAR PDF
                         </button>
 
@@ -97,18 +97,18 @@ export default function FacturaModal({ f, onClose }) {
                         <div className="relative">
                             <button
                                 ref={btnRef}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded w-full"
+                                className="bg-blue-600 hover:bg-blue-700 py-2 rounded w-full font-semibold text-white"
                                 onClick={() => setMostrarFormatos(!mostrarFormatos)}
                             >
                                 GENERAR PDF
                             </button>
 
                             {mostrarFormatos && (
-                                <ul className="absolute z-50 mt-1 left-0 right-0 bg-white shadow-lg rounded border border-gray-200">
+                                <ul className="right-0 left-0 z-50 absolute bg-white shadow-lg mt-1 border border-gray-200 rounded">
                                     {formatos.map((formato) => (
                                         <li key={formato.id}>
                                             <button
-                                                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                                className="hover:bg-gray-100 px-4 py-2 w-full text-left"
                                                 onClick={() => handleSeleccionFormato(formato.id)}
                                             >
                                                 {formato.label}
@@ -119,25 +119,25 @@ export default function FacturaModal({ f, onClose }) {
                             )}
                         </div>
 
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             GUÍA DE REMISIÓN
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             NOTA DE CRÉDITO
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             NOTA DE DÉBITO
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             DESCARGAR XML
                         </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+                        <button className="bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold text-white">
                             DESCARGAR CDR
                         </button>
                     </div>
 
                     {/* Botón de baja (rojo) */}
-                    <button className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded">
+                    <button className="bg-red-600 hover:bg-red-700 mt-3 py-2 rounded w-full font-semibold text-white">
                         DAR DE BAJA (ANULAR)
                     </button>
                 </div>
