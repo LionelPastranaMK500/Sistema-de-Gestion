@@ -15,7 +15,7 @@ export const handleRegister = async (form, navigate) => {
 
         if (!payload.correo || !payload.clave) {
             toast.error("Correo y clave son obligatorios", { autoClose: 1500 });
-            return { success: false, message: "Correo y clave son obligatorios" };
+            return { success: false };
         }
 
         const res = await registerUser(payload);
@@ -27,10 +27,10 @@ export const handleRegister = async (form, navigate) => {
 
         toast.success("Usuario registrado correctamente", { autoClose: 1500 });
         redirectWithDelay(navigate, "/");
-        return { success: true, message: "Usuario registrado" };
+        return { success: true};
     } catch {
         toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false, message: "Error inesperado" };
+        return { success: false};
     }
 };
 
@@ -40,7 +40,7 @@ export const handleLogin = async (form, navigate) => {
 
     if (!correo || !clave) {
         toast.error("Correo y clave son obligatorios", { autoClose: 1500 });
-        return { success: false, message: "Correo y clave son obligatorios" };
+        return { success: false};
     }
 
     try {
@@ -60,7 +60,7 @@ export const handleLogin = async (form, navigate) => {
         return { success: true, user: res.user };
     } catch {
         toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false, message: "Error inesperado" };
+        return { success: false};
     }
 };
 

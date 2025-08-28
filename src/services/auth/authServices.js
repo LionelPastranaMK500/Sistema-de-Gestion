@@ -15,14 +15,14 @@ export function registerUser(userData) {
     });
 
     localStorage.setItem("users", JSON.stringify(users));
-    return { success: true, message: "Usuario registrado" };
+    return { success: true };
 }
 export function loginUser(correo, clave) {
     const correoNormalizado = String(correo || "").trim().toLowerCase();
     const claveNormalizada = String(clave || "").trim();
 
     if (!correoNormalizado || !claveNormalizada) {
-        return { success: false, message: "Campos requeridos" };
+        return { success: false};
     }
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
