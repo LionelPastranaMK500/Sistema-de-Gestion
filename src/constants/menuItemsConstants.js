@@ -10,7 +10,6 @@ export const menuItems = [
     { name: "Clientes y Proveedores",action:"cliente", icon: I.PeopleIcon},
     { name: "Productos y Servicios",action:"producto", icon: I.InventoryIcon},
     { name: "Configuración",action:"configuracion" , icon: I.SettingsIcon},
-    { name: "Soporte / Ayuda",action:"ayuda" , icon: I.SupportAgentIcon},
 ];
 
 export const menuItemsFactura =[
@@ -39,4 +38,10 @@ export const menuItemsConfig =[
     {name:"Almacenes",action:"configurar_almacen",icon:I.InventoryIcon},
     {name:"Sucursales",action:"configurar_sucursal",icon:I.StoreIcon},
     {name:"Impresión",action:"configurar_impresion",icon:I.LocalPrintshopIcon},
+];
+
+export const guiaTabs = [
+    { name: "Información Básica", action: "infoBasica", icon: I.PermIdentityTwoToneIcon },
+    { name: "Datos de Envío", action: "datosEnvio", icon: I.LocalPrintshopIcon },
+    { name: "Productos", action: "productos", icon: I.InventoryIcon },
 ];

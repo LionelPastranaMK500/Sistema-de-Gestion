@@ -6,7 +6,6 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import SettingsIcon from "@mui/icons-material/Settings";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BusinessIcon from "@mui/icons-material/Business";
 import LockIcon from "@mui/icons-material/Lock";
@@ -23,10 +22,12 @@ import FilePresentIcon from '@mui/icons-material/FilePresent';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import StoreIcon from '@mui/icons-material/Store';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 export {
    MoreVertIcon,
    CloseIcon,
+   RemoveCircleIcon,
    PermIdentityTwoToneIcon,
    AccessTimeTwoToneIcon, 
    PollIcon,
@@ -36,7 +37,6 @@ export {
    ShoppingCartIcon,
    AssessmentIcon,
    SettingsIcon,
-   SupportAgentIcon,
    AssignmentIcon,
    BusinessIcon,
    LockIcon,
