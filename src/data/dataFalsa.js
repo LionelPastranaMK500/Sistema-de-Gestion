@@ -53,3 +53,21 @@ export const dataFalsa = [
         ]
     }
 ];
+
+export const productosDesdeFacturas = (() => {
+    const allItems = dataFalsa.flatMap(factura => factura.items);
+
+    const mapProductos = new Map();
+
+    allItems.forEach(item => {
+        if (!mapProductos.has(item.codigo)) {
+            mapProductos.set(item.codigo, {
+                codigo: item.codigo,
+                descripcion: item.descripcion,
+                unidad: item.unidad,
+            });
+        }
+    });
+
+    return Array.from(mapProductos.values());
+})();
