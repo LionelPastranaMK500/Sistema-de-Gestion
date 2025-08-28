@@ -9,7 +9,7 @@ import {
 } from "@constants/iconsConstants";
 import { menuItems } from "@constants/menuItemsConstants";
 import { buttonColors } from "@constants/colorsConstants";
-import { logoutUser } from "@services/auth/authServices";
+import { logoutUser,getActiveCompany, logoutCompany} from "@services/auth/authServices";
 import { useNavigate } from "react-router-dom";
 import { menuActions } from "@utils/menuActions";
 import { useSidebar } from "@utils/sidebarState";
@@ -26,6 +26,7 @@ export default function Sidebar() {
     const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${user.apellidoPaterno?.[0] || ""}`;
     const handleLogout = () => {
         logoutUser();
+        logoutCompany();
         navigate("/");
     }
 
@@ -37,11 +38,11 @@ export default function Sidebar() {
 
     useEffect(() => {
         if (sidebarReady) {
-            setEmpresas([{ id: 1, nombre: "Chicharrones A La Leña 'Don Lucho'" }]);
-            setSucursales([
-                { id: 1, nombre: "Sucursal Lima" },
-                { id: 2, nombre: "Sucursal Arequipa" },
-            ]);
+            const company = getActiveCompany();
+                setEmpresas([{ id: 1, nombre: company.razonSocial }]);
+                setEmpresa(1);
+                setSucursales([{ id: 1, nombre: company.surcursal }]);
+                setSucursal(1);
         }
     }, [sidebarReady]);
 
@@ -152,9 +153,9 @@ export default function Sidebar() {
 
                     >
                         <option value="">Seleccione sucursal</option>
-                        {sucursales.map((e) => (
-                            <option key={e.id} value={e.id}>
-                                {e.nombre}
+                        {sucursales.map((s) => (
+                            <option key={s.id} value={s.id}>
+                                {s.nombre}
                             </option>
                         ))}
                     </select>
