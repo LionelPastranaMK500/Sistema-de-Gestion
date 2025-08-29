@@ -2,7 +2,9 @@ import { dataFalsa } from "@/data/dataFalsa";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,
-  AccessTimeTwoToneIcon
+  AccessTimeTwoToneIcon,
+  KeyboardArrowLeftIcon,
+  KeyboardArrowRightIcon
 } from "@constants/iconsConstants";
 import { useState, useEffect, useRef } from "react";
 import { configCalendar } from "@utils/configCalendar";
@@ -74,11 +76,8 @@ export default function FacturasView() {
 
         {/* Acciones */}
         <div className="flex items-center gap-4">
-          <button
-            className="hover:bg-gray-200 p-2 rounded"
-            onClick={() => moverDia(-1)}
-          >
-            {"<"}
+          <button className="hover:bg-gray-200 p-2 rounded">
+            <KeyboardArrowLeftIcon onClick={() => moverDia(-1)} />
           </button>
 
           {/* 👉 Calendar ocultando el input de fecha */}
@@ -88,10 +87,11 @@ export default function FacturasView() {
             onChange={(e) => setFechaSeleccionada(e.value)}
             dateFormat="dd/mm/yy"
             showIcon
-            className="hidden" // ocultamos el input por completo
+            className="hidden"
           />
 
           {/* Botón con ícono de calendario */}
+
           <button
             className="hover:bg-gray-200 p-2 rounded"
             onClick={() => calendarRef.current.show()}
@@ -99,15 +99,12 @@ export default function FacturasView() {
             <i className="text-gray-700 pi pi-calendar"></i>
           </button>
 
-          <button
-            className="hover:bg-gray-200 p-2 rounded"
-            onClick={() => moverDia(1)}
-          >
-            {">"}
+          <button className="hover:bg-gray-200 p-2 rounded">
+            <KeyboardArrowRightIcon onClick={() => moverDia(1)} />
           </button>
 
           <MoreVertIcon
-            className="cursor-pointer"
+            className="hover:bg-gray-200 cursor-pointer"
             onClick={() => setShowConfig(!showConfig)}
           />
           {showConfig && (
@@ -137,7 +134,7 @@ export default function FacturasView() {
                   onClick={() => setSelectedFactura(f)}
                   className={`flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white ${f.tDocumento.toLowerCase().includes("nota de crédito")
                     ? "border-red-300 bg-red-50"
-                    : "border-gray-200"
+                    : "border-gray-250"
                     }`}
                   style={{ minHeight: "110px" }}
                 >
