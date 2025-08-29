@@ -23,13 +23,16 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import StoreIcon from '@mui/icons-material/Store';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 export {
    MoreVertIcon,
    CloseIcon,
    RemoveCircleIcon,
    PermIdentityTwoToneIcon,
-   AccessTimeTwoToneIcon, 
+   AccessTimeTwoToneIcon,
+   KeyboardArrowLeftIcon,
+   KeyboardArrowRightIcon, 
    PollIcon,
    PeopleIcon,
    InventoryIcon,
