@@ -53,9 +53,8 @@ export default function Sidebar() {
             {/* Logo y configuración */}
             <div className="relative flex items-center p-6">
                 <img
-                    src="/images/Logo_WolfFur.webp"
+                    src="/images/Logo_WolfFur.avif"
                     alt="Logo"
-                    className="h-36 object-contain"
                 />
                 <MoreVertIcon
                     onClick={() => setShowConfig(!showConfig)}
