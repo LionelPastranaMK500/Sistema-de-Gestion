@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export function registerUser(userData) {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const correoNormalizado = String(userData.correo || "").trim().toLowerCase();
@@ -61,11 +63,12 @@ export function getActiveUser() {
 }
 export function logoutUser() {
     localStorage.removeItem("activeUser");
+    toast.success("Sesión cerrada", { autoClose: 1500 });
+    return { success: true };
 }
 export function getActiveCompany() {
     return JSON.parse(localStorage.getItem("activeCompany"));
 }
-
 export function logoutCompany() {
     localStorage.removeItem("activeCompany");
 }
