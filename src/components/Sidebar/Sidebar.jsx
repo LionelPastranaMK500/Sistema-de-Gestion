@@ -152,9 +152,9 @@ export default function Sidebar() {
 
                     >
                         <option value="">Seleccione sucursal</option>
-                        {sucursales.map((s) => (
-                            <option key={s.id} value={s.id}>
-                                {s.nombre}
+                        {sucursales.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.nombre}
                             </option>
                         ))}
                     </select>
