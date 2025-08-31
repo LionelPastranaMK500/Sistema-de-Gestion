@@ -21,7 +21,7 @@ export const handleRegister = async (form, navigate) => {
         const res = await registerUser(payload);
 
         if (!res.success) {
-            toast.error(res.message || "Error al registrar", { autoClose: 1500 });
+            toast.error(res.message , { autoClose: 1500 });
             return { success: false, message: res.message };
         }
 
@@ -47,7 +47,7 @@ export const handleLogin = async (form, navigate) => {
         const res = await loginUser(correo, clave);
 
         if (!res.success) {
-            toast.error(res.message || "Error al iniciar sesión", { autoClose: 1500 });
+            toast.error(res.message , { autoClose: 1500 });
             return { success: false, message: res.message };
         }
 
@@ -73,7 +73,7 @@ export const handleSunatAuth = async (form, navigate) => {
 
         if (!ruc || !usuarioSol || !claveSol) {
             toast.error("Todos los campos son requeridos", { autoClose: 1500 });
-            return { success: false, message: "Todos los campos son requeridos" };
+            return { success: false };
         }
 
         const res = await loginSunatUser({ ruc, usuarioSol, claveSol });
@@ -83,11 +83,11 @@ export const handleSunatAuth = async (form, navigate) => {
             return { success: false, message: res.message };
         }
 
-        toast.success(res.message || "Se registró exitosamente la empresa", { autoClose: 1500 });
+        toast.success("Empresa registrada",{ autoClose: 1500 })
         redirectWithDelay(navigate, "/dashboard");
         return { success: true, data: res };
     } catch {
         toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false, message: "Error inesperado" };
+        return { success: false};
     }
 };
