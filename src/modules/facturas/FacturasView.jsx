@@ -1,4 +1,4 @@
-import { dataFalsa } from "@/data/dataFalsa";
+import { generarDataFalsa } from "@utils/generadorData";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,
@@ -14,11 +14,11 @@ import { menuItemsFactura } from "@constants/menuItemsConstants";
 
 
 export default function FacturasView() {
-  const [facturas] = useState(dataFalsa);
+  const [facturas, setFacturas] = useState([]);
   const [showConfig, setShowConfig] = useState(false);
   const [selectedFactura, setSelectedFactura] = useState(null);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
-
+  
   const calendarRef = useRef(null); // 👉 referencia al Calendar de PrimeReact
 
   const getTituloFecha = (fechaISO) => {
@@ -55,6 +55,8 @@ export default function FacturasView() {
   };
 
   useEffect(() => {
+    const datos = generarDataFalsa(50);
+    setFacturas(datos);
     configCalendar();
   }, []);
 
