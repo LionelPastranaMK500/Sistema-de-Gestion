@@ -23,11 +23,15 @@ export const generarDni = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
 };
 
-export const generarItemsAleatorios = (catalogo, maxItems = 5) => {
-    const cantidad = Math.floor(Math.random() * maxItems) + 2;
+export const generarItemsAleatorios = (catalogo, maxItems = 2) => {
+    const cantidad = Math.floor(Math.random() * maxItems) + 1;
     return Array.from({ length: cantidad }, () => {
         const item = elegirAleatorio(catalogo);
-        return { ...item, cantidad: 1, unidad: "UND" };
+        let precio = item.precio || 0;
+        if (precio < 100 || precio > 1000) {
+            precio = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
+        }
+        return { ...item, cantidad: 1, unidad: "UND", precio };
     });
 };
 
@@ -36,7 +40,7 @@ export const calcularMonto = (tipoDocumento, totalItems) => {
         case "Nota de Credito":
             return -Math.round(totalItems * 0.5);
         case "Guia de Remision":
-            return 0;
+            return 10;
         default:
             return totalItems;
     }
