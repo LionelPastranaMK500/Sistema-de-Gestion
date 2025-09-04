@@ -169,7 +169,7 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
     const igv = total - gravado;
 
     //totales
-    doc.setFont("helvetica", "italic").setFontSize(cfg.fs.sm);
+    doc.setFont("helvetica", "italic", "bold").setFontSize(cfg.fs.sm + 2);
     doc.text(`SON: ${amountToWords(total)}`, cfg.margin, y);
     y += cfg.line + 1;
     doc.line(cfg.margin, y, W - cfg.margin, y); y += cfg.line;
@@ -208,26 +208,25 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     };
 
     y += 5;
-    doc.setFont("helvetica", "bold").setFontSize(fs.lg);
+    doc.setFont("helvetica", "bold").setFontSize(16); // Set to 14 as requested
 
     //datos empresa
-    const empresa = "LUBRICANTES CLAUDIA";
-    const safeWidth = W - 6 * M;
-    doc.splitTextToSize(empresa, safeWidth).forEach(line => {
-        doc.text(line, W / 2, y, { align: "center" });
-        y += lineH;
-    });
-    y += 2;
+    const empresa = "LUBRICANTES CLAUDIA"; // Restored with space between words
+    const safeWidth = W - 2 * M; // Ajustado para que quepa en una línea
+    doc.text(empresa, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" }); // Reduced spacing within words
+    // Duplicar texto con offset para simular bold más exagerado
+    doc.text(empresa, W / 2 + 0.1, y + 0.1, { align: "center", charSpace: -0.3, renderingMode: "fill" });
+    y += lineH * 1.5;
 
-    doc.setFont("helvetica", "normal").setFontSize(fs.sm);
-    doc.text(`DE ${nombreCompleto.toUpperCase()}`,W/2, y, { align: "center" });
+    doc.setFont("helvetica", "normal").setFontSize(fs.md);
+    doc.text(`DE: ${nombreCompleto.toUpperCase()}`, W / 2, y, { align: "center" });
     y += lineH;
 
-    doc.setFont("helvetica", "bold").setFontSize(fs.sm);
-    doc.text(`RUC ${factura.emisorRuc || "20043553445"}`, W / 2, y, { align: "center" });
+    doc.setFont("helvetica", "bold").setFontSize(fs.lg + 2);
+    doc.text(`RUC ${factura.emisorRuc || "20043553445"}`, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" });
     y += lineH;
 
-    doc.setFont("helvetica", "normal").setFontSize(fs.xs);
+    doc.setFont("helvetica", "normal").setFontSize(fs.sm + 1);
     const direccion = "AV. ALFREDO MENDIOLA 6376 ASOC. VIV. FAMILIA UNIDA - S.M.P. LIMA / N° TELEFONO: (01)536-9146";
     doc.splitTextToSize(direccion, safeWidth).forEach(line => {
         doc.text(line, W / 2, y, { align: "center" });
@@ -240,27 +239,69 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         y += lineH;
     });
 
-    doc.setFont("helvetica", "bold").setFontSize(fs.md);
-    doc.text(`${factura.tDocumento}`, W / 2, y, { align: "center" });
+    doc.setFont("helvetica", "bold").setFontSize(fs.sm + 3);
+    doc.text(`${factura.tDocumento.toUpperCase()}`, W / 2, y, { align: "center", charSpace: -0.0, renderingMode: "fill" });
     y += lineH;
 
-    doc.setFont("helvetica", "bold").setFontSize(fs.sm);
-    doc.text(`${factura.serie}-${String(factura.numero).padStart(6, "0")}`, W / 2, y, { align: "center" });
+    doc.setFont("helvetica", "bold").setFontSize(fs.lg + 2);
+    doc.text(`${factura.serie}-${String(factura.numero).padStart(6, "0")}`, W / 2 + 0.1, y + 0.1, { align: "center", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 2;
 
     //dato cliente
-    doc.setFont("helvetica", "normal").setFontSize(fs.sm);
-    doc.text(`DOCUMENTO RUC: ${factura.ruc || ""}`, M, y); y += lineH;
-    doc.text(`CLIENTE: ${factura.cliente || ""}`, M, y); y += lineH;
-    doc.text(`DIRECCIÓN: ${factura.direccion || ""}`, M, y); y += lineH;
-    doc.text(`FECHA EMISIÓN: ${fmtDate(factura.fecha)}`, M, y); y += lineH;
+    doc.setFont("helvetica", "bold").setFontSize(fs.sm + 2);
+    const clientLeftWidth = (W / 2) - M; // Ancho aproximado para la columna izquierda (constantes)
+    const clientRightStart = M + clientLeftWidth + 2; // Inicio de la columna derecha (info dinámica)
+    const clientRightWidth = W - clientRightStart - M; // Ancho disponible para la info dinámica
+
+    // DOCUMENTO RUC
+    doc.text("DOCUMENTO RUC:", M, y);
+    doc.setFont("helvetica", "normal");
+    const rucText = `${factura.ruc || ""}`;
+    const rucLines = doc.splitTextToSize(rucText, clientRightWidth);
+    rucLines.forEach((line, i) => {
+        doc.text(line, clientRightStart, y + (i * lineH));
+    });
+    y += Math.max(1, rucLines.length) * lineH * 1.5;
+
+    // CLIENTE
+    doc.setFont("helvetica", "bold");
+    doc.text("CLIENTE:", M, y);
+    doc.setFont("helvetica", "normal");
+    const clienteText = `${factura.cliente || ""}`;
+    const clienteLines = doc.splitTextToSize(clienteText, clientRightWidth);
+    clienteLines.forEach((line, i) => {
+        doc.text(line, clientRightStart, y + (i * lineH));
+    });
+    y += Math.max(1, clienteLines.length) * lineH * 1.5;
+
+    // DIRECCIÓN
+    doc.setFont("helvetica", "bold");
+    doc.text("DIRECCIÓN:", M, y);
+    doc.setFont("helvetica", "normal");
+    const direccionText = `${factura.direccion || ""}`;
+    const direccionLines = doc.splitTextToSize(direccionText, clientRightWidth);
+    direccionLines.forEach((line, i) => {
+        doc.text(line, clientRightStart, y + (i * lineH));
+    });
+    y += Math.max(1, direccionLines.length) * lineH * 1.5;
+
+    // FECHA EMISIÓN
+    doc.setFont("helvetica", "bold");
+    doc.text("FECHA EMISIÓN:", M, y);
+    doc.setFont("helvetica", "normal");
+    const fechaText = `${fmtDate(factura.fecha)}`;
+    const fechaLines = doc.splitTextToSize(fechaText, clientRightWidth);
+    fechaLines.forEach((line, i) => {
+        doc.text(line, clientRightStart, y + (i * lineH));
+    });
+    y += Math.max(1, fechaLines.length) * lineH * 1.5;
 
     //items
     let total = 0;
-    doc.setFont("helvetica", "bold");
-    doc.text("DESCRIPCIÓN", cols.desc, y);
-    doc.text("P/U", cols.punit, y, { align: "right" });
-    doc.text("TOTAL", cols.total, y, { align: "right" });
+    doc.setFont("helvetica", "bold").setFontSize(fs.sm);
+    doc.text("DESCRIPCIÓN", cols.desc, y, { charSpace: -0.3, renderingMode: "fill" });
+    doc.text("P/U", cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text("TOTAL", cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += 2; doc.line(M, y, W - M, y); y += lineH;
 
     factura.items.forEach((it) => {
@@ -268,7 +309,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         const precio = Number(it.precio || 0);
         const subtotal = cantidad * precio;
         total += subtotal;
-        const desc = `[${cantidad}] ${it.descripcion}`;
+        const desc = `[${cantidad.toFixed(2)}] ${it.descripcion}`;
         const lines = doc.splitTextToSize(desc, cols.punit - cols.desc - 4);
 
         lines.forEach((line, i) => {
@@ -288,8 +329,9 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     y += 2; doc.line(M, y, W - M, y); y += lineH;
 
     //totales
-    doc.setFont("helvetica", "italic").setFontSize(fs.xs);
-    doc.text(`SON: ${amountToWords(total)}`, M, y);
+    doc.setFont("helvetica", "italic", "bold").setFontSize(fs.xs + 2);
+    const amountInWords = `SON ${amountToWords(total)}`;
+    doc.text(amountInWords, M, y, { charSpace: -0.3, renderingMode: "fill" });
     y += lineH + 1;
 
     const gravado = total / 1.18;
@@ -298,21 +340,21 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     doc.setFont("helvetica", "bold").setFontSize(fs.sm);
     const totales = [
         ["GRAVADO S/", money(gravado)],
-        ["IGV (18%) S/", money(igv)],
+        ["I.G.V. 18% S/", money(igv)],
     ];
     totales.forEach(([label, value]) => {
-        doc.text(label, cols.punit, y, { align: "right" });
-        doc.text(value, cols.total, y, { align: "right" });
+        doc.text(label, cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+        doc.text(value, cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
         y += lineH;
     });
 
     doc.setFontSize(fs.md);
-    doc.text("TOTAL S/", cols.punit, y, { align: "right" });
-    doc.text(money(total), cols.total, y, { align: "right" });
+    doc.text("TOTAL S/", cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text(money(total), cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 2;
 
-    doc.setFont("helvetica", "normal").setFontSize(fs.xs);
-    doc.text(`USUARIO ${(nombreCompleto).toUpperCase()} - ${fmtDateTime()}`, M, y);
+    doc.setFont("helvetica", "normal").setFontSize(fs.xs+2);
+    doc.text(`USUARIO ${(nombreCompleto).toUpperCase()} ${fmtDateTime()}`, M, y);
     y += lineH;
 
     return { y, total };
