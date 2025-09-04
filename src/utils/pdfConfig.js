@@ -170,7 +170,7 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
 
     //totales
     doc.setFont("helvetica", "italic", "bold").setFontSize(cfg.fs.sm + 2);
-    doc.text(`SON: ${amountToWords(total)}`, cfg.margin, y);
+    doc.text(`SON: ${amountToWords(total)}`, W / 2, y, { align: "center" });
     y += cfg.line + 1;
     doc.line(cfg.margin, y, W - cfg.margin, y); y += cfg.line;
 
@@ -188,7 +188,8 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
     doc.text(`USUARIO ${nombreCompleto.toUpperCase()} - ${fmtDateTime()}`, cfg.margin, y); y += cfg.line;
     doc.text("CONDICIÓN DE PAGO: ", cfg.margin, y); y += cfg.line;
     doc.setFont("helvetica", "bold").text("CUENTAS BANCARIAS:", cfg.margin, y); y += cfg.line;
-    doc.setFont("helvetica", "normal");
+    // Aumentar un poco el tamaño y poner en negrita las cuentas bancarias
+    doc.setFont("helvetica", "bold").setFontSize(cfg.fs.xs + 1);
     BANKS.forEach((b) => { doc.text(b, cfg.margin + 2, y); y += cfg.line; });
 
     return { y, total };
@@ -199,6 +200,15 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     const fs = cfg.fs;
     const lineH = cfg.line;
     const cols = cfg.cols(W, M);
+
+    // === AJUSTES SOLICITADOS ===
+    // Mueve la columna "P/U" un poquito a la derecha y recalcula el ancho de la descripción
+    const PUNIT_BUMP_MM = 4;                   // <--- ajusta aquí si lo quieres más/menos
+    const punitX = cols.punit + PUNIT_BUMP_MM; // nueva X para "P/U"
+    const totalX = cols.total;                 // mantenemos TOTAL en su borde derecho
+    const descWidth = punitX - cols.desc - 4;  // nuevo ancho disponible para la descripción
+    // ============================
+
     let y = M;
     const ensureSpace = (need = 0) => {
         if (y > H - (cfg.bottomSafe + need)) {
@@ -211,9 +221,9 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     doc.setFont("helvetica", "bold").setFontSize(16); // Set to 14 as requested
 
     //datos empresa
-    const empresa = "LUBRICANTES CLAUDIA"; // Restored with space between words
-    const safeWidth = W - 2 * M; // Ajustado para que quepa en una línea
-    doc.text(empresa, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" }); // Reduced spacing within words
+    const empresa = "LUBRICANTES CLAUDIA";
+    const safeWidth = W - 2 * M;
+    doc.text(empresa, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" });
     // Duplicar texto con offset para simular bold más exagerado
     doc.text(empresa, W / 2 + 0.1, y + 0.1, { align: "center", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 1.5;
@@ -240,7 +250,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     });
 
     doc.setFont("helvetica", "bold").setFontSize(fs.sm + 3);
-    doc.text(`${factura.tDocumento.toUpperCase()}`, W / 2, y, { align: "center", charSpace: -0.0, renderingMode: "fill" });
+    doc.text(`${(factura.tDocumento || "").toUpperCase()}`, W / 2, y, { align: "center", charSpace: -0.0, renderingMode: "fill" });
     y += lineH;
 
     doc.setFont("helvetica", "bold").setFontSize(fs.lg + 2);
@@ -249,7 +259,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
 
     //dato cliente
     doc.setFont("helvetica", "bold").setFontSize(fs.sm + 2);
-    const clientLeftWidth = (W / 2) - M; // Ancho aproximado para la columna izquierda (constantes)
+    const clientLeftWidth = (W / 2) - M;           // Ancho aproximado para la columna izquierda (constantes)
     const clientRightStart = M + clientLeftWidth + 2; // Inicio de la columna derecha (info dinámica)
     const clientRightWidth = W - clientRightStart - M; // Ancho disponible para la info dinámica
 
@@ -298,10 +308,13 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
 
     //items
     let total = 0;
-    doc.setFont("helvetica", "bold").setFontSize(fs.sm);
+
+    // Encabezado de tabla (ligeramente más grande)
+    doc.setFont("helvetica", "bold").setFontSize(fs.sm + 1);
     doc.text("DESCRIPCIÓN", cols.desc, y, { charSpace: -0.3, renderingMode: "fill" });
-    doc.text("P/U", cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
-    doc.text("TOTAL", cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    // acercamos P/U al TOTAL un poquito más
+    doc.text("P/U", totalX - 14, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text("TOTAL", totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += 2; doc.line(M, y, W - M, y); y += lineH;
 
     factura.items.forEach((it) => {
@@ -309,16 +322,20 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         const precio = Number(it.precio || 0);
         const subtotal = cantidad * precio;
         total += subtotal;
+
         const desc = `[${cantidad.toFixed(2)}] ${it.descripcion}`;
-        const lines = doc.splitTextToSize(desc, cols.punit - cols.desc - 4);
+        // ajustar ancho de descripción para que rompa línea sin invadir columnas
+        const lines = doc.splitTextToSize(desc, (totalX - 16) - cols.desc - 6);
 
         lines.forEach((line, i) => {
             ensureSpace(lineH);
             if (i === 0) {
-                doc.setFont("helvetica", "normal").setFontSize(fs.xs);
+                // Contenido de la tabla un poco más grande
+                doc.setFont("helvetica", "normal").setFontSize(fs.xs + 3);
                 doc.text(line, cols.desc, y);
-                doc.text(precio.toFixed(2), cols.punit, y, { align: "right" });
-                doc.text(subtotal.toFixed(2), cols.total - 2, y, { align: "right" });
+                // P/U un poco más cerca del TOTAL
+                doc.text(precio.toFixed(2), totalX - 14, y, { align: "right" });
+                doc.text(subtotal.toFixed(2), totalX - 2, y, { align: "right" }); // pequeño respiro al borde
             } else {
                 y += lineH;
                 doc.text(line, cols.desc, y);
@@ -343,17 +360,17 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         ["I.G.V. 18% S/", money(igv)],
     ];
     totales.forEach(([label, value]) => {
-        doc.text(label, cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
-        doc.text(value, cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+        doc.text(label, punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+        doc.text(value, totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
         y += lineH;
     });
 
     doc.setFontSize(fs.md);
-    doc.text("TOTAL S/", cols.punit, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
-    doc.text(money(total), cols.total, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text("TOTAL S/", punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text(money(total), totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 2;
 
-    doc.setFont("helvetica", "normal").setFontSize(fs.xs+2);
+    doc.setFont("helvetica", "normal").setFontSize(fs.xs + 1);
     doc.text(`USUARIO ${(nombreCompleto).toUpperCase()} ${fmtDateTime()}`, M, y);
     y += lineH;
 
