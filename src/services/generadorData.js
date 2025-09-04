@@ -1,6 +1,5 @@
 import {
     elegirAleatorio,
-    generarFechaAleatoria,
     generarRuc,
     generarDni,
     generarItemsAleatorios,
@@ -80,50 +79,57 @@ export const productos = [
 
 export const getTiposComprobante = () => tiposComprobante;
 export const getSeries = (tipo) => {
-    const company = getActiveCompany(); 
+    const company = getActiveCompany();
     return series[company?.ruc]?.[tipo] || ["BB004"];
 };
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 50) => {
+export const generarDataFalsa = (cantidad = 50000) => {
     const data = [];
     const counters = [];
-    for (let i = 0; i < cantidad; i++) {
-        const fecha = generarFechaAleatoria(new Date(2025, 5, 1), new Date(2025, 9, 3));
-        const tDocumento = elegirAleatorio(getTiposComprobante());
-
-        const claveTipo = mapTipo[tDocumento];
-        const seriesDisponibles = getSeries(claveTipo);
-        const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : "XX01";
-        if (!counters[serie]) counters[serie] = 0;
-        counters[serie]++;
-        const numero = counters[serie].toString().padStart(6, "0");
-
-        const items = generarItemsAleatorios(getProductos());
-        const totalItems = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
-        const monto = calcularMonto(tDocumento, totalItems);
-        const clienteElegido = elegirAleatorio(getClientes());
-        const tipoOperacion = Math.random() < 0.5 ? "venta" : "compra";
-
-        const isRuc = Math.random() < 0.6;
-        const documento = isRuc ? generarRuc() : generarDni();
-
-        data.push({
-            id: i + 1,
-            serie,
-            numero,
-            cliente: clienteElegido.razonSocial,
-            documento,
-            fecha: fecha.toISOString(),
-            direccion: clienteElegido.direccion,
-            monto,
-            tDocumento,
-            state: generarEstado(),
-            items,
-            tipoOperacion
-        });
+    const start = new Date(2025, 5, 1);
+    const end = new Date(2025, 8, 10);
+    const dias = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        dias.push(new Date(d));
     }
+    let idCounter = 1;
+    dias.forEach(fecha => {
+        for (let i = 0; i < cantidad; i++) {
+            const tDocumento = elegirAleatorio(getTiposComprobante());
+            const claveTipo = mapTipo[tDocumento];
+            const seriesDisponibles = getSeries(claveTipo);
+            const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : "XX01";
+            if (!counters[serie]) counters[serie] = 0;
+            counters[serie]++;
+            const numero = counters[serie].toString().padStart(6, "0");
+
+            const items = generarItemsAleatorios(getProductos());
+            const totalItems = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
+            const monto = calcularMonto(tDocumento, totalItems);
+            const clienteElegido = elegirAleatorio(getClientes());
+            const tipoOperacion = Math.random() < 0.5 ? "venta" : "compra";
+
+            const isRuc = Math.random() < 0.6;
+            const documento = isRuc ? generarRuc() : generarDni();
+
+            data.push({
+                id: idCounter,
+                serie,
+                numero,
+                cliente: clienteElegido.razonSocial,
+                documento,
+                fecha: fecha.toISOString(),
+                direccion: clienteElegido.direccion,
+                monto,
+                tDocumento,
+                state: generarEstado(),
+                items,
+                tipoOperacion
+            });
+        }
+    })
 
     return data;
 };
