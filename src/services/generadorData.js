@@ -9,7 +9,7 @@ import {
 } from "./generadorDocumentos";
 import { getActiveCompany } from "@services/auth/authServices";
 
-const tiposComprobante = [
+export const tiposComprobante = [
     "Factura Electronica",
     "Boleta de Venta Electronica",
     "Nota de Credito",
@@ -18,11 +18,11 @@ const tiposComprobante = [
     "Guia de Remision"
 ];
 
-const mapTipo = {
+export const mapTipo = {
     "Factura Electronica": "Factura",
     "Boleta de Venta Electronica": "Boleta",
-    "Nota de Credito": "Factura",
-    "Nota de Debito": "Factura",
+    "Nota de Credito": "NotaCredito",
+    "Nota de Debito": "NotaDebito",
     "Proforma": "Proforma",
     "Guia de Remision": "Guia"
 };
@@ -32,7 +32,9 @@ export const series = {
         "Factura": ["F001", "F002"],
         "Boleta": ["B001", "B002"],
         "Proforma": ["P001"],
-        "Guia": ["T001"]
+        "Guia": ["T001"],
+        "NotaCredito": ["NC01"],
+        "NotaDebito": ["ND01"]
     },
     "20234567890": {
         "Factura": ["F101"],
@@ -40,7 +42,7 @@ export const series = {
     }
 };
 
-const clientes = [
+export const clientes = [
     { razonSocial: "NORSET SL", direccion: "Av. Los Olivos 12453, Lima" },
     { razonSocial: "Talleres Pérez E.I.R.L.", direccion: "Calle San Martín 45, Lima" },
     { razonSocial: "Auto Partes García S.A.", direccion: "Jr. Arequipa 567, Lima" },
@@ -53,13 +55,13 @@ const clientes = [
     { razonSocial: "Jorge Herrera S.A.C.", direccion: "Av. Arequipa 19, Lima" }
 ];
 
-const productos = [
+export const productos = [
     { codigo: "001", descripcion: "Filtro de aire", precio: 50 },
-    { codigo: "002", descripcion: "Aceite Shell Helix 10W40", precio: 12 },
+    { codigo: "002", descripcion: "Aceite Shell Helix 10W40", precio: 62 },
     { codigo: "4003", descripcion: "Pastillas de freno", precio: 20 },
     { codigo: "004", descripcion: "Neumático Michelin 16''", precio: 35 },
     { codigo: "7005", descripcion: "Batería Bosch 12V", precio: 48 },
-    { codigo: "006", descripcion: "Kit de embrague Toyota Hilux", precio: 125},
+    { codigo: "006", descripcion: "Kit de embrague Toyota Hilux", precio: 125 },
     { codigo: "007", descripcion: "Aceite Castrol Magnatec 5W30 4L", precio: 110 },
     { codigo: "008", descripcion: "Filtro de aceite", precio: 80 },
     { codigo: "009", descripcion: "Amortiguador delantero Toyota Corolla", precio: 42 },
@@ -67,8 +69,8 @@ const productos = [
     { codigo: "011", descripcion: "Disco de freno Hyundai Accent", precio: 30 },
     { codigo: "1012", descripcion: "Alternador Chevrolet Aveo", precio: 95 },
     { codigo: "013", descripcion: "Correa de distribución Kia Rio", precio: 27 },
-    { codigo: "014", descripcion: "Luz LED H4 alta/baja", precio: 99 },
-    { codigo: "015", descripcion: "Espejo retrovisor lateral derecho", precio: 120},
+    { codigo: "014", descripcion: "Luz LED H4 alta/baja", precio: 109 },
+    { codigo: "015", descripcion: "Espejo retrovisor lateral derecho", precio: 120 },
     { codigo: "016", descripcion: "Parachoques delantero Toyota Yaris", precio: 75 },
     { codigo: "4017", descripcion: "Juego de bujías NGK x4", precio: 149 },
     { codigo: "018", descripcion: "Sensor de oxígeno Honda Civic", precio: 359 },
@@ -78,25 +80,25 @@ const productos = [
 
 export const getTiposComprobante = () => tiposComprobante;
 export const getSeries = (tipo) => {
-    const company = getActiveCompany();
+    const company = getActiveCompany(); 
     return series[company?.ruc]?.[tipo] || ["BB004"];
 };
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 50) => {
+export const generarDataFalsa = (cantidad = 5000) => {
     const data = [];
     const counters = [];
     for (let i = 0; i < cantidad; i++) {
         const fecha = generarFechaAleatoria(new Date(2025, 5, 1), new Date(2025, 9, 3));
         const tDocumento = elegirAleatorio(getTiposComprobante());
-        
+
         const claveTipo = mapTipo[tDocumento];
         const seriesDisponibles = getSeries(claveTipo);
         const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : "XX01";
-        if(!counters[serie]) counters[serie]=0;
+        if (!counters[serie]) counters[serie] = 0;
         counters[serie]++;
-        const numero = counters[serie].toString().padStart(6,"0");
+        const numero = counters[serie].toString().padStart(6, "0");
 
         const items = generarItemsAleatorios(getProductos());
         const totalItems = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
