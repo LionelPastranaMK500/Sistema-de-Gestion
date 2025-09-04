@@ -50,7 +50,7 @@ const LAYOUT = {
     },
 };
 
-const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
+const money = (n) => ` ${Number(n || 0).toFixed(2)}`;
 const amountToWords = (amount) => {
     const abs = Math.abs(Number(amount || 0));
     const entero = Math.floor(abs);
@@ -348,8 +348,8 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
 
     doc.setFont("helvetica", "bold").setFontSize(fs.sm);
     const totales = [
-        ["GRAVADO S/", money(gravado)],
-        ["I.G.V. 18% S/", money(igv)],
+        ["GRAVADO S/:", money(gravado)],
+        ["I.G.V. 18% S/:", money(igv)],
     ];
     totales.forEach(([label, value]) => {
         ensureSpace(lineH);
@@ -360,7 +360,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
 
     doc.setFontSize(fs.md);
     ensureSpace(lineH);
-    doc.text("TOTAL S/", punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    doc.text("TOTAL S/:", punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     doc.text(money(total), totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 2;
 
