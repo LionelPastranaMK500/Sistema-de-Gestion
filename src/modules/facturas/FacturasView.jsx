@@ -1,4 +1,4 @@
-import { generarDataFalsa } from "@utils/generadorData";
+import { generarDataFalsa } from "@services/generadorData";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,
