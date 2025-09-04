@@ -207,9 +207,11 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     const punitX = cols.punit + PUNIT_BUMP_MM; // nueva X para "P/U" (para totales al pie)
     const totalX = cols.total;                 // mantenemos TOTAL en su borde derecho
     // Coordenada efectiva para P/U en la tabla de items (alineado con TOTAL pero sin superposición)
-    const PUX = totalX - 14;                   // P/U a 14mm a la izquierda del TOTAL
-    const DESC_SAFE_GAP = 5;                   // separación mínima entre descripción y P/U
-    const descWidth = PUX - DESC_SAFE_GAP - cols.desc; // ancho máximo de la descripción
+    const PUX = totalX - 14;                    // P/U a 14mm a la izquierda del TOTAL
+    const DESC_SAFE_GAP = 5;                    // separación mínima entre descripción y P/U
+    const descWidthOriginal = PUX - DESC_SAFE_GAP - cols.desc; // ancho máximo de la descripción (original)
+    const DESC_WIDTH_FACTOR = 0.8;              // usar 4/5 partes del ancho original
+    const descWidth = descWidthOriginal * DESC_WIDTH_FACTOR;   // ancho efectivo reducido
     // ============================
 
     let y = M;
