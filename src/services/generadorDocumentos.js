@@ -23,8 +23,8 @@ export const generarDni = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
 };
 
-export const generarItemsAleatorios = (catalogo, maxItems = 2) => {
-    const cantidad = Math.floor(Math.random() * maxItems) + 1;
+export const generarItemsAleatorios = (catalogo, maxItems = 5) => {
+    const cantidad = Math.floor(Math.random() * maxItems) + 2;
     return Array.from({ length: cantidad }, () => {
         const item = elegirAleatorio(catalogo);
         return { ...item, cantidad: 1, unidad: "UND" };

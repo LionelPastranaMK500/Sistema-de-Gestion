@@ -56,18 +56,18 @@ export const clientes = [
 ];
 
 export const productos = [
-    { codigo: "001", descripcion: "Filtro de aire", precio: 50 },
-    { codigo: "002", descripcion: "Aceite Shell Helix 10W40", precio: 62 },
-    { codigo: "4003", descripcion: "Pastillas de freno", precio: 20 },
-    { codigo: "004", descripcion: "Neumático Michelin 16''", precio: 35 },
-    { codigo: "7005", descripcion: "Batería Bosch 12V", precio: 48 },
+    { codigo: "001", descripcion: "Filtro de aire", precio: 150 },
+    { codigo: "002", descripcion: "Aceite Shell Helix 10W40", precio: 162 },
+    { codigo: "4003", descripcion: "Pastillas de freno", precio: 120 },
+    { codigo: "004", descripcion: "Neumático Michelin 16''", precio: 135 },
+    { codigo: "7005", descripcion: "Batería Bosch 12V", precio: 148 },
     { codigo: "006", descripcion: "Kit de embrague Toyota Hilux", precio: 125 },
     { codigo: "007", descripcion: "Aceite Castrol Magnatec 5W30 4L", precio: 110 },
-    { codigo: "008", descripcion: "Filtro de aceite", precio: 80 },
+    { codigo: "008", descripcion: "Filtro de aceite", precio: 180 },
     { codigo: "009", descripcion: "Amortiguador delantero Toyota Corolla", precio: 42 },
-    { codigo: "010", descripcion: "Radiador Nissan Sentra", precio: 68 },
-    { codigo: "011", descripcion: "Disco de freno Hyundai Accent", precio: 30 },
-    { codigo: "1012", descripcion: "Alternador Chevrolet Aveo", precio: 95 },
+    { codigo: "010", descripcion: "Radiador Nissan Sentra", precio: 168 },
+    { codigo: "011", descripcion: "Disco de freno Hyundai Accent", precio: 130 },
+    { codigo: "1012", descripcion: "Alternador Chevrolet Aveo", precio: 195 },
     { codigo: "013", descripcion: "Correa de distribución Kia Rio", precio: 27 },
     { codigo: "014", descripcion: "Luz LED H4 alta/baja", precio: 109 },
     { codigo: "015", descripcion: "Espejo retrovisor lateral derecho", precio: 120 },
@@ -86,7 +86,7 @@ export const getSeries = (tipo) => {
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 5000) => {
+export const generarDataFalsa = (cantidad = 50) => {
     const data = [];
     const counters = [];
     for (let i = 0; i < cantidad; i++) {
