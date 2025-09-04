@@ -204,9 +204,12 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     // === AJUSTES SOLICITADOS ===
     // Mueve la columna "P/U" un poquito a la derecha y recalcula el ancho de la descripción
     const PUNIT_BUMP_MM = 4;                   // <--- ajusta aquí si lo quieres más/menos
-    const punitX = cols.punit + PUNIT_BUMP_MM; // nueva X para "P/U"
+    const punitX = cols.punit + PUNIT_BUMP_MM; // nueva X para "P/U" (para totales al pie)
     const totalX = cols.total;                 // mantenemos TOTAL en su borde derecho
-    const descWidth = punitX - cols.desc - 4;  // nuevo ancho disponible para la descripción
+    // Coordenada efectiva para P/U en la tabla de items (alineado con TOTAL pero sin superposición)
+    const PUX = totalX - 14;                   // P/U a 14mm a la izquierda del TOTAL
+    const DESC_SAFE_GAP = 5;                   // separación mínima entre descripción y P/U
+    const descWidth = PUX - DESC_SAFE_GAP - cols.desc; // ancho máximo de la descripción
     // ============================
 
     let y = M;
@@ -312,8 +315,8 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     // Encabezado de tabla (ligeramente más grande)
     doc.setFont("helvetica", "bold").setFontSize(fs.sm + 1);
     doc.text("DESCRIPCIÓN", cols.desc, y, { charSpace: -0.3, renderingMode: "fill" });
-    // acercamos P/U al TOTAL un poquito más
-    doc.text("P/U", totalX - 14, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
+    // P/U alineado con coordenada PUX; TOTAL queda al borde derecho
+    doc.text("P/U", PUX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     doc.text("TOTAL", totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += 2; doc.line(M, y, W - M, y); y += lineH;
 
@@ -324,8 +327,8 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         total += subtotal;
 
         const desc = `[${cantidad.toFixed(2)}] ${it.descripcion}`;
-        // ajustar ancho de descripción para que rompa línea sin invadir columnas
-        const lines = doc.splitTextToSize(desc, (totalX - 16) - cols.desc - 6);
+        // usar el ancho definido que respeta un gap con P/U
+        const lines = doc.splitTextToSize(desc, descWidth);
 
         lines.forEach((line, i) => {
             ensureSpace(lineH);
@@ -333,8 +336,8 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
                 // Contenido de la tabla un poco más grande
                 doc.setFont("helvetica", "normal").setFontSize(fs.xs + 3);
                 doc.text(line, cols.desc, y);
-                // P/U un poco más cerca del TOTAL
-                doc.text(precio.toFixed(2), totalX - 14, y, { align: "right" });
+                // P/U alineado en PUX (sin invadir TOTAL ni descripción)
+                doc.text(precio.toFixed(2), PUX, y, { align: "right" });
                 doc.text(subtotal.toFixed(2), totalX - 2, y, { align: "right" }); // pequeño respiro al borde
             } else {
                 y += lineH;
