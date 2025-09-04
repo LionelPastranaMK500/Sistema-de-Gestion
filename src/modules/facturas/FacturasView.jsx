@@ -27,7 +27,9 @@ export default function FacturasView() {
     const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
     const dia = fecha.getDate();
     const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-    return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} » ${dia}° ${mes.charAt(0).toUpperCase() + mes.slice(1)}`;
+    const anio = fecha.getFullYear();
+    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
   };
 
   const facturasFiltradas = fechaSeleccionada
@@ -84,23 +86,23 @@ export default function FacturasView() {
 
           {/* Calendario anclado al ícono (overlay en la misma posición) */}
           <div className="relative">
-  <Calendar
-    ref={calendarRef}
-    value={fechaSeleccionada}
-    onChange={(e) => setFechaSeleccionada(e.value)}
-    dateFormat="dd/mm/yy"
-    appendTo={document.body}                 // panel en el body
-    panelClassName="z-50"
-    className="absolute inset-0 opacity-0 pointer-events-none" // ⬅️ NO bloquea el click
-  />
-  <button
-    className="hover:bg-gray-200 p-2 rounded"
-    onClick={() => calendarRef.current?.show?.()}
-    aria-label="Abrir calendario"
-  >
-    <i className="text-gray-700 pi pi-calendar"></i>
-  </button>
-</div>
+            <Calendar
+              ref={calendarRef}
+              value={fechaSeleccionada}
+              onChange={(e) => setFechaSeleccionada(e.value)}
+              dateFormat="dd/mm/yy"
+              appendTo={document.body}                 // panel en el body
+              panelClassName="z-50"
+              className="absolute inset-0 opacity-0 pointer-events-none" // ⬅️ NO bloquea el click
+            />
+            <button
+              className="hover:bg-gray-200 p-2 rounded"
+              onClick={() => calendarRef.current?.show?.()}
+              aria-label="Abrir calendario"
+            >
+              <i className="text-gray-700 pi pi-calendar"></i>
+            </button>
+          </div>
 
           <button className="hover:bg-gray-200 p-2 rounded">
             <KeyboardArrowRightIcon onClick={() => moverDia(1)} />
