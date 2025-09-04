@@ -201,7 +201,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     const lineH = cfg.line;
     const cols = cfg.cols(W, M);
 
-    // === AJUSTES SOLICITADOS ===
+
     // Mueve la columna "P/U" un poquito a la derecha y recalcula el ancho de la descripción
     const PUNIT_BUMP_MM = 4;                   // <--- ajusta aquí si lo quieres más/menos
     const punitX = cols.punit + PUNIT_BUMP_MM; // nueva X para "P/U" (para totales al pie)
@@ -353,6 +353,7 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     //totales
     doc.setFont("helvetica", "italic", "bold").setFontSize(fs.xs + 2);
     const amountInWords = `SON ${amountToWords(total)}`;
+    ensureSpace(lineH);
     doc.text(amountInWords, M, y, { charSpace: -0.3, renderingMode: "fill" });
     y += lineH + 1;
 
@@ -365,12 +366,14 @@ function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
         ["I.G.V. 18% S/", money(igv)],
     ];
     totales.forEach(([label, value]) => {
+        ensureSpace(lineH);
         doc.text(label, punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
         doc.text(value, totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
         y += lineH;
     });
 
     doc.setFontSize(fs.md);
+    ensureSpace(lineH);
     doc.text("TOTAL S/", punitX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     doc.text(money(total), totalX, y, { align: "right", charSpace: -0.3, renderingMode: "fill" });
     y += lineH * 2;
