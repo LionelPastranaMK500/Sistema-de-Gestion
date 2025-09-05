@@ -11,7 +11,7 @@ const BANKS = [
     "Cta. BBVA:"
 ];
 
-const PAGE_SIZES = {
+export const PAGE_SIZES = {
     A4: { width: 210, height: 297 },
     t80mm: { width: 80, height: 297 },
 };
@@ -21,7 +21,7 @@ const FORMAT_LABELS = {
     t80mm: "80mm"
 };
 
-const LAYOUT = {
+export const LAYOUT = {
     A4: {
         margin: 12,
         fs: { xs: 10, sm: 12, md: 14, lg: 16, xl: 22 },
@@ -71,7 +71,7 @@ const fmtDateTime = (d = new Date()) =>
         hour12: true,
     });
 
-function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
+export function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
     const M = cfg.margin;
     const fs = cfg.fs;
     const lineH = cfg.line;
@@ -104,7 +104,7 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
     let yBox = boxY + lineH + 2;
 
     doc.setFont("helvetica", "bold").setFontSize(11);
-    doc.text(`RUC ${factura.emisorRuc || "20043553445"}`, centerX, yBox, { align: "center" });
+    doc.text(`RUC ${factura.emisorRuc}`, centerX, yBox, { align: "center" });
     yBox += lineH + 2;
     doc.setFont("helvetica", "normal").setFontSize(11);
     doc.text(`${factura.tDocumento}`, centerX, yBox, { align: "center" });
@@ -117,7 +117,7 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
 
     //dato cliente
     doc.setFont("helvetica", "normal").setFontSize(fs.sm);
-    doc.text(`DOCUMENTO RUC ${factura.ruc || ""}`, M, y); y += lineH;
+    doc.text(`DOCUMENTO RUC/DNI ${factura.ruc || ""}`, M, y); y += lineH;
     doc.text(`CLIENTE ${factura.cliente || ""}`, M, y); y += lineH;
     doc.text(`DIRECCIÓN ${factura.direccion || ""}`, M, y);
     let yRight = y - 2 * lineH;
@@ -195,7 +195,7 @@ function renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto) {
     return { y, total };
 }
 
-function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
+export function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     const M = cfg.margin;
     const fs = cfg.fs;
     const lineH = cfg.line;
@@ -382,8 +382,10 @@ export async function generarPDF(factura, tipo = "A4") {
 
         if (tipo === "A4") {
             renderFacturaA4(doc, factura, cfg, W, H, nombreCompleto);
+            console.log(doc, factura, cfg, W, H, nombreCompleto)
         } else if (tipo === "t80mm") {
             renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto);
+            console.log(doc, factura, cfg, W, H, nombreCompleto)
         }
 
         doc.save(`${factura.tDocumento}_${factura.serie}-${factura.numero}.pdf`);
