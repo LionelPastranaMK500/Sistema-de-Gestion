@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 import { Calendar } from "primereact/calendar";
 import { configCalendar } from "@utils/configCalendar";
-import { generarDataFalsa } from "@utils/generadorData";
+import { generarDataFalsa } from "@services/generadorData";
 import { contarComprobantes } from "@utils/comprobantesUtils";
 import {
     buildEmisionesData, emisionesChartOptions,
@@ -50,7 +50,7 @@ export default function EstadisticasView() {
         if (!data.length) return;
         const filtrada = filtrarPorFecha(fechaEmisiones, data);
         setEmisiones(contarComprobantes(filtrada));
-        if (fechaEmisiones) toast.success("Emisiones actualizadas");
+        if (fechaEmisiones) toast.success("Emisiones actualizadas",{autoClose: 1000});
     }, [fechaEmisiones, data]);
 
     useEffect(() => {
@@ -59,7 +59,7 @@ export default function EstadisticasView() {
         const total = filtrada.reduce((acc, cur) => acc + cur.monto, 0);
         setVentas(total);
         setDataVentasFiltrada(filtrada);
-        if (fechaVentas) toast.success("Ventas actualizadas");
+        if (fechaVentas) toast.success("Ventas actualizadas",{autoClose: 1000});
     }, [fechaVentas, data]);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ export default function EstadisticasView() {
         const total = filtrada.reduce((acc, cur) => acc + cur.monto, 0);
         setCompras(total);
         setDataCompras(buildComprasData(filtrada, fechaCompras));
-        if (fechaCompras) toast.success("Compras actualizadas");
+        if (fechaCompras) toast.success("Compras actualizadas",{autoClose: 1000});
     }, [fechaCompras, data]);
 
     const emisionesData = buildEmisionesData(emisiones);
@@ -91,12 +91,12 @@ export default function EstadisticasView() {
                     {emisionesData.labels.map((label, i) => {
                         // mapeo
                         const keyMap = {
-                            "Facturas": "facturas",
-                            "Boletas": "boletas",
-                            "Notas de Crédito": "notasCredito",
-                            "Notas de Débito": "notasDebito",
-                            "Proformas": "proformas",
-                            "Guías de Remisión": "guiasRemision"
+                            "Factura Electronica": "Factura",
+                            "Boleta de Venta Electronica": "Boleta",
+                            "Nota de Credito": "NotaCredito",
+                            "Nota de Debito": "NotaDebito",
+                            "Proforma": "Proforma",
+                            "Guia de Remision": "Guia"
                         };
                         const key = keyMap[label];
 
