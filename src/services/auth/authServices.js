@@ -50,7 +50,7 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
             ruc,
             usuarioSol,
             razonSocial: "Juan Santos Pimentel",
-            surcursal: "Lubricantes Claudia"
+            sucursal: "Lubricantes Claudia"
         };
         localStorage.setItem("activeCompany", JSON.stringify(empresa));
 
