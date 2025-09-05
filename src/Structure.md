@@ -2,6 +2,7 @@
 └── 📁Facturacion
     └── 📁public
         └── 📁images
+            ├── Logo_WolfFur.avif
             ├── Logo_WolfFur.jpg
             ├── Logo_WolfFur.webp
         ├── vite.svg
@@ -86,11 +87,15 @@
             └── 📁guia_remision
             └── 📁ventas
             ├── api.js
+            ├── generadorData.js
+            ├── generadorDocumentos.js
         └── 📁styles
             ├── App.css
             ├── index.css
             ├── primereact-styles.css
         └── 📁utils
+            ├── chartUtils.js
+            ├── comprobantesUtils.js
             ├── configCalendar.js
             ├── menuActions.js
             ├── pdfConfig.js
