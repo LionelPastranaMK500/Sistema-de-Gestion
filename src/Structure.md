@@ -99,6 +99,7 @@
             ├── configCalendar.js
             ├── menuActions.js
             ├── pdfConfig.js
+            ├── pdfViewer.js
             ├── redirectWithDelay.js
             ├── sidebarState.js
         ├── App.jsx
