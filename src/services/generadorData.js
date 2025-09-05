@@ -55,26 +55,26 @@ export const clientes = [
 ];
 
 export const productos = [
-    { codigo: "001", descripcion: "Filtro de aire", precio: 150 },
-    { codigo: "002", descripcion: "Aceite Shell Helix 10W40", precio: 162 },
-    { codigo: "4003", descripcion: "Pastillas de freno", precio: 120 },
-    { codigo: "004", descripcion: "Neumático Michelin 16''", precio: 135 },
-    { codigo: "7005", descripcion: "Batería Bosch 12V", precio: 148 },
-    { codigo: "006", descripcion: "Kit de embrague Toyota Hilux", precio: 125 },
-    { codigo: "007", descripcion: "Aceite Castrol Magnatec 5W30 4L", precio: 110 },
-    { codigo: "008", descripcion: "Filtro de aceite", precio: 180 },
-    { codigo: "009", descripcion: "Amortiguador delantero Toyota Corolla", precio: 42 },
-    { codigo: "010", descripcion: "Radiador Nissan Sentra", precio: 168 },
-    { codigo: "011", descripcion: "Disco de freno Hyundai Accent", precio: 130 },
-    { codigo: "1012", descripcion: "Alternador Chevrolet Aveo", precio: 195 },
-    { codigo: "013", descripcion: "Correa de distribución Kia Rio", precio: 27 },
-    { codigo: "014", descripcion: "Luz LED H4 alta/baja", precio: 109 },
-    { codigo: "015", descripcion: "Espejo retrovisor lateral derecho", precio: 120 },
-    { codigo: "016", descripcion: "Parachoques delantero Toyota Yaris", precio: 75 },
-    { codigo: "4017", descripcion: "Juego de bujías NGK x4", precio: 149 },
-    { codigo: "018", descripcion: "Sensor de oxígeno Honda Civic", precio: 359 },
-    { codigo: "019", descripcion: "Aceite Valvoline SynPower 5W40 4L", precio: 169 },
-    { codigo: "6020", descripcion: "Balatas traseras Nissan Versa", precio: 229 }
+    { codigo: "001", unidad: "UND", descripcion: "Filtro de aire", precio: 150 },
+    { codigo: "002", unidad: "UND", descripcion: "Aceite Shell Helix 10W40", precio: 162 },
+    { codigo: "4003", unidad: "UND", descripcion: "Pastillas de freno", precio: 120 },
+    { codigo: "004", unidad: "UND", descripcion: "Neumático Michelin 16''", precio: 135 },
+    { codigo: "7005", unidad: "UND", descripcion: "Batería Bosch 12V", precio: 148 },
+    { codigo: "006", unidad: "UND", descripcion: "Kit de embrague Toyota Hilux", precio: 125 },
+    { codigo: "007", unidad: "UND", descripcion: "Aceite Castrol Magnatec 5W30 4L", precio: 110 },
+    { codigo: "008", unidad: "UND", descripcion: "Filtro de aceite", precio: 180 },
+    { codigo: "009", unidad: "UND", descripcion: "Amortiguador delantero Toyota Corolla", precio: 42 },
+    { codigo: "010", unidad: "UND", descripcion: "Radiador Nissan Sentra", precio: 168 },
+    { codigo: "011", unidad: "UND", descripcion: "Disco de freno Hyundai Accent", precio: 130 },
+    { codigo: "1012", unidad: "UND", descripcion: "Alternador Chevrolet Aveo", precio: 195 },
+    { codigo: "013", unidad: "UND", descripcion: "Correa de distribución Kia Rio", precio: 27 },
+    { codigo: "014", unidad: "UND", descripcion: "Luz LED H4 alta/baja", precio: 109 },
+    { codigo: "015", unidad: "UND", descripcion: "Espejo retrovisor lateral derecho", precio: 120 },
+    { codigo: "016", unidad: "UND", descripcion: "Parachoques delantero Toyota Yaris", precio: 75 },
+    { codigo: "4017", unidad: "UND", descripcion: "Juego de bujías NGK x4", precio: 149 },
+    { codigo: "018", unidad: "UND", descripcion: "Sensor de oxígeno Honda Civic", precio: 359 },
+    { codigo: "019", unidad: "UND", descripcion: "Aceite Valvoline SynPower 5W40 4L", precio: 169 },
+    { codigo: "6020", unidad: "UND", descripcion: "Balatas traseras Nissan Versa", precio: 229 }
 ];
 
 export const getTiposComprobante = () => tiposComprobante;

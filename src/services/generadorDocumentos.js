@@ -40,7 +40,7 @@ export const calcularMonto = (tipoDocumento, totalItems) => {
         case "Nota de Credito":
             return -Math.round(totalItems * 0.5);
         case "Guia de Remision":
-            return 10;
+            return 0;
         default:
             return totalItems;
     }
@@ -48,7 +48,7 @@ export const calcularMonto = (tipoDocumento, totalItems) => {
 
 export const generarEstado = () => {
     const rnd = Math.random();
-    if (rnd < 0.01) return "RECHAZADO";      // 1%
-    if (rnd < 0.89) return "EN PROCESO";    // 89%
-    return "ACEPTADO";                      // 90%
+    if (rnd < 0.05) return "RECHAZADO";      // 5%
+    if (rnd < 0.525) return "EN PROCESO";    // 47%
+    return "ACEPTADO";                      // 47%
 };
