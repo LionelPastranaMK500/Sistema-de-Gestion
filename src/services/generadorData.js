@@ -85,10 +85,10 @@ export const getSeries = (tipo) => {
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 50000) => {
+export const generarDataFalsa = (cantidad = 1000) => {
     const data = [];
     const counters = [];
-    const start = new Date(2025, 5, 1);
+    const start = new Date(2024, 5, 1);
     const end = new Date(2025, 8, 10);
     const dias = [];
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {

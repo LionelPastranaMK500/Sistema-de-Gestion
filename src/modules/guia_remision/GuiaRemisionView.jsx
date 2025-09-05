@@ -1,7 +1,9 @@
 import {
-    MoreVertIcon,
+    MoreVertIcon, // (no usado, lo dejo si lo necesitas luego)
     PermIdentityTwoToneIcon,
-    AccessTimeTwoToneIcon
+    AccessTimeTwoToneIcon,
+    KeyboardArrowLeftIcon,
+    KeyboardArrowRightIcon,
 } from "@constants/iconsConstants";
 import { useState, useEffect, useRef } from "react";
 import { configCalendar } from "@utils/configCalendar";
@@ -22,7 +24,9 @@ export default function GuiaRemision() {
         const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
         const dia = fecha.getDate();
         const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-        return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} » ${dia}° ${mes.charAt(0).toUpperCase() + mes.slice(1)}`;
+        const anio = fecha.getFullYear();
+        const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+        return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
     };
 
     const guiaRemisionFiltradas = fechaSeleccionada
@@ -40,11 +44,13 @@ export default function GuiaRemision() {
         if (!fechaISO) return "";
         const fecha = new Date(fechaISO);
         const opcionesFecha = { day: "numeric", month: "long" };
-        const fechaFormateada = fecha.toLocaleDateString("es-ES", opcionesFecha).replace(/\b\w/, c => c.toUpperCase());
+        const fechaFormateada = fecha
+            .toLocaleDateString("es-ES", opcionesFecha)
+            .replace(/\b\w/, (c) => c.toUpperCase());
         const horaFormateada = fecha.toLocaleTimeString("es-ES", {
             hour: "numeric",
             minute: "2-digit",
-            hour12: true
+            hour12: true,
         });
         return `${fechaFormateada}, ${horaFormateada}`;
     };
@@ -53,58 +59,105 @@ export default function GuiaRemision() {
         configCalendar();
     }, []);
 
+    // navegación por días (mismo patrón)
+    const moverDia = (cantidad) => {
+        setFechaSeleccionada((prev) => {
+            const fechaBase = prev ? new Date(prev) : new Date();
+            fechaBase.setDate(fechaBase.getDate() + cantidad);
+            return fechaBase;
+        });
+    };
+
     return (
-        <div>
-            <div>
-                <h2>{getTituloFecha(fechaSeleccionada)}</h2>
+        <div className="flex flex-col w-full h-screen">
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-6 py-4 border-b">
+                <h2 className="font-bold text-gray-800 text-2xl">
+                    {getTituloFecha(fechaSeleccionada)}
+                </h2>
 
-                <div>
-                    <Calendar
-                        ref={calendarRef}
-                        value={fechaSeleccionada}
-                        onChange={(e) => setFechaSeleccionada(e.value)}
-                        dateFormat="dd/mm/yy"
-                        showIcon
-                    />
-
-                    <button onClick={() => calendarRef.current.show()}>
-                        <i></i>
+                {/* Acciones */}
+                <div className="flex items-center gap-4">
+                    {/* Flecha izquierda */}
+                    <button
+                        className="hover:bg-gray-200 p-2 rounded"
+                        onClick={() => moverDia(-1)}
+                        aria-label="Día anterior"
+                    >
+                        <KeyboardArrowLeftIcon />
                     </button>
 
-                    <button onClick={() => setMostrarNuevo(true)}>
+                    {/* Calendario anclado al ícono (overlay en body) */}
+                    <div className="relative">
+                        <Calendar
+                            ref={calendarRef}
+                            value={fechaSeleccionada}
+                            onChange={(e) => setFechaSeleccionada(e.value)}
+                            dateFormat="dd/mm/yy"
+                            appendTo={document.body}
+                            panelClassName="z-50"
+                            className="absolute inset-0 opacity-0 pointer-events-none"
+                        />
+                        <button
+                            className="hover:bg-gray-200 p-2 rounded"
+                            onClick={() => calendarRef.current?.show?.()}
+                            aria-label="Abrir calendario"
+                        >
+                            <i className="text-gray-700 pi pi-calendar"></i>
+                        </button>
+                    </div>
+
+                    {/* Flecha derecha */}
+                    <button
+                        className="hover:bg-gray-200 p-2 rounded"
+                        onClick={() => moverDia(1)}
+                        aria-label="Día siguiente"
+                    >
+                        <KeyboardArrowRightIcon />
+                    </button>
+
+                    {/* Registrar Nuevo */}
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                        onClick={() => setMostrarNuevo(true)}
+                    >
                         Registrar Nuevo
                     </button>
-
                 </div>
             </div>
 
-            <div>
+            {/* CONTENIDO */}
+            <div className="flex-1 min-h-0 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
                 {fechaSeleccionada ? (
                     guiaRemisionFiltradas.length > 0 ? (
-                        <div>
+                        <div className="flex flex-col gap-6 w-full">
                             {guiaRemisionFiltradas.map((f) => (
                                 <div
                                     key={f.id}
                                     onClick={() => setSelectedGuiaRemision(f)}
+                                    className="flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white border-gray-250"
+                                    style={{ minHeight: "110px" }}
                                 >
-                                    <div>
-                                        <p>
+                                    {/* Izquierda */}
+                                    <div className="flex flex-col gap-1 text-gray-700 text-base">
+                                        <p className="font-bold text-gray-900 text-lg">
                                             {f.tDocumento} » {f.numero}
                                         </p>
-                                        <p>
+                                        <p className="flex items-center gap-2 text-gray-700 text-base">
                                             <PermIdentityTwoToneIcon fontSize="small" />
                                             <span>
                                                 {f.cliente} ({f.ruc})
                                             </span>
                                         </p>
-                                        <p>
+                                        <p className="flex items-center gap-2 text-gray-500 text-sm">
                                             <AccessTimeTwoToneIcon fontSize="small" />
                                             {formatoFechaHora(f.fecha)}
                                         </p>
                                     </div>
 
-                                    <div>
-                                        <p>
+                                    {/* Derecha */}
+                                    <div className="text-right">
+                                        <p className="text-xl font-extrabold text-blue-700">
                                             S/ {Math.abs(f.monto).toFixed(2)}
                                         </p>
                                     </div>
@@ -112,33 +165,40 @@ export default function GuiaRemision() {
                             ))}
                         </div>
                     ) : (
-                        <div>
+                        <div className="flex flex-col justify-center items-center h-full">
                             <img
                                 src="/assets/personaje.png"
                                 alt="Sin Guia de Remision"
+                                className="mx-auto mb-4 w-48"
                             />
-                            <p>No se encontraron Guia de Remision realizadas en esta fecha</p>
+                            <p className="text-gray-600">
+                                No se encontraron Guia de Remision realizadas en esta fecha
+                            </p>
                         </div>
                     )
                 ) : (
-                    <div>
-                        <p>Seleccione una fecha para ver las Guias de Remision.</p>
+                    <div className="flex justify-center items-center h-full">
+                        <p className="text-gray-600">
+                            Seleccione una fecha para ver las Guias de Remision.
+                        </p>
                     </div>
                 )}
             </div>
 
+            {/* MODAL DETALLE */}
             {selectedGuiaRemision && (
                 <GuiaRemisionModal
                     f={selectedGuiaRemision}
-                    onClose={() => setSelectedGuiaRemision(false)}
+                    onClose={() => setSelectedGuiaRemision(false)} // (respetando tu lógica)
                 />
             )}
 
+            {/* MODAL NUEVO */}
             {mostrarNuevo && (
                 <div>
                     <GuiaRemisionNuevo onClose={() => setMostrarNuevo(false)} />
                 </div>
             )}
         </div>
-    )
+    );
 }

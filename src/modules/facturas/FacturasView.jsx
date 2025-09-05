@@ -18,7 +18,7 @@ export default function FacturasView() {
   const [showConfig, setShowConfig] = useState(false);
   const [selectedFactura, setSelectedFactura] = useState(null);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
-  
+
   const calendarRef = useRef(null); // 👉 referencia al Calendar de PrimeReact
 
   const getTituloFecha = (fechaISO) => {
@@ -27,7 +27,9 @@ export default function FacturasView() {
     const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
     const dia = fecha.getDate();
     const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-    return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} » ${dia}° ${mes.charAt(0).toUpperCase() + mes.slice(1)}`;
+    const anio = fecha.getFullYear();
+    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
   };
 
   const facturasFiltradas = fechaSeleccionada
@@ -69,7 +71,7 @@ export default function FacturasView() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-screen">
       {/* HEADER */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <h2 className="font-bold text-gray-800 text-2xl">
@@ -82,24 +84,25 @@ export default function FacturasView() {
             <KeyboardArrowLeftIcon onClick={() => moverDia(-1)} />
           </button>
 
-          {/* 👉 Calendar ocultando el input de fecha */}
-          <Calendar
-            ref={calendarRef}
-            value={fechaSeleccionada}
-            onChange={(e) => setFechaSeleccionada(e.value)}
-            dateFormat="dd/mm/yy"
-            showIcon
-            className="hidden"
-          />
-
-          {/* Botón con ícono de calendario */}
-
-          <button
-            className="hover:bg-gray-200 p-2 rounded"
-            onClick={() => calendarRef.current.show()}
-          >
-            <i className="text-gray-700 pi pi-calendar"></i>
-          </button>
+          {/* Calendario anclado al ícono (overlay en la misma posición) */}
+          <div className="relative">
+            <Calendar
+              ref={calendarRef}
+              value={fechaSeleccionada}
+              onChange={(e) => setFechaSeleccionada(e.value)}
+              dateFormat="dd/mm/yy"
+              appendTo={document.body}                 // panel en el body
+              panelClassName="z-50"
+              className="absolute inset-0 opacity-0 pointer-events-none" // ⬅️ NO bloquea el click
+            />
+            <button
+              className="hover:bg-gray-200 p-2 rounded"
+              onClick={() => calendarRef.current?.show?.()}
+              aria-label="Abrir calendario"
+            >
+              <i className="text-gray-700 pi pi-calendar"></i>
+            </button>
+          </div>
 
           <button className="hover:bg-gray-200 p-2 rounded">
             <KeyboardArrowRightIcon onClick={() => moverDia(1)} />
@@ -110,7 +113,7 @@ export default function FacturasView() {
             onClick={() => setShowConfig(!showConfig)}
           />
           {showConfig && (
-            <div className="top-14 right-6 absolute bg-white shadow-lg p-2 rounded-md">
+            <div className="top-14 right-6 absolute z-40 bg-white shadow-lg p-2 rounded-md">
               {menuItemsFactura.map((item, index) => (
                 <div
                   key={index}
@@ -126,7 +129,7 @@ export default function FacturasView() {
       </div>
 
       {/* CONTENIDO */}
-      <div className="flex-1 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
+      <div className="flex-1 min-h-0 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
         {fechaSeleccionada ? (
           facturasFiltradas.length > 0 ? (
             <div className="flex flex-col gap-6 w-full">
