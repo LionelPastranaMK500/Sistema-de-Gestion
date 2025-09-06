@@ -341,9 +341,11 @@ export default function VentasView() {
 
                 {/* TOTAL + BOTONES */}
                 <div className="flex justify-between items-center gap-4">
-                    <div className="group relative flex-[2] text-center cursor-pointer">
+                    <div className="group relative flex-[22] text-center cursor-pointer">
                         <p className="font-bold text-gray-700 text-lg">
-                            <strong>TOTAL<span className="text-black">S/. {totalGeneral}</span></strong>
+                            <strong>
+                                TOTAL <span className="text-black">S/. {totalGeneral}</span>
+                            </strong>
                         </p>
                         <div className="hidden group-hover:block bottom-full left-1/2 absolute bg-white shadow-lg mb-2 p-4 border rounded-lg w-52 text-gray-700 text-sm -translate-x-1/2">
                             {[
@@ -359,18 +361,21 @@ export default function VentasView() {
 
                     <button
                         onClick={handleVistaPrevia}
-                        className="flex-[1] bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700">
+                        className="flex-[9] bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700"
+                    >
                         VISTA PREVIA
                     </button>
-                    <button className="flex-[1] bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white">
+
+                    <button className="flex-[9] bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white">
                         PROCESAR
                     </button>
                 </div>
 
+
                 <Dialog
                     header="Vista previa PDF"
                     visible={visiblePreview}
-                    
+
                     style={{ width: "80vw", height: "90vh" }}
                     onHide={() => setVisiblePreview(false)}
                 >
