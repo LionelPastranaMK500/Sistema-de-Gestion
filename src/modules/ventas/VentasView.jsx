@@ -375,11 +375,11 @@ export default function VentasView() {
                 <Dialog
                     header="Vista previa PDF"
                     visible={visiblePreview}
-
-                    style={{ width: "80vw", height: "90vh" }}
+                    maximized
+                    className="w-screen h-screen"
                     onHide={() => setVisiblePreview(false)}
                 >
-                    <div className="flex gap-2 mb-3">
+                    <div className="flex gap-10 mb-3">
                         <select
                             value={tipoPdf}
                             onChange={(e) => setTipoPdf(e.target.value)}
@@ -400,9 +400,11 @@ export default function VentasView() {
                         <iframe
                             src={pdfUrl}
                             title="Vista previa PDF"
-                            style={{ width: "100%", height: "80vh", border: "none" }}
+                            className="border-0 w-full h-[calc(100vh-100px)]"
                         />
                     )}
+
+                    
                 </Dialog>
             </div>
         </div>
