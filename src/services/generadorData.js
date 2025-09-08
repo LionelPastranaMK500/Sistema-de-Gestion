@@ -8,38 +8,46 @@ import {
 } from "./generadorDocumentos";
 import { getActiveCompany } from "@services/auth/authServices";
 
+//variables predterminados
+const DEFAULT_SERIE = "XX01";
+const DEFAULT_FALLBACK = ["BB004"];
+
 export const tiposComprobante = [
-    "Factura Electronica",
-    "Boleta de Venta Electronica",
-    "Nota de Credito",
-    "Nota de Debito",
-    "Proforma",
-    "Guia de Remision"
+    "FACTURA ELECTRÓNICA",
+    "BOLETA DE VENTA ELECTRÓNICA",
+    "NOTA DE CRÉDITO ELECTRÓNICA",
+    "NOTA DE DÉBITO ELECTRÓNICA",
+    "PROFORMA ELECTRÓNICA",
+    "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA"
 ];
 
 export const mapTipo = {
-    "Factura Electronica": "Factura",
-    "Boleta de Venta Electronica": "Boleta",
-    "Nota de Credito": "NotaCredito",
-    "Nota de Debito": "NotaDebito",
-    "Proforma": "Proforma",
-    "Guia de Remision": "Guia"
+    "FACTURA ELECTRÓNICA": "FACTURA",
+    "BOLETA DE VENTA ELECTRÓNICA": "BOLETA DE VENTA",
+    "NOTA DE CRÉDITO ELECTRÓNICA": "NOTA DE CRÉDITO",
+    "NOTA DE DÉBITO ELECTRÓNICA": "NOTA DE DÉBITO",
+    "PROFORMA ELECTRÓNICA": "PROFORMA",
+    "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA": "GUÍA DE REMISIÓN REMITENTE"
 };
 
 export const series = {
     "20123456789": {
-        "Factura": ["F001", "F002"],
-        "Boleta": ["B001", "B002"],
-        "Proforma": ["P001"],
-        "Guia": ["T001"],
-        "NotaCredito": ["NC01"],
-        "NotaDebito": ["ND01"]
+        "FACTURA": ["F001", "F002"],
+        "BOLETA DE VENTA": ["B001", "B002"],
+        "PROFORMA": ["P001"],
+        "GUÍA DE REMISIÓN REMITENTE": ["T001"],
+        "NOTA DE CRÉDITO": ["NC01"],
+        "NOTA DE DÉBITO": ["ND01"]
     },
     "20234567890": {
-        "Factura": ["F101"],
-        "Boleta": ["B101"]
+        "FACTURA": ["F101"],
+        "BOLETA DE VENTA": ["B101"]
     }
 };
+
+export const condicionPago = {
+
+}
 
 export const clientes = [
     { razonSocial: "NORSET SL", direccion: "Av. Los Olivos 12453, Lima" },
@@ -77,30 +85,37 @@ export const productos = [
     { codigo: "6020", unidad: "UND", descripcion: "Balatas traseras Nissan Versa", precio: 229 }
 ];
 
+
+
 export const getTiposComprobante = () => tiposComprobante;
 export const getSeries = (tipo) => {
     const company = getActiveCompany();
-    return series[company?.ruc]?.[tipo] || ["BB004"];
+    return series[company?.ruc]?.[tipo] || DEFAULT_FALLBACK;
 };
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 1000) => {
+export const generarDataFalsa = (cantidad = 5, fechaBase = new Date()) => {
     const data = [];
     const counters = [];
-    const start = new Date(2024, 5, 1);
-    const end = new Date(2025, 8, 10);
+
+    const year = fechaBase.getFullYear();
+    const mesReferencia = fechaBase.getMonth();
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, mesReferencia + 1, 0);
     const dias = [];
+
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         dias.push(new Date(d));
     }
+    
     let idCounter = 1;
     dias.forEach(fecha => {
         for (let i = 0; i < cantidad; i++) {
             const tDocumento = elegirAleatorio(getTiposComprobante());
             const claveTipo = mapTipo[tDocumento];
             const seriesDisponibles = getSeries(claveTipo);
-            const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : "XX01";
+            const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : DEFAULT_SERIE;
             if (!counters[serie]) counters[serie] = 0;
             counters[serie]++;
             const numero = counters[serie].toString().padStart(6, "0");
