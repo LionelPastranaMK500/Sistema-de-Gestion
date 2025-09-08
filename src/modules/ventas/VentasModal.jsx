@@ -22,11 +22,19 @@ export default function VentasModal() {
 
     const inputItems = componentsVentas.filter((c) => c.isInput);
     const otrosModalItems = componentsVentas
-        .filter((c) => !c.isInput) // Guía también va aquí
+        .filter((c) => !c.isInput) // Guía incluida aquí
         .map(({ name, action }) => ({
             label: name,
             command: () => setModals((prev) => ({ ...prev, [action]: true })),
         }));
+
+    // 👉 CLASES UNIFICADAS (misma altura/estilo para TODOS)
+    const BTN_CLASS =
+        "w-full h-12 rounded-md bg-blue-600 px-4 text-sm font-medium text-white " +
+        "flex items-center justify-center gap-2 leading-none transition hover:bg-blue-700";
+    const INPUT_CLASS =
+        "w-full h-12 rounded-md border border-gray-300 px-3 text-sm outline-none " +
+        "ring-2 ring-transparent focus:ring-blue-400";
 
     const renderModal = (action) => {
         switch (action) {
@@ -58,11 +66,11 @@ export default function VentasModal() {
 
     return (
         <div className="col-span-4 w-full">
-            {/* Ahora: grid de 4 columnas, cada botón ocupa toda la celda */}
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-                {/* Botones con inline input */}
+            {/* 4 columnas simétricas; estiro hijos para igualar alturas */}
+            <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+                {/* Botones tipo input (PLACA, O. COMPRA, OBSERVACIONES, D. ADICIONALES) */}
                 {inputItems.map(({ name, action, placeholder }) => (
-                    <div key={action} className="w-full">
+                    <div key={action} className="h-full">
                         {inlineInputs[action] ? (
                             <input
                                 type="text"
@@ -70,12 +78,13 @@ export default function VentasModal() {
                                 autoFocus
                                 onBlur={() => blurInlineInput(action)}
                                 onKeyDown={(e) => e.key === "Enter" && blurInlineInput(action)}
-                                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none ring-2 ring-transparent focus:ring-blue-400"
+                                className={INPUT_CLASS}
                             />
                         ) : (
                             <button
                                 onClick={() => toggleInlineInput(action)}
-                                className="w-full rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-700"
+                                className={BTN_CLASS}
+                                title={name}
                             >
                                 {name}
                             </button>
@@ -83,15 +92,16 @@ export default function VentasModal() {
                     </div>
                 ))}
 
-                {/* Botón OTROS, ahora con mismo diseño que los demás */}
-                <div className="relative w-full">
+                {/* Botón OTROS — EXACTAMENTE MISMAS DIMENSIONES */}
+                <div className="relative h-full">
                     <Menu model={otrosModalItems} popup ref={menuRef} />
                     <button
                         onClick={(e) => menuRef.current?.toggle(e)}
-                        className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-700"
+                        className={BTN_CLASS}
                     >
                         OTROS
-                        <MenuIcon />
+                        {/* Limito el tamaño del ícono para no variar la altura */}
+                        <MenuIcon className="h-4 w-4" />
                     </button>
                 </div>
             </div>
