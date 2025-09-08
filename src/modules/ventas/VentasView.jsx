@@ -6,6 +6,7 @@ import { configCalendar } from "@utils/configCalendar";
 import { getClientes, getTiposComprobante, getSeries, getProductos, mapTipo } from "@services/generadorData";
 import { visualizarPDF } from "@utils/pdfViewer";
 import { generarRuc, generarDni } from "@services/generadorDocumentos";
+import VentasModal from "./VentasModal";
 
 export default function VentasView() {
     const [fechaEmision, setFechaEmision] = useState(new Date());
@@ -256,14 +257,7 @@ export default function VentasView() {
 
             {/* BOTONES DE OPCIONES */}
             <div className="gap-2 grid grid-cols-4 mb-6">
-                {["PLACA", "O. COMPRA", "G. REMISIÓN", "OBSERVACIONES", "D. ADICIONALES"].map((label) => (
-                    <button
-                        key={label}
-                        className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded w-full font-medium text-white text-sm"
-                    >
-                        {label}
-                    </button>
-                ))}
+                <VentasModal />
             </div>
 
             {/* ZONA DE PRODUCTOS */}
@@ -404,7 +398,7 @@ export default function VentasView() {
                         />
                     )}
 
-                    
+
                 </Dialog>
             </div>
         </div>
