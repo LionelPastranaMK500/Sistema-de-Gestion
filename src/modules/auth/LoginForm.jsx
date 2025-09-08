@@ -30,7 +30,7 @@ export default function LoginForm() {
                     <aside className="hidden relative md:flex flex-col justify-center items-center bg-blue-700 w-1/2 overflow-hidden text-white">
                         {/* Logo */}
                         <div className="top-6 left-6 z-10 absolute">
-                            <img src="/images/Logo_WolfFur.webp" alt="Logo" className="h-20 object-contain" />
+                            <img src="/images/Logo_WolfFur.webp" alt="Logo" className="h-20" />
                         </div>
 
                         {/* Contenido (centrado pero desplazado un poco a la izquierda) */}
