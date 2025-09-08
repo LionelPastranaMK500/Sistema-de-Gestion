@@ -1,3 +1,18 @@
-export default function CondicionPagoModal(){
-    
+import { Dialog } from "primereact/dialog";
+
+export default function CondicionPagoModal({ visible, onHide }) {
+    return (
+        <Dialog
+            header="Condición de Pago"
+            modal
+            draggable={false}
+            visible={visible}
+            onHide={onHide}
+            breakpoints={{ '960px': '75vw', '641px': '100vw' }}
+        >
+            <div>
+
+            </div>
+        </Dialog>
+    );
 }
