@@ -73,6 +73,13 @@
                 ├── ReportesModal.jsx
                 ├── ReportesView.jsx
             └── 📁ventas
+                └── 📁components
+                    ├── CondicionPagoModal.jsx
+                    ├── DatosAdicionalesModal.jsx
+                    ├── GuiaRemisionModal.jsx
+                    ├── ObservacionesModal.jsx
+                    ├── OrdenCompraModal.jsx
+                    ├── PlacaModal.jsx
                 ├── VentasModal.jsx
                 ├── VentasView.jsx
         └── 📁routes
