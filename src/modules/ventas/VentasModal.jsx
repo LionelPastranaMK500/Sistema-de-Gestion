@@ -5,6 +5,7 @@ import { componentsVentas } from "@constants/menuitemsConstants";
 import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
+import { MenuIcon } from "@constants/iconsConstants";
 
 export default function VentasModal() {
     const [modals, setModals] = useState({});
@@ -57,7 +58,15 @@ export default function VentasModal() {
 
             <div style={{ display: "inline-block", margin: "5px" }}>
                 <Menu model={otrosItems} popup ref={menu} />
-                <Button label="OTROS" onClick={e => menu.current.toggle(e)} />
+                <Button
+                    onClick={e => menu.current.toggle(e)}
+                >
+                    <span>
+                        OTROS
+                        <MenuIcon />
+                    </span>
+                </Button>
+
             </div>
 
             {componentsVentas
