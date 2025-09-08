@@ -28,9 +28,9 @@ export const generarItemsAleatorios = (catalogo, maxItems = 2) => {
     return Array.from({ length: cantidad }, () => {
         const item = elegirAleatorio(catalogo);
         let precio = item.precio || 0;
-        if (precio < 1000 || precio > 1500) {
-            precio = Math.floor(Math.random() * (1500 - 1000 + 1)) + 1000;
-        }
+        if (precio < 20 || precio > 200) {
+            precio = Math.floor(Math.random() * (200 - 20 + 1)) + 20;
+        }        
         return { ...item, cantidad: 1, unidad: "UND", precio };
     });
 };
