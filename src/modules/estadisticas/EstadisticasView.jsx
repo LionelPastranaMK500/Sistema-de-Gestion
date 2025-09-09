@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 import { Calendar } from "primereact/calendar";
 import { configCalendar } from "@utils/configCalendar";
-import { generarDataFalsa } from "@services/generadorData";
+import { generarDataFalsa, keyMap} from "@services/generadorData";
 import { contarComprobantes } from "@utils/comprobantesUtils";
 import {
     buildEmisionesData, emisionesChartOptions,
@@ -42,7 +42,7 @@ export default function EstadisticasView() {
     };
 
     useEffect(() => {
-        const datosGenerados = generarDataFalsa(50);
+        const datosGenerados = generarDataFalsa(2);
         setData(datosGenerados);
         configCalendar();
     }, []);
@@ -82,19 +82,19 @@ export default function EstadisticasView() {
     return (
         <div className="flex flex-col w-full h-screen">
             {/* HEADER (mismo patrón que FacturasView) */}
-            <div className="flex items-center justify-between px-6 py-4 border-b">
-                <h2 className="ml-14 md:ml-20 text-2xl font-bold text-gray-800">
+            <div className="flex justify-between items-center px-6 py-4 border-b">
+                <h2 className="ml-14 md:ml-20 font-bold text-gray-800 text-2xl">
                     Estadísticas
                 </h2>
             </div>
 
             {/* CONTENIDO scrollable (idéntico comportamiento que FacturasView) */}
-            <div className="flex-1 min-h-0 w-full px-6 py-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
+            <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
 
                 {/* === EMISIONES === */}
-                <div className="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm">
-                    <div className="flex items-center justify-between border-b px-5 py-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Emisiones</h3>
+                <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-xl">
+                    <div className="flex justify-between items-center px-5 py-4 border-b">
+                        <h3 className="font-semibold text-gray-800 text-lg">Emisiones</h3>
                         <div className="relative">
                             <Calendar
                                 ref={refCalEmi}
@@ -105,44 +105,36 @@ export default function EstadisticasView() {
                                 showIcon={false}
                                 appendTo={document.body}
                                 panelClassName="z-50"
-                                className="absolute inset-0 pointer-events-none opacity-0"
+                                className="absolute inset-0 opacity-0 pointer-events-none"
                             />
                             <button
                                 onClick={() => refCalEmi.current?.show?.()}
-                                className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
                             >
                                 {fmtMesAnio(fechaEmisiones)}
-                                <i className="pi pi-chevron-down text-gray-500" />
+                                <i className="text-gray-500 pi pi-chevron-down" />
                             </button>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-12 gap-6 px-5 py-6">
+                    <div className="gap-6 grid grid-cols-12 px-5 py-6">
                         <div className="col-span-12 lg:col-span-6">
                             <div className="mb-6 text-center">
-                                <p className="text-4xl font-semibold text-gray-800">{emisiones.total}</p>
-                                <p className="text-sm text-gray-500">Comprobantes emitidos</p>
+                                <p className="font-semibold text-gray-800 text-4xl">{emisiones.total}</p>
+                                <p className="text-gray-500 text-sm">Comprobantes emitidos</p>
                             </div>
 
                             <ul className="space-y-2">
                                 {emisionesData.labels.map((label, i) => {
-                                    const keyMap = {
-                                        "Factura Electronica": "facturas",
-                                        "Boleta de Venta Electronica": "boletas",
-                                        "Nota de Credito": "notasCredito",
-                                        "Nota de Debito": "notasDebito",
-                                        "Proforma": "proformas",
-                                        "Guia de Remision": "guiasRemision",
-                                    };
                                     const key = keyMap[label];
                                     return (
                                         <li
                                             key={label}
-                                            className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-2 text-sm"
+                                            className="flex justify-between items-center bg-gray-50 px-4 py-2 rounded-lg text-sm"
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span
-                                                    className="inline-block h-3 w-3 rounded-full"
+                                                    className="inline-block rounded-full w-3 h-3"
                                                     style={{ backgroundColor: emisionesData.datasets[0].backgroundColor[i] }}
                                                 />
                                                 <span className="text-gray-700">{label}</span>
@@ -155,7 +147,7 @@ export default function EstadisticasView() {
                         </div>
 
                         <div className="col-span-12 lg:col-span-6">
-                            <div className="mx-auto h-[320px] max-w-[420px]">
+                            <div className="mx-auto max-w-[420px] h-[320px]">
                                 <Doughnut
                                     data={emisionesData}
                                     options={{ ...emisionesChartOptions, maintainAspectRatio: false, responsive: true }}
@@ -166,11 +158,11 @@ export default function EstadisticasView() {
                 </div>
 
                 {/* === VENTAS === */}
-                <div className="mb-6 rounded-xl border border-gray-200 bg-white shadow-sm">
-                    <div className="flex items-center justify-between border-b px-5 py-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Ventas</h3>
+                <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-xl">
+                    <div className="flex justify-between items-center px-5 py-4 border-b">
+                        <h3 className="font-semibold text-gray-800 text-lg">Ventas</h3>
                         <div className="flex items-center gap-2">
-                            <select className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                            <select className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 text-sm">
                                 <option>PEN</option>
                             </select>
                             <div className="relative">
@@ -183,30 +175,30 @@ export default function EstadisticasView() {
                                     showIcon={false}
                                     appendTo={document.body}
                                     panelClassName="z-50"
-                                    className="absolute inset-0 pointer-events-none opacity-0"
+                                    className="absolute inset-0 opacity-0 pointer-events-none"
                                 />
                                 <button
                                     onClick={() => refCalVen.current?.show?.()}
-                                    className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                    className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
                                 >
                                     {fmtMesAnio(fechaVentas)}
-                                    <i className="pi pi-chevron-down text-gray-500" />
+                                    <i className="text-gray-500 pi pi-chevron-down" />
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="relative px-5 py-6">
-                        <div className="pointer-events-none absolute right-6 top-6 flex flex-col items-end gap-2">
-                            <span className="rounded-md bg-indigo-600 px-3 py-1 text-sm font-bold text-white shadow">
+                        <div className="top-6 right-6 absolute flex flex-col items-end gap-2 pointer-events-none">
+                            <span className="bg-indigo-600 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {ventas.toFixed(2)}
                             </span>
-                            <span className="rounded-md bg-blue-500 px-3 py-1 text-sm font-bold text-white shadow">
+                            <span className="bg-blue-500 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {(0).toFixed(2)}
                             </span>
                         </div>
 
-                        <div className="h-[360px] w-full">
+                        <div className="w-full h-[360px]">
                             <Line
                                 data={ventasData}
                                 options={{ ...ventasChartOptions, maintainAspectRatio: false, responsive: true }}
@@ -216,11 +208,11 @@ export default function EstadisticasView() {
                 </div>
 
                 {/* === COMPRAS === */}
-                <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-                    <div className="flex items-center justify-between border-b px-5 py-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Compras</h3>
+                <div className="bg-white shadow-sm border border-gray-200 rounded-xl">
+                    <div className="flex justify-between items-center px-5 py-4 border-b">
+                        <h3 className="font-semibold text-gray-800 text-lg">Compras</h3>
                         <div className="flex items-center gap-2">
-                            <select className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                            <select className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 text-sm">
                                 <option>PEN</option>
                             </select>
                             <div className="relative">
@@ -233,27 +225,27 @@ export default function EstadisticasView() {
                                     showIcon={false}
                                     appendTo={document.body}
                                     panelClassName="z-50"
-                                    className="absolute inset-0 pointer-events-none opacity-0"
+                                    className="absolute inset-0 opacity-0 pointer-events-none"
                                 />
                                 <button
                                     onClick={() => refCalCom.current?.show?.()}
-                                    className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                    className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
                                 >
                                     {fmtMesAnio(fechaCompras)}
-                                    <i className="pi pi-chevron-down text-gray-500" />
+                                    <i className="text-gray-500 pi pi-chevron-down" />
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="relative px-5 py-6">
-                        <div className="pointer-events-none absolute right-6 top-6">
-                            <span className="rounded-md bg-emerald-600 px-3 py-1 text-sm font-bold text-white shadow">
+                        <div className="top-6 right-6 absolute pointer-events-none">
+                            <span className="bg-emerald-600 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {compras.toFixed(2)}
                             </span>
                         </div>
 
-                        <div className="h-[360px] w-full">
+                        <div className="w-full h-[360px]">
                             {dataCompras && (
                                 <Line
                                     data={dataCompras}
