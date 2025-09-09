@@ -9,10 +9,13 @@ export function contarComprobantes(data, fechaInicio = null, fechaFin = null) {
         guiasRemision: 0,
     };
 
+    const hoy = new Date();
+
     data.forEach(doc => {
         if (fechaInicio && fechaFin) {
             const fechaDoc = new Date(doc.fecha);
-            if (fechaDoc < fechaInicio || fechaDoc > fechaFin) return;
+            const fechaLimite = fechaFin > hoy ? hoy : fechaFin;
+            if (fechaDoc < fechaInicio || fechaDoc > fechaLimite) return;
         }
 
         conteo.total++;
