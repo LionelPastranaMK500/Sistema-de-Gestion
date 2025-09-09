@@ -50,8 +50,8 @@ export default function VentasView() {
         setProformaChecked(checked);
 
         if (checked) {
-            setComprobante("Proforma");
-            const nuevasSeries = getSeries("Proforma");
+            setComprobante("PROFORMA ELECTRÓNICA");
+            const nuevasSeries = getSeries("PROFORMA");
             setSeriesDisponibles(nuevasSeries);
             setSerie(nuevasSeries[0] || "");
         } else {
@@ -64,9 +64,9 @@ export default function VentasView() {
     const handleVistaPrevia = async () => {
         let docCliente = cliente?.documento;
         if (!docCliente) {
-            if (comprobante.includes("Factura")) {
+            if (comprobante.includes("FACTURA ELECTRÓNICA")) {
                 docCliente = generarRuc();
-            } else if (comprobante.includes("Boleta")) {
+            } else if (comprobante.includes("BOLETA DE VENTA ELECTRÓNICA")) {
                 docCliente = generarDni();
             } else {
                 docCliente = generarRuc();
