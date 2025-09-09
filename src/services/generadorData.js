@@ -30,6 +30,15 @@ export const mapTipo = {
     "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA": "GUÍA DE REMISIÓN REMITENTE"
 };
 
+export const keyMap = {
+    "Facturas": "facturas",
+    "Boletas de Venta": "boletas",
+    "Notas de Crédito": "notasCredito",
+    "Notas de Débito": "notasDebito",
+    "Proformas": "proformas",
+    "Guías de Remisión": "guiasRemision"
+};
+
 export const series = {
     "20123456789": {
         "FACTURA": ["F001", "F002"],
@@ -50,16 +59,16 @@ export const condicionPago = {
 }
 
 export const clientes = [
-    { razonSocial: "NORSET SL", direccion: "Av. Los Olivos 12453, Lima" },
-    { razonSocial: "Talleres Pérez E.I.R.L.", direccion: "Calle San Martín 45, Lima" },
-    { razonSocial: "Auto Partes García S.A.", direccion: "Jr. Arequipa 567, Lima" },
-    { razonSocial: "Servicios de Transporte Torres S.A.C.", direccion: "Av. Javier Prado 890, Lima" },
-    { razonSocial: "Lubricantes Fernández S.A.", direccion: "Calle Bolívar 234, Lima" },
-    { razonSocial: "Distribuciones Díaz E.I.R.L.", direccion: "Av. La Marina 678, Lima" },
-    { razonSocial: "Motors Ramírez S.A.", direccion: "Jr. Tacna 101, Lima" },
-    { razonSocial: "MISDUS SL", direccion: "Av. Grau 345, Lima" },
-    { razonSocial: "WESIZE SA", direccion: "Calle Pardo 22, Lima" },
-    { razonSocial: "Jorge Herrera S.A.C.", direccion: "Av. Arequipa 19, Lima" }
+    { razonSocial: "NORSET SL", direccion: "Av. Los Olivos 12453, Lima", nombre: "Carlos Noriega", tipo: "Cliente", documento: "20123456789", email: "carlos.n@norset.com" },
+    { razonSocial: "Talleres Pérez E.I.R.L.", direccion: "Calle San Martín 45, Lima", nombre: "Luis Pérez", tipo: "Cliente", documento: "20567891234", email: "luis.p@talleresperez.com" },
+    { razonSocial: "Auto Partes García S.A.", direccion: "Jr. Arequipa 567, Lima", nombre: "Ana García", tipo: "Proveedor", documento: "20456789123", email: "ana.g@autopartesgarcia.com" },
+    { razonSocial: "Servicios de Transporte Torres S.A.C.", direccion: "Av. Javier Prado 890, Lima", nombre: "Miguel Torres", tipo: "Cliente", documento: "20345678912", email: "miguel.t@transportetorres.com" },
+    { razonSocial: "Lubricantes Fernández S.A.", direccion: "Calle Bolívar 234, Lima", nombre: "Jorge Fernández", tipo: "Proveedor", documento: "20234567891", email: "jorge.f@lubricantesfernandez.com" },
+    { razonSocial: "Distribuciones Díaz E.I.R.L.", direccion: "Av. La Marina 678, Lima", nombre: "María Díaz", tipo: "Cliente", documento: "20123456987", email: "maria.d@distribucionesdiaz.com" },
+    { razonSocial: "Motors Ramírez S.A.", direccion: "Jr. Tacna 101, Lima", nombre: "Pedro Ramírez", tipo: "Proveedor", documento: "20567892341", email: "pedro.r@motorsramirez.com" },
+    { razonSocial: "MISDUS SL", direccion: "Av. Grau 345, Lima", nombre: "Lucía Torres", tipo: "Cliente", documento: "20345678923", email: "lucia.t@misdus.com" },
+    { razonSocial: "WESIZE SA", direccion: "Calle Pardo 22, Lima", nombre: "Fernando Silva", tipo: "Proveedor", documento: "20456789134", email: "fernando.s@wesize.com" },
+    { razonSocial: "Jorge Herrera S.A.C.", direccion: "Av. Arequipa 19, Lima", nombre: "Jorge Herrera", tipo: "Cliente", documento: "20234567894", email: "jorge.h@jorgeherrera.com" }
 ];
 
 export const productos = [
@@ -108,7 +117,7 @@ export const generarDataFalsa = (cantidad = 5, fechaBase = new Date()) => {
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         dias.push(new Date(d));
     }
-    
+
     let idCounter = 1;
     dias.forEach(fecha => {
         for (let i = 0; i < cantidad; i++) {
