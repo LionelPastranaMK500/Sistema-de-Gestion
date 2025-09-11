@@ -7,7 +7,7 @@ import VentasView from "@modules/ventas/VentasView";
 import FacturasView from "@modules/facturas/FacturasView";
 import EstadisticasView from "@modules/estadisticas/EstadisticasView";
 import ProformasView from "@modules/proformas/ProformasView";
-import ClienteView from "@modules/clientes/ClienteView";
+import ClienteView from "@modules/clientes/ClientesView";
 import ProductosView from "@modules/productos/ProductosView";
 import SunatForm from "@modules/auth/SunatForm";
 import GuiaRemision from "@modules/guia_remision/GuiaRemisionView";
