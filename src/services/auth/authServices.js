@@ -13,7 +13,8 @@ export function registerUser(userData) {
         clave: String(userData.clave || "").trim(),
         nombres: userData.nombres || "",
         apellidoPaterno: userData.apellidoPaterno || "",
-        apellidoMaterno: userData.apellidoMaterno || ""
+        apellidoMaterno: userData.apellidoMaterno || "",
+        empresa: null
     });
 
     localStorage.setItem("users", JSON.stringify(users));
@@ -39,6 +40,11 @@ export function loginUser(correo, clave) {
     }
 
     localStorage.setItem("activeUser", JSON.stringify(user));
+
+    if (user.empresa) {
+        localStorage.setItem("activeCompany", JSON.stringify(user.empresa));
+    }
+
     return { success: true, user };
 }
 export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
@@ -52,7 +58,23 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
             razonSocial: "Juan Santos Pimentel",
             sucursal: "Lubricantes Claudia"
         };
+
         localStorage.setItem("activeCompany", JSON.stringify(empresa));
+
+        const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
+        if (activeUser) {
+            activeUser.empresa = empresa;
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const idx = users.findIndex(u => u.correo === activeUser.correo);
+            if (idx !== -1) {
+                users[idx] = activeUser;
+                localStorage.setItem("users", JSON.stringify(users));
+                console.log(users[idx]);
+            }
+
+            localStorage.setItem("activeUser", JSON.stringify(activeUser));
+        }
 
         return { success: true, message: "Empresa registrada", empresa };
     }
@@ -69,7 +91,14 @@ export function logoutUser() {
 export function getActiveCompany() {
     return JSON.parse(localStorage.getItem("activeCompany"));
 }
-export function logoutCompany() {
-    localStorage.removeItem("activeCompany");
+export function syncActiveCompany(){
+    const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
+    const activeCompany = JSON.parse(localStorage.getItem("activeCompany")) || null;
+
+    if(activeUser?.empresa && !activeCompany){
+        localStorage.setItem("activeCompany", JSON.stringify(activeUser.empresa));
+        return activeUser.empresa;
+    }
+    return activeCompany;
 }
 
