@@ -9,7 +9,7 @@ import {
 } from "@constants/iconsConstants";
 import { menuItems } from "@constants/menuItemsConstants";
 import { buttonColors } from "@constants/colorsConstants";
-import { logoutUser,getActiveCompany, logoutCompany} from "@services/auth/authServices";
+import { logoutUser, syncActiveCompany } from "@services/auth/authServices";
 import { useNavigate } from "react-router-dom";
 import { menuActions } from "@utils/menuActions";
 import { useSidebar } from "@utils/sidebarState";
@@ -26,7 +26,6 @@ export default function Sidebar() {
     const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${user.apellidoPaterno?.[0] || ""}`;
     const handleLogout = () => {
         logoutUser();
-        logoutCompany();
         navigate("/");
     }
 
@@ -38,11 +37,19 @@ export default function Sidebar() {
 
     useEffect(() => {
         if (sidebarReady) {
-            const company = getActiveCompany();
+            const company = syncActiveCompany();
+            if (company) {
                 setEmpresas([{ id: 1, nombre: company.razonSocial }]);
                 setEmpresa(1);
-                setSucursales([{ id: 1, nombre: company.surcursal }]);
+                setSucursales([{ id: 1, nombre: company.sucursal }]);
                 setSucursal(1);
+            } else {
+                //valores predeterminados pipipipi MOISES GARCIA GOD
+                setEmpresas([]);
+                setEmpresa("");
+                setSucursales([]);
+                setSucursal("");
+            }
         }
     }, [sidebarReady]);
 
