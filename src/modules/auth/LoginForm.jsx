@@ -90,7 +90,7 @@ export default function LoginForm() {
                                 </button>
 
                                 <a
-                                    href="#"
+                                    href="/reset-password"
                                     className="block text-gray-500 hover:text-blue-600 text-sm text-center"
                                 >
                                     ¿Olvidaste tu contraseña?
