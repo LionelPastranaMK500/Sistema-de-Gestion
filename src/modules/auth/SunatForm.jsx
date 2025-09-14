@@ -5,10 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { validarSunat } from "@services/auth/validations";
 import { useSidebar } from "@utils/sidebarState";
+import { getActiveCompany, getActiveUser } from "@services/auth/authServices";
+import { useEffect, useState } from "react";
 
 export default function SunatForm() {
     const navigate = useNavigate();
     const { setSidebarReady } = useSidebar();
+    const [shouldRender, setShouldRender] = useState(false);
+    
+    useEffect(() => {
+        const user = getActiveUser();
+        const company = getActiveCompany();
+
+        if (user?.empresa || company) {
+            navigate("/welcome");
+        } else {
+            setShouldRender(true);
+        }
+    }, [navigate]);
 
     const { values, err, handleChange, handleSubmit } = useFormHandler(
         { ruc: "", usuarioSol: "", claveSol: "" },
@@ -24,17 +38,17 @@ export default function SunatForm() {
             });
         }
     );
-
+    if (!shouldRender) return null;
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+        <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/60">
             {/* Card principal */}
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 relative">
+            <div className="relative bg-white shadow-2xl p-8 rounded-2xl w-full max-w-lg">
                 {/* Título */}
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
+                <h2 className="mb-2 font-bold text-gray-800 text-2xl text-center">
                     INGRESE SU CLAVE SOL
                 </h2>
                 {/* Texto aclaratorio */}
-                <p className="text-sm text-gray-500 text-center mb-6">
+                <p className="mb-6 text-gray-500 text-sm text-center">
                     Al ingresar tu <strong>CLAVE SOL</strong> se está autorizando su uso
                     para dar de alta automáticamente a{" "}
                     <span className="font-semibold">WOLFFUR</span> como su PSE en SUNAT.
@@ -49,7 +63,7 @@ export default function SunatForm() {
                             value={values.ruc}
                             onChange={handleChange}
                             placeholder="RUC"
-                            className="w-full border rounded-lg px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-gray-600 placeholder-gray-400"
                         />
                         {err.ruc && <ErrorText>{err.ruc}</ErrorText>}
                     </div>
@@ -60,7 +74,7 @@ export default function SunatForm() {
                             value={values.usuarioSol}
                             onChange={handleChange}
                             placeholder="Usuario SOL"
-                            className="w-full border rounded-lg px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-gray-600 placeholder-gray-400"
                         />
                         {err.usuarioSol && <ErrorText>{err.usuarioSol}</ErrorText>}
                     </div>
@@ -71,7 +85,7 @@ export default function SunatForm() {
                             value={values.claveSol}
                             onChange={handleChange}
                             placeholder="Clave SOL"
-                            className="w-full border rounded-lg px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-gray-600 placeholder-gray-400"
                         />
                         {err.claveSol && <ErrorText>{err.claveSol}</ErrorText>}
                     </div>
@@ -80,14 +94,14 @@ export default function SunatForm() {
                     <div className="flex justify-between gap-4 pt-4">
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                            className="bg-blue-600 hover:bg-blue-700 py-2 rounded-lg w-full font-medium text-white transition"
                         >
                             Registrar
                         </button>
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="w-full border border-blue-600 text-blue-600 py-2 rounded-lg font-medium hover:bg-blue-50 transition"
+                            className="hover:bg-blue-50 py-2 border border-blue-600 rounded-lg w-full font-medium text-blue-600 transition"
                         >
                             Regresar
                         </button>
