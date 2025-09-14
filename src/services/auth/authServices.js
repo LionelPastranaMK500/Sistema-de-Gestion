@@ -1,13 +1,14 @@
-import { toast } from "react-toastify";
-
 export function registerUser(userData) {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const correoNormalizado = String(userData.correo || "").trim().toLowerCase();
 
-    if (users.some(u => u.correo === correoNormalizado)) {
-        return { success: false, message: "Correo registrado" };
+    if (!correoNormalizado || !userData.clave) {
+        return { success: false, message: "Correo y clave son obligatorios" };
     }
 
+    if (users.some(u => u.correo === correoNormalizado)) {
+        return { success: false, message: "El correo ya está registrado" };
+    }
     users.push({
         correo: correoNormalizado,
         clave: String(userData.clave || "").trim(),
@@ -18,25 +19,25 @@ export function registerUser(userData) {
     });
 
     localStorage.setItem("users", JSON.stringify(users));
-    return { success: true };
+    return { success: true, message: "Usuario registrado correctamente" };
 }
 export function loginUser(correo, clave) {
     const correoNormalizado = String(correo || "").trim().toLowerCase();
     const claveNormalizada = String(clave || "").trim();
 
     if (!correoNormalizado || !claveNormalizada) {
-        return { success: false };
+        return { success: false, message: "Correo y clave son obligatorios" };
     }
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(u => u.correo === correoNormalizado);
 
     if (!user) {
-        return { success: false, message: "Correo no registrado" };
+        return { success: false, message: "Usuario no encontrado" };
     }
 
     if (user.clave !== claveNormalizada) {
-        return { success: false, message: "Contraseña incorrecta" };
+        return { success: false, message: "Clave incorrecta" };
     }
 
     localStorage.setItem("activeUser", JSON.stringify(user));
@@ -45,11 +46,11 @@ export function loginUser(correo, clave) {
         localStorage.setItem("activeCompany", JSON.stringify(user.empresa));
     }
 
-    return { success: true, user };
+    return { success: true, message: `Bienvenido ${user.nombres.split(" ")[0]} ${user.apellidoPaterno}`, user };
 }
 export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
     if (!ruc || !usuarioSol || !claveSol) {
-        return { success: false, message: "Todo los campos son requeridos" };
+        return { success: false, message: "Todos los campos son requeridos" };
     }
     if (ruc === "20123456789" && usuarioSol === "EQSIOF0C8" && claveSol === "10s3f4al") {
         const empresa = {
@@ -76,17 +77,17 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
             localStorage.setItem("activeUser", JSON.stringify(activeUser));
         }
 
-        return { success: true, message: "Empresa registrada", empresa };
+        return { success: true, message: "Empresa registrada correctamente", empresa };
     }
-    return { success: false, message: "Credenciales invalidas" };
+    return { success: false, message: "Credenciales de SUNAT inválidas" };
 }
 export function getActiveUser() {
     return JSON.parse(localStorage.getItem("activeUser"));
 }
 export function logoutUser() {
     localStorage.removeItem("activeUser");
-    toast.success("Sesión cerrada", { autoClose: 1500 });
-    return { success: true };
+    localStorage.removeItem("activeCompany");
+    return { success: true, message: "Sesión cerrada" };
 }
 export function getActiveCompany() {
     return JSON.parse(localStorage.getItem("activeCompany"));
@@ -101,4 +102,3 @@ export function syncActiveCompany(){
     }
     return activeCompany;
 }
-
