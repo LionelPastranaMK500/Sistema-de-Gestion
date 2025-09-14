@@ -1,5 +1,5 @@
-import { loginUser, registerUser, loginSunatUser } from "@services/auth/authServices";
-import { toast } from "react-toastify";
+import { loginUser, registerUser, loginSunatUser, logoutUser } from "@services/auth/authServices";
+import { notifySuccess, notifyError } from "@utils/notify";
 import { redirectWithDelay } from "@utils/redirectWithDelay";
 // import axios from "axios";
 
@@ -13,24 +13,19 @@ export const handleRegister = async (form, navigate) => {
             clave: String(form.clave || "").trim(),
         };
 
-        if (!payload.correo || !payload.clave) {
-            toast.error("Correo y clave son obligatorios", { autoClose: 1500 });
-            return { success: false };
-        }
-
         const res = await registerUser(payload);
 
         if (!res.success) {
-            toast.error(res.message , { autoClose: 1500 });
-            return { success: false, message: res.message };
+            notifyError(res.message)
+            return { success: false };
         }
 
-        toast.success("Usuario registrado correctamente", { autoClose: 1500 });
+        notifySuccess(res.message);
         redirectWithDelay(navigate, "/");
-        return { success: true};
+        return { success: true };
     } catch {
-        toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false};
+        notifyError("Error inesperado");
+        return { success: false };
     }
 };
 
@@ -38,32 +33,23 @@ export const handleLogin = async (form, navigate) => {
     const correo = String(form.correo || "").trim().toLowerCase();
     const clave = String(form.clave || "").trim();
 
-    if (!correo || !clave) {
-        toast.error("Correo y clave son obligatorios", { autoClose: 1500 });
-        return { success: false};
-    }
-
     try {
         const res = await loginUser(correo, clave);
 
         if (!res.success) {
-            toast.error(res.message , { autoClose: 1500 });
-            return { success: false, message: res.message };
+            notifyError(res.message);
+            return { success: false };
         }
 
-        const primerNombre = res.user.nombres.split(" ")[0];
-        const aPaterno = res.user.apellidoPaterno;
-
-        toast.success(`Bienvenido ${primerNombre} ${aPaterno}`, { autoClose: 1500 });
+        notifySuccess(res.message);
         redirectWithDelay(navigate, "/welcome");
 
         return { success: true, user: res.user };
     } catch {
-        toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false};
+        notifyError("Error inesperado");
+        return { success: false };
     }
 };
-
 
 export const handleSunatAuth = async (form, navigate) => {
     try {
@@ -71,23 +57,29 @@ export const handleSunatAuth = async (form, navigate) => {
         const usuarioSol = String(form.usuarioSol || "").trim();
         const claveSol = String(form.claveSol || "").trim();
 
-        if (!ruc || !usuarioSol || !claveSol) {
-            toast.error("Todos los campos son requeridos", { autoClose: 1500 });
-            return { success: false };
-        }
-
         const res = await loginSunatUser({ ruc, usuarioSol, claveSol });
 
         if (!res.success) {
-            toast.error(res.message || "Error de autenticación", { autoClose: 1500 });
+            notifyError(res.message);
             return { success: false, message: res.message };
         }
 
-        toast.success("Empresa registrada",{ autoClose: 1500 })
+        notifySuccess(res.message);
         redirectWithDelay(navigate, "/dashboard");
         return { success: true, data: res };
     } catch {
-        toast.error("Error inesperado", { autoClose: 1500 });
-        return { success: false};
+        notifyError("Error inesperado");
+        return { success: false };
     }
+};
+
+export const handleLogout = (navigate) => {
+    const res = logoutUser();
+    if (res.success) {
+        notifySuccess(res.message);
+        redirectWithDelay(navigate, "/");
+    } else {
+        notifyError(res.message);
+    }
+    return res;
 };
