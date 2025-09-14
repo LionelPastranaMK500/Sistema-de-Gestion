@@ -9,7 +9,8 @@ import {
 } from "@constants/iconsConstants";
 import { menuItems } from "@constants/menuItemsConstants";
 import { buttonColors } from "@constants/colorsConstants";
-import { logoutUser, syncActiveCompany } from "@services/auth/authServices";
+import { syncActiveCompany } from "@services/auth/authServices";
+import { handleLogout } from "@services/auth/authLogic";
 import { useNavigate } from "react-router-dom";
 import { menuActions } from "@utils/menuActions";
 import { useSidebar } from "@utils/sidebarState";
@@ -24,10 +25,6 @@ export default function Sidebar() {
     const [empresa, setEmpresa] = useState("");
     const [sucursal, setSucursal] = useState("");
     const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${user.apellidoPaterno?.[0] || ""}`;
-    const handleLogout = () => {
-        logoutUser();
-        navigate("/");
-    }
 
     const handleMenuAction = (action) => {
         if (menuActions[action]) {
@@ -44,7 +41,7 @@ export default function Sidebar() {
                 setSucursales([{ id: 1, nombre: company.sucursal }]);
                 setSucursal(1);
             } else {
-                //valores predeterminados pipipipi MOISES GARCIA GOD
+                //valores predeterminados MOISES GARCIA GOD
                 setEmpresas([]);
                 setEmpresa("");
                 setSucursales([]);
@@ -121,7 +118,7 @@ export default function Sidebar() {
 
                         <div
                             className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
-                            onClick={handleLogout}
+                            onClick={() => handleLogout(navigate)}
                         >
                             <ExitToAppIcon className="text-red-600" fontSize="medium" />
                             Cerrar sesión
