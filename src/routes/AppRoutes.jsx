@@ -3,6 +3,7 @@ import MainLayout from "@layouts/MainLayout";
 import Dashboard from "@modules/dashboard/Dashboard";
 import Login from "@modules/auth/Login";
 import Register from "@modules/auth/Register";
+import ResetPassword from "../modules/auth/Reset_Password";
 import VentasView from "@modules/ventas/VentasView";
 import FacturasView from "@modules/facturas/FacturasView";
 import EstadisticasView from "@modules/estadisticas/EstadisticasView";
@@ -35,6 +36,7 @@ export default function AppRoutes() {
       {/* Rutas públicas */}
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/reset-password" element={<ResetPassword/>}/>
 
       {/* Rutas con Sidebar */}
       <Route element={<MainLayout />}>
