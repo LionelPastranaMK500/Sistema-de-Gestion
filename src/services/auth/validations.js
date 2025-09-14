@@ -64,3 +64,15 @@ export const validarSunat = (datos) => {
     return err;
   };
   
+  export const validateResetPassword = (form, step) => {
+    const errors = {};
+    if (step === 1) {
+        if (!form.correo) errors.correo = "El correo es obligatorio";
+        else if (!new RegExp(patternEmail).test(form.correo)) errors.correo = "Correo invalido";
+    } else {
+        if (!form.codigo) errors.codigo = "El codigo es obligatorio";
+        if (!form.nuevaClave) errors.nuevaClave = "La nueva contraseña es obligatoria";
+        else if (form.nuevaClave.length < 6) errors.nuevaClave = "La contraseña debe tener al menos 6 caracteres";
+    }
+    return Object.keys(errors).length ? errors : null;
+};
