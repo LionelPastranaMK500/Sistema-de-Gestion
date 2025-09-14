@@ -92,13 +92,52 @@ export function logoutUser() {
 export function getActiveCompany() {
     return JSON.parse(localStorage.getItem("activeCompany"));
 }
-export function syncActiveCompany(){
+export function syncActiveCompany() {
     const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
     const activeCompany = JSON.parse(localStorage.getItem("activeCompany")) || null;
 
-    if(activeUser?.empresa && !activeCompany){
+    if (activeUser?.empresa && !activeCompany) {
         localStorage.setItem("activeCompany", JSON.stringify(activeUser.empresa));
         return activeUser.empresa;
     }
     return activeCompany;
+}
+export function requestResetPassword(correo) {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const correoNormalizado = String(correo).trim().toLowerCase();
+
+    const user = users.find(u => u.correo === correoNormalizado);
+    if (!user) {
+        return { success: false, message: "Correo electronico no registrado" };
+    }
+
+    const code = Math.floor(1000 + Math.random() * 9000).toString();
+    user.resetCode = code;
+    localStorage.setItem("users", JSON.stringify(users));
+
+    console.log(`Codigo ${correoNormalizado}: ${code}`);
+    return { success: true, message: "Se envió un código de recuperación a tu correo" };
+}
+export function verifyResetCode(correo, code) {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(u => u.correo === String(correo).trim().toLowerCase());
+
+    if (!user || user.resetCode !== code) {
+        return { success: false, message: "Codigo incorrecto o expirado" };
+    }
+    return { success: true, message: "Codigo valido" };
+}
+export function resetPassword(correo, code, nuevaClave) {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const idx = users.findIndex(u => u.correo === String(correo).trim().toLowerCase());
+
+    if (idx === -1 || users[idx].resetCode !== code) {
+        return { success: false, message: "Codigo incorrecto o expirado" };
+    }
+
+    users[idx].clave = String(nuevaClave).trim();
+    delete users[idx].resetCode;
+    localStorage.setItem("users", JSON.stringify(users));
+
+    return { success: true, message: "Contraseña actualizada correctamente" };
 }
