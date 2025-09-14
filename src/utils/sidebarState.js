@@ -15,11 +15,10 @@ export function SidebarProvider({ children }) {
             const user = getActiveUser();
             const company = getActiveCompany();
 
-            if (user && company) {
-                setActiveUser(user);
-                setActiveCompany(company);
-                setSidebarReady(true);
-            }
+            if (user) setActiveUser(user);
+            if (company) setActiveCompany(company);
+
+            setSidebarReady(true);
         }
 
         initSidebar();
