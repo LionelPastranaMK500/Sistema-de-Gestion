@@ -12,15 +12,24 @@ export function useFormHandler(initialValues, validate, onSubmit) {
         setErr((prev) => ({ ...prev, [name]: undefined }));
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = validate(values);
+        const validationErrors = validate ? validate(values) || {} : {};
         setErr(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            await onSubmit(values);
+            try {
+                await onSubmit(values);
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 
-    return { values, err, handleChange, handleSubmit };
+    const resetForm = () => {
+        setValues(initialValues);
+        setErr({});
+    };
+
+    return { values, setValues, err, handleChange, handleSubmit, resetForm };
 }
