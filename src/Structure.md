@@ -32,10 +32,11 @@
                 ├── LoginForm.jsx
                 ├── Register.jsx
                 ├── RegisterForm.jsx
+                ├── Reset_Password.jsx
                 ├── SunatForm.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
-                ├── ClienteView.jsx
+                ├── ClientesView.jsx
             └── 📁configuracion
                 └── 📁items
                     ├── ConfigurarAlmacen.jsx
@@ -85,6 +86,7 @@
             └── 📁auth
                 ├── authLogic.js
                 ├── authServices.js
+                ├── reset_password.js
                 ├── validations.js
             └── 📁clientes
             └── 📁facturas
@@ -109,6 +111,7 @@
         ├── App.jsx
         ├── main.jsx
         ├── Structure.md
+    ├── .env
     ├── .gitignore
     ├── eslint.config.js
     ├── index.html
