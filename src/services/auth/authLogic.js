@@ -1,4 +1,4 @@
-import { loginUser, registerUser, loginSunatUser, logoutUser } from "@services/auth/authServices";
+import { loginUser, registerUser, loginSunatUser, logoutUser, requestResetPassword, verifyResetCode, resetPassword } from "@services/auth/authServices";
 import { notifySuccess, notifyError } from "@utils/notify";
 import { redirectWithDelay } from "@utils/redirectWithDelay";
 // import axios from "axios";
@@ -82,4 +82,50 @@ export const handleLogout = (navigate) => {
         notifyError(res.message);
     }
     return res;
+};
+
+export const handleRequestReset = async (correo) => {
+    try {
+        const res = await requestResetPassword(correo);
+        if (!res.success) {
+            notifyError(res.message);
+            return { success: false };
+        }
+        notifySuccess(res.message);
+        return { success: true };
+    } catch {
+        notifyError("Error inesperado");
+        return { success: false };
+    }
+};
+
+export const handleVerifyResetCode = async (correo, code) => {
+    try {
+        const res = await verifyResetCode(correo, code);
+        if (!res.success) {
+            notifyError(res.message);
+            return { success: false };
+        }
+        notifySuccess(res.message);
+        return { success: true };
+    } catch {
+        notifyError("Error inesperado");
+        return { success: false };
+    }
+};
+
+export const handleResetPassword = async (correo, code, nuevaClave, navigate) => {
+    try {
+        const res = await resetPassword(correo, code, nuevaClave);
+        if (!res.success) {
+            notifyError(res.message);
+            return { success: false };
+        }
+        notifySuccess(res.message);
+        redirectWithDelay(navigate, "/");
+        return { success: true };
+    } catch {
+        notifyError("Error inesperado");
+        return { success: false };
+    }
 };
