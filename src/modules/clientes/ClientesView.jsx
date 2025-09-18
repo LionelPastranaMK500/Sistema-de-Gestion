@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { AutoComplete } from "primereact/autocomplete";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
-import { MoreVertIcon } from "@constants/iconsConstants";
 import { DataView } from "primereact/dataview";
 import { clientes } from "@services/generadorData";
+import {
+    MoreVertIcon,
+    SearchIcon,
+    KeyboardArrowLeftIcon,
+    KeyboardArrowRightIcon,
+} from "@constants/iconsConstants";
 
 export default function ClientesView() {
     const [search, setSearch] = useState("");
@@ -14,7 +19,7 @@ export default function ClientesView() {
         setFilteredClientes(clientes);
     }, []);
 
-    // PrimeReact: trabaja con completeMethod(e.query)
+    // búsqueda
     const searchClientes = (e) => {
         const query = (e.query ?? "").toLowerCase();
         setSearch(query);
@@ -29,7 +34,7 @@ export default function ClientesView() {
     const clienteCard = (c, i) => (
         <div
             key={`${c.documento || c.razonSocial}-${i}`}
-            className="rounded-md border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm transition hover:shadow-md"
+            className="rounded-md border border-gray-300 bg-white px-4 py-4 text-sm shadow-sm transition hover:shadow-md"
         >
             <div className="flex items-center gap-4">
                 <Avatar
@@ -72,7 +77,7 @@ export default function ClientesView() {
 
     return (
         <div className="flex h-screen w-full flex-col rounded-lg bg-white p-6 shadow-md overflow-hidden">
-            {/* HEADER (mismo patrón que Ventas) */}
+            {/* HEADER */}
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="ml-5 text-xl font-bold text-gray-800">
                     Clientes / Proveedores
@@ -92,10 +97,13 @@ export default function ClientesView() {
 
             {/* CONTENEDOR SCROLLABLE */}
             <div className="flex-1 min-h-0 flex flex-col">
-                {/* Fila: buscador + chevrons a la misma altura */}
+                {/* Fila buscador + chevrons */}
                 <div className="mb-4 flex items-center justify-between gap-3">
+                    {/* contenedor relativo para posicionar el icono */}
                     <div className="relative w-full max-w-xl">
-                        <i className="pi pi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        {/* Ícono de lupa (de tu set) */}
+                        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 !h-5 !w-5 text-gray-400" />
+
                         <AutoComplete
                             value={search}
                             completeMethod={searchClientes}
@@ -104,7 +112,7 @@ export default function ClientesView() {
                             placeholder="Buscar..."
                             className="w-full"
                             emptyMessage="No se encontraron Clientes o Proveedores"
-                            inputClassName="w-full rounded-md border border-gray-300 px-3 py-2 pl-9 text-sm focus:ring-2 focus:ring-blue-400"
+                            inputClassName="w-full rounded-md border border-gray-300 px-3 py-4 pl-10 text-sm focus:ring-2 focus:ring-blue-400"
                             onChange={(e) => {
                                 const val = e.value || "";
                                 setSearch(val);
@@ -112,25 +120,26 @@ export default function ClientesView() {
                             }}
                         />
                     </div>
+
                     <div className="shrink-0 flex items-center gap-2">
                         <button
                             className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
                             aria-label="Anterior"
                             title="Anterior"
                         >
-                            &lt;
+                            <KeyboardArrowLeftIcon />
                         </button>
                         <button
                             className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
                             aria-label="Siguiente"
                             title="Siguiente"
                         >
-                            &gt;
+                            <KeyboardArrowRightIcon />
                         </button>
                     </div>
                 </div>
 
-                {/* Lista con scroll interno que afecta las cards */}
+                {/* Lista con scroll interno */}
                 <div className="flex-1 min-h-0 overflow-y-auto rounded-md border border-gray-300 bg-gray-50 p-4">
                     <DataView value={filteredClientes} listTemplate={listTemplate} layout="list" />
                 </div>
