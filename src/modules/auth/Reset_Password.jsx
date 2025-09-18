@@ -16,12 +16,6 @@ export default function ResetPassword() {
         (form) => validateResetPassword(form, step)
     );
 
-    const customInput = ({ events, props }) => {
-        return <><input {...events}{...props} type="text" className=""/>
-
-        </>
-    }
-
     const handleSubmitEmail = async (e) => {
         e.preventDefault();
         if (err?.correo) return notifyError(err.correo);
@@ -86,8 +80,8 @@ export default function ResetPassword() {
                         length={6}
                         autoFocus
                         inputTemplate={({ events, props }) => <input {...events} {...props} type="text" />}
-                        onChange={(e) =>
-                            setValues((prev) => ({ ...prev, codigo: e.value || "" }))
+                        onChange={(code) =>
+                            setValues((prev) => ({ ...prev, codigo: code }))
                         }
                     />
                     {err?.codigo && <p>{err.codigo}</p>}
