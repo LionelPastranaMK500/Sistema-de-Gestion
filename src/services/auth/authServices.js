@@ -111,7 +111,7 @@ export function requestResetPassword(correo) {
         return { success: false, message: "Correo electronico no registrado" };
     }
 
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
     user.resetCode = code;
     localStorage.setItem("users", JSON.stringify(users));
 
