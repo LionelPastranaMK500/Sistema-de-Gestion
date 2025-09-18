@@ -81,7 +81,7 @@ export default function ResetPassword() {
                         autoFocus
                         inputTemplate={({ events, props }) => <input {...events} {...props} type="text" />}
                         onChange={(code) =>
-                            setValues((prev) => ({ ...prev, codigo: code }))
+                            setValues((prev) => ({ ...prev, codigo: code?.value || "" }))
                         }
                     />
                     {err?.codigo && <p>{err.codigo}</p>}
