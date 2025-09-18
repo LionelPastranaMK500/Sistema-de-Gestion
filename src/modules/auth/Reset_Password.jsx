@@ -16,6 +16,12 @@ export default function ResetPassword() {
         (form) => validateResetPassword(form, step)
     );
 
+    const customInput = ({ events, props }) => {
+        return <><input {...events}{...props} type="text" className=""/>
+
+        </>
+    }
+
     const handleSubmitEmail = async (e) => {
         e.preventDefault();
         if (err?.correo) return notifyError(err.correo);
@@ -77,15 +83,17 @@ export default function ResetPassword() {
                 <form onSubmit={handleSubmitCode}>
                     <InputOtp
                         value={values.codigo || ""}
-                        numInputs={4}
-                        separator="-"
+                        length={6}
                         autoFocus
+                        inputTemplate={({ events, props }) => <input {...events} {...props} type="text" />}
                         onChange={(e) =>
                             setValues((prev) => ({ ...prev, codigo: e.value || "" }))
                         }
                     />
                     {err?.codigo && <p>{err.codigo}</p>}
-                    <button type="submit">Validar código</button>
+                    <button type="submit" disabled={values.codigo.length !== 6}>
+                        Validar código
+                    </button>
                 </form>
             )}
 
