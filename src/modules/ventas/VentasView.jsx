@@ -264,7 +264,7 @@ export default function VentasView() {
             <div className="flex-1 bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md overflow-auto text-gray-500 text-sm text-center">
                 {productosAgregados.length === 0 ? (
                     <div className="p-6 text-gray-500 text-sm text-center">
-                        Escanea un producto con un lector de código de barras o búscalo
+                        Busca un producto....
                     </div>
                 ) : (
                     <table className="w-full text-gray-700 text-sm">
