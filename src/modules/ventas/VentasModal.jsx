@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Menu } from "primereact/menu";
-import { componentsVentas } from "@constants/menuitemsConstants";
+import { componentsVentas } from "@constants/menuItemsConstants";
 import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
