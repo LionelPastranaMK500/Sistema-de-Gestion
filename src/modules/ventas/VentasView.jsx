@@ -183,6 +183,38 @@ export default function VentasView() {
                         placeholder="Escriba Nombre - RUC/DNI"
                         className="w-full"
                         inputClassName="px-3 py-2 border border-gray-300 rounded-md text-sm w-full focus:ring-2 focus:ring-blue-400"
+                        itemTemplate={(item) => (
+                            <div>
+                                <span>{item.documento}</span>
+                                <br />
+                                <span>{item.razonSocial}</span>
+                            </div>
+                        )}
+                        selectedItemTemplate={(item) =>
+                            item ? `${item.documento} -> ${item.razonSocial}` : ""
+                        }
+                        emptyMessage="No se encontraron resultados"
+                        panelHeaderTemplate={() => (
+                            <div>
+                                <span>Resultado de la búsqueda</span>
+                                <button
+                                    type="button"
+                                >
+                                    Registrar nuevo
+                                </button>
+                            </div>
+                        )}
+                        panelFooterTemplate={() => {
+                            const query = cliente?.razonSocial || cliente?.documento || "";
+                            return !query || query.length < 3 ? (
+                                <div>
+                                    <p>TIP: Escribe <strong>3 o más caracteres</strong> para comenzar a buscar</p>
+                                    <p>TIP: Para un <strong>DNI o RUC</strong>, escribe el número y presiona <kbd>ENTER</kbd></p>
+                                    <p>TIP: ¿Sin documentos? Escribe el nombre y presiona <kbd>ENTER</kbd></p>
+                                    <p>TIP: Para una venta sin datos, puede dejar el campo vacío</p>
+                                </div>
+                            ) : null;
+                        }}
                     />
                 </div>
 
