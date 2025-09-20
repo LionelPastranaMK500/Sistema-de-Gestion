@@ -71,7 +71,7 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
             if (idx !== -1) {
                 users[idx] = activeUser;
                 localStorage.setItem("users", JSON.stringify(users));
-                console.log(users[idx]);
+                //console.log(users[idx]);
             }
 
             localStorage.setItem("activeUser", JSON.stringify(activeUser));
