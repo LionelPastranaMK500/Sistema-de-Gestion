@@ -96,17 +96,23 @@ export function syncActiveCompany() {
     const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
     const activeCompany = JSON.parse(localStorage.getItem("activeCompany")) || null;
 
-    if (activeUser?.empresa && !activeCompany) {
+    if (!activeUser) return null;
+    if (!activeCompany || JSON.stringify(activeCompany) !== JSON.stringify(activeUser.empresa)) {
         localStorage.setItem("activeCompany", JSON.stringify(activeUser.empresa));
         return activeUser.empresa;
     }
     return activeCompany;
 }
 export function requestResetPassword(correo) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const correoNormalizado = String(correo).trim().toLowerCase();
+    const correoNormalizado = String(correo || "").trim().toLowerCase();
 
+    if (!correoNormalizado) {
+        return { success: false, message: "El correo es obligatorio" };
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(u => u.correo === correoNormalizado);
+
     if (!user) {
         return { success: false, message: "Correo electronico no registrado" };
     }
@@ -115,9 +121,10 @@ export function requestResetPassword(correo) {
     user.resetCode = code;
     localStorage.setItem("users", JSON.stringify(users));
 
-    console.log(`Codigo ${correoNormalizado}: ${code}`);
-    return { success: true, message: "Se envió un código de recuperación a tu correo" };
+    console.log(`Código ${correoNormalizado}: ${code}`);
+    return { success: true, message: "Se envio un código de recuperación a tu correo" };
 }
+
 export function verifyResetCode(correo, code) {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(u => u.correo === String(correo).trim().toLowerCase());
