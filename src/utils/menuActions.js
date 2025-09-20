@@ -1,39 +1,39 @@
-export const menuActions ={
-    estadistica: ({navigate})=>{
+export const menuActions = {
+    estadistica: ({ navigate }) => {
         navigate("/estadistica")
     },
-    ventas: ({navigate})=>{
+    ventas: ({ navigate }) => {
         navigate("/ventas");
     },
-    ventasRealizadas: ({navigate})=>{
+    ventasRealizadas: ({ navigate }) => {
         navigate("/facturas");
     },
-    proformas: ({navigate})=>{
+    proformas: ({ navigate }) => {
         navigate("/proformas");
     },
-    reportes: ({navigate})=>{
+    reportes: ({ navigate }) => {
         navigate("/reportes");
     },
-    guia: ({navigate})=>{
+    guia: ({ navigate }) => {
         navigate("/guia_remision");
     },
-    cliente: ({navigate})=>{
-        navigate("/cliente");
+    cliente: ({ navigate }) => {
+        navigate("/clientes");
     },
-    producto: ({navigate})=>{
-        navigate("/producto");
+    producto: ({ navigate }) => {
+        navigate("/productos");
     },
-    configuracion: ({navigate})=>{
+    configuracion: ({ navigate }) => {
         navigate("/configuracion");
     },
-    ayuda: ({navigate})=>{
+    ayuda: ({ navigate }) => {
         navigate("/dashboard");
     },
 };
 
 export const menuActionsConfig = {
     configurar_empresa: ({ navigate }) => {
-        navigate("/configuracion/empresa");
+        navigate("/configuracion/empresas");
     },
     configurar_usuario: ({ navigate }) => {
         navigate("/configuracion/usuarios");
