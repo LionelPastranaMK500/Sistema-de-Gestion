@@ -1,7 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import MainLayout from "@layouts/MainLayout";
 import { lazy, Suspense } from "react";
+import MainLayout from "@layouts/MainLayout";
+import AuthLayout from "@layouts/AuthLayout";
+import PublicRoute from "./PublicRoute";
+import PrivateRoute from "./PrivateRoute";
 
+//modulos common
+const NotFound = lazy(() => import("@modules/common/NotFound"));
 //modulos publi
 const Login = lazy(() => import("@modules/auth/Login"));
 const Register = lazy(() => import("@modules/auth/Register"));
@@ -40,33 +45,41 @@ export default function AppRoutes() {
     <Suspense fallback={'Cargando....'}>
       <Routes>
         {/* publicas */}
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route element={<PublicRoute />}>
+          <Route element={<AuthLayout />}>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Route>
 
         {/* sidebar priv*/}
-        <Route element={<MainLayout />}>
-          <Route path="/welcome" element={<SunatForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/estadistica" element={<EstadisticasView />} />
-          <Route path="/ventas" element={<VentasView />} />
-          <Route path="/guia_remision" element={<GuiaRemision />} />
-          <Route path="/facturas" element={<FacturasView />} />
-          <Route path="/proformas" element={<ProformasView />} />
-          <Route path="/reportes" element={<ReportesView />} />
-          <Route path="/reportes/ventas_general" element={<ReporteVentasGeneral />} />
-          <Route path="/reportes/ventas_detallado" element={<ReporteVentasDetallado />} />
-          <Route path="/reportes/productos" element={<ReporteProductos />} />
-          <Route path="/reportes/clientes_proveedores" element={<ReporteClientesProveedores />} />
-          <Route path="/reportes/guias" element={<ReporteGuias />} />
-          <Route path="/cliente" element={<ClienteView />} />
-          <Route path="/producto" element={<ProductosView />} />
-          <Route path="/configuracion" element={<ConfiguracionView />} />
-          <Route path="/configuracion/empresa" element={<ConfigurarEmpresa />} />
-          <Route path="/configuracion/usuarios" element={<ConfigurarUsuario />} />
-          <Route path="/configuracion/almacenes" element={<ConfigurarAlmacen />} />
-          <Route path="/configuracion/sucursales" element={<ConfigurarSucursal />} />
-          <Route path="/configuracion/impresion" element={<ConfigurarImpresion />} />
+        <Route element={<PrivateRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/welcome" element={<SunatForm />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/estadistica" element={<EstadisticasView />} />
+            <Route path="/ventas" element={<VentasView />} />
+            <Route path="/guia_remision" element={<GuiaRemision />} />
+            <Route path="/facturas" element={<FacturasView />} />
+            <Route path="/proformas" element={<ProformasView />} />
+            <Route path="/reportes" element={<ReportesView />} />
+            <Route path="/reportes/ventas_general" element={<ReporteVentasGeneral />} />
+            <Route path="/reportes/ventas_detallado" element={<ReporteVentasDetallado />} />
+            <Route path="/reportes/productos" element={<ReporteProductos />} />
+            <Route path="/reportes/clientes_proveedores" element={<ReporteClientesProveedores />} />
+            <Route path="/reportes/guias" element={<ReporteGuias />} />
+            <Route path="/clientes" element={<ClienteView />} />
+            <Route path="/productos" element={<ProductosView />} />
+            <Route path="/configuracion" element={<ConfiguracionView />} />
+            <Route path="/configuracion/empresa" element={<ConfigurarEmpresa />} />
+            <Route path="/configuracion/usuarios" element={<ConfigurarUsuario />} />
+            <Route path="/configuracion/almacenes" element={<ConfigurarAlmacen />} />
+            <Route path="/configuracion/sucursales" element={<ConfigurarSucursal />} />
+            <Route path="/configuracion/impresion" element={<ConfigurarImpresion />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Route>
       </Routes>
     </Suspense>
