@@ -65,7 +65,7 @@ export const handleSunatAuth = async (form, navigate) => {
         }
 
         notifySuccess(res.message);
-        redirectWithDelay(navigate, "/welcome");
+        redirectWithDelay(navigate, "/dashboard");
         return { success: true, data: res };
     } catch {
         notifyError("Error inesperado");
