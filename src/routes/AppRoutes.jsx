@@ -1,67 +1,74 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MainLayout from "@layouts/MainLayout";
-import Dashboard from "@modules/dashboard/Dashboard";
-import Login from "@modules/auth/Login";
-import Register from "@modules/auth/Register";
-import ResetPassword from "../modules/auth/Reset_Password";
-import VentasView from "@modules/ventas/VentasView";
-import FacturasView from "@modules/facturas/FacturasView";
-import EstadisticasView from "@modules/estadisticas/EstadisticasView";
-import ProformasView from "@modules/proformas/ProformasView";
-import ClienteView from "@modules/clientes/ClientesView";
-import ProductosView from "@modules/productos/ProductosView";
-import SunatForm from "@modules/auth/SunatForm";
-import GuiaRemision from "@modules/guia_remision/GuiaRemisionView";
+import { lazy, Suspense } from "react";
+
+//modulos publi
+const Login = lazy(() => import("@modules/auth/Login"));
+const Register = lazy(() => import("@modules/auth/Register"));
+const ResetPassword = lazy(() => import("@modules/auth/ResetPassword"));
+
+//modulos priv
+const SunatForm = lazy(() => import("@modules/auth/SunatForm"));
+const Dashboard = lazy(() => import("@modules/dashboard/Dashboard"));
+const EstadisticasView = lazy(() => import("@modules/estadisticas/EstadisticasView"));
+const VentasView = lazy(() => import("@modules/ventas/VentasView"));
+const GuiaRemision = lazy(() => import("@modules/guia_remision/GuiaRemisionView"));
+const FacturasView = lazy(() => import("@modules/facturas/FacturasView"));
+const ProformasView = lazy(() => import("@modules/proformas/ProformasView"));
+const ClienteView = lazy(() => import("@modules/clientes/ClientesView"));
+const ProductosView = lazy(() => import("@modules/productos/ProductosView"));
 
 //modulo config
-import ConfiguracionView from "@modules/configuracion/ConfiguracionView";
-import ConfigurarEmpresa from "@modules/configuracion/items/ConfigurarEmpresa";
-import ConfigurarUsuario from "@modules/configuracion/items/ConfigurarUsuario";
-import ConfigurarAlmacen from "@modules/configuracion/items/ConfigurarAlmacen";
-import ConfigurarSucursal from "@modules/configuracion/items/ConfigurarSucursal";
-import ConfigurarImpresion from "@modules/configuracion/items/ConfigurarImpresion";
+const ConfiguracionView = lazy(() => import("@modules/configuracion/ConfiguracionView"));
+const ConfigurarEmpresa = lazy(() => import("@modules/configuracion/items/ConfigurarEmpresa"));
+const ConfigurarUsuario = lazy(() => import("@modules/configuracion/items/ConfigurarUsuario"));
+const ConfigurarAlmacen = lazy(() => import("@modules/configuracion/items/ConfigurarAlmacen"));
+const ConfigurarSucursal = lazy(() => import("@modules/configuracion/items/ConfigurarSucursal"));
+const ConfigurarImpresion = lazy(() => import("@modules/configuracion/items/ConfigurarImpresion"));
 
 //modulo reportes
-import ReportesView from "@modules/reportes/ReportesView";
-import ReporteVentasGeneral from "@modules/reportes/items/ReporteVentasGeneral";
-import ReporteVentasDetallado from "@modules/reportes/items/ReporteVentasDetallado";
-import ReporteClientesProveedores from "@modules/reportes/items/ReporteClientesProveedores";
-import ReporteProductos from "@modules/reportes/items/ReporteProductos";
-import ReporteGuias from "@modules/reportes/items/ReporteGuias";
+const ReportesView = lazy(() => import("@modules/reportes/ReportesView"));
+const ReporteVentasGeneral = lazy(() => import("@modules/reportes/items/ReporteVentasGeneral"));
+const ReporteVentasDetallado = lazy(() => import("@modules/reportes/items/ReporteVentasDetallado"));
+const ReporteClientesProveedores = lazy(() => import("@modules/reportes/items/ReporteClientesProveedores"));
+const ReporteProductos = lazy(() => import("@modules/reportes/items/ReporteProductos"));
+const ReporteGuias = lazy(() => import("@modules/reportes/items/ReporteGuias"));
 
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      {/* Rutas públicas */}
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/reset-password" element={<ResetPassword/>}/>
+    <Suspense fallback={'Cargando....'}>
+      <Routes>
+        {/* publicas */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Rutas con Sidebar */}
-      <Route element={<MainLayout />}>
-        <Route path="/welcome" element={<SunatForm />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/estadistica" element={<EstadisticasView />} />
-        <Route path="/ventas" element={<VentasView />} />
-        <Route path="/guia_remision" element={<GuiaRemision />} />
-        <Route path="/facturas" element={<FacturasView />} />
-        <Route path="/proformas" element={<ProformasView />} />
-        <Route path="/reportes" element={<ReportesView />} />
-        <Route path="/reportes/ventas_general" element={<ReporteVentasGeneral />} />
-        <Route path="/reportes/ventas_detallado" element={<ReporteVentasDetallado />} />
-        <Route path="/reportes/productos" element={<ReporteProductos />} />
-        <Route path="/reportes/clientes_proveedores" element={<ReporteClientesProveedores />} />
-        <Route path="/reportes/guias" element={<ReporteGuias />} />
-        <Route path="/cliente" element={<ClienteView />} />
-        <Route path="/producto" element={<ProductosView />} />
-        <Route path="/configuracion" element={<ConfiguracionView />} />
-        <Route path="/configuracion/empresa" element={<ConfigurarEmpresa />} />
-        <Route path="/configuracion/usuarios" element={<ConfigurarUsuario />} />
-        <Route path="/configuracion/almacenes" element={<ConfigurarAlmacen />} />
-        <Route path="/configuracion/sucursales" element={<ConfigurarSucursal />} />
-        <Route path="/configuracion/impresion" element={<ConfigurarImpresion />} />
-      </Route>
-    </Routes>
+        {/* sidebar priv*/}
+        <Route element={<MainLayout />}>
+          <Route path="/welcome" element={<SunatForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/estadistica" element={<EstadisticasView />} />
+          <Route path="/ventas" element={<VentasView />} />
+          <Route path="/guia_remision" element={<GuiaRemision />} />
+          <Route path="/facturas" element={<FacturasView />} />
+          <Route path="/proformas" element={<ProformasView />} />
+          <Route path="/reportes" element={<ReportesView />} />
+          <Route path="/reportes/ventas_general" element={<ReporteVentasGeneral />} />
+          <Route path="/reportes/ventas_detallado" element={<ReporteVentasDetallado />} />
+          <Route path="/reportes/productos" element={<ReporteProductos />} />
+          <Route path="/reportes/clientes_proveedores" element={<ReporteClientesProveedores />} />
+          <Route path="/reportes/guias" element={<ReporteGuias />} />
+          <Route path="/cliente" element={<ClienteView />} />
+          <Route path="/producto" element={<ProductosView />} />
+          <Route path="/configuracion" element={<ConfiguracionView />} />
+          <Route path="/configuracion/empresa" element={<ConfigurarEmpresa />} />
+          <Route path="/configuracion/usuarios" element={<ConfigurarUsuario />} />
+          <Route path="/configuracion/almacenes" element={<ConfigurarAlmacen />} />
+          <Route path="/configuracion/sucursales" element={<ConfigurarSucursal />} />
+          <Route path="/configuracion/impresion" element={<ConfigurarImpresion />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
