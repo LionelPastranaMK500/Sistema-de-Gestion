@@ -63,11 +63,66 @@ export default function Sidebar() {
                 />
                 {showConfig && (
                     <div className="top-16 right-6 z-50 absolute bg-white shadow-lg p-4 border border-gray-200 rounded-lg min-w-[16rem] max-w-md text-black">
-                        {/* ...contenido igual... */}
+                        <div className="flex items-center gap-3 mb-3">
+                            {/* Círculo con iniciales */}
+                            <div className="flex flex-shrink-0 justify-center items-center bg-blue-600 shadow-md rounded-full w-14 h-14 font-extrabold text-white text-lg">
+                                {initials}
+                            </div>
+
+                            {/* Nombre, apellido y correo */}
+                            <div className="flex flex-col">
+                                <p className="font-bold text-gray-900 text-lg leading-tight">
+                                    {user.nombres}{" "}
+                                    <span className="font-extrabold text-gray-800">
+                                        {user.apellidoPaterno}
+                                    </span>
+                                </p>
+                                <p className="text-black text-sm break-words">{user.correo}</p>
+                            </div>
+                        </div>
+
+                        <h6 className="mb-2 font-bold">Empresa Seleccionada</h6>
+                        <a href="">
+                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                                <BusinessIcon className="text-blue-600" fontSize="medium" />
+                                Gestionar plan
+                            </div>
+                        </a>
+
+                        <a href="">
+                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                                <ReceiptIcon className="text-green-600" fontSize="medium" />
+                                Ordenes de pago
+                            </div>
+                        </a>
+
+                        <hr className="my-2" />
+
+                        <h3 className="mb-2 font-bold">Usuario</h3>
+                        <a href="">
+                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                                <PeopleIcon className="text-purple-600" fontSize="medium" />
+                                Registrar nueva empresa
+                            </div>
+                        </a>
+
+                        <a href="">
+                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                                <LockIcon className="text-orange-600" fontSize="medium" />
+                                Cambiar contraseña
+                            </div>
+                        </a>
+
+                        <div
+                            className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+                            onClick={() => handleLogout(navigate)}
+                        >
+                            <ExitToAppIcon className="text-red-600" fontSize="medium" />
+                            Cerrar sesión
+                        </div>
                     </div>
                 )}
             </div>
-
             {/* Empresa / Sucursal (sin scroll) */}
             <div className="space-y-6 px-5">
                 {/* EMPRESA */}
