@@ -22,16 +22,31 @@ export default function VentasView() {
   const productos = getProductos();
   const comprobantes = getTiposComprobante();
 
+  // ===== Defaults solicitados =====
+  const DEFAULT_COMPROBANTE = "BOLETA DE VENTA ELECTRÓNICA";
+  const DEFAULT_SERIE = "B001";
+
+  const seriesIniciales = mapTipo[DEFAULT_COMPROBANTE]
+    ? getSeries(mapTipo[DEFAULT_COMPROBANTE])
+    : [];
+
   const [cliente, setCliente] = useState(null);
   const [producto, setProducto] = useState(null);
-  const [comprobante, setComprobante] = useState("");
+
+  // inicia con BOLETA DE VENTA ELECTRÓNICA
+  const [comprobante, setComprobante] = useState(DEFAULT_COMPROBANTE);
+
+  // inicia con las series de boleta y la B001 si existe
+  const [seriesDisponibles, setSeriesDisponibles] = useState(seriesIniciales);
+  const [serie, setSerie] = useState(
+    seriesIniciales.includes(DEFAULT_SERIE)
+      ? DEFAULT_SERIE
+      : seriesIniciales[0] || ""
+  );
 
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [proformaChecked, setProformaChecked] = useState(false);
-
-  const [seriesDisponibles, setSeriesDisponibles] = useState([]);
-  const [serie, setSerie] = useState("");
 
   const [productosAgregados, setProductoAgregados] = useState([]);
 
@@ -48,11 +63,19 @@ export default function VentasView() {
     configCalendar();
   }, []);
 
+  // cuando cambia el tipo de comprobante recalculamos series (preferir B001)
   useEffect(() => {
     if (mapTipo[comprobante]) {
       const nuevasSeries = getSeries(mapTipo[comprobante]);
       setSeriesDisponibles(nuevasSeries);
-      setSerie(nuevasSeries[0] || "");
+      setSerie(
+        nuevasSeries.includes(DEFAULT_SERIE)
+          ? DEFAULT_SERIE
+          : nuevasSeries[0] || ""
+      );
+    } else {
+      setSeriesDisponibles([]);
+      setSerie("");
     }
   }, [comprobante]);
 
@@ -66,6 +89,7 @@ export default function VentasView() {
       setSeriesDisponibles(nuevasSeries);
       setSerie(nuevasSeries[0] || "");
     } else {
+      // al desmarcar PROFORMA no imponemos defaults; queda a elección del flujo
       setComprobante("");
       setSerie("");
       setSeriesDisponibles([]);
@@ -139,11 +163,7 @@ export default function VentasView() {
       setProductoAgregados(
         productosAgregados.map((p) =>
           p.codigo === idProd
-            ? {
-                ...p,
-                cantidad: p.cantidad + 1,
-                total: (p.cantidad + 1) * p.precio,
-              }
+            ? { ...p, cantidad: p.cantidad + 1, total: (p.cantidad + 1) * p.precio }
             : p
         )
       );
