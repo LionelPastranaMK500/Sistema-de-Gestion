@@ -204,16 +204,17 @@ export default function VentasView() {
   const clienteItemTemplate = (opt) => {
     if (opt?.__type === "header") {
       return (
+        //(Fix) Buscador - (no se puede seleccionar aun cliente)
         <div
-          className="sticky top-0 z-10 flex items-center justify-between bg-white px-4 py-3 border-b"
+          className="top-0 z-10 sticky flex justify-between items-center bg-white px-4 py-3 border-b"
           onMouseDown={(e) => e.preventDefault()} // evita seleccionar/cerrar
         >
-          <span className="text-[13px] font-semibold text-gray-600 uppercase tracking-wide">
+          <span className="font-semibold text-[13px] text-gray-600 uppercase tracking-wide">
             Resultados de la búsqueda
           </span>
           <button
             type="button"
-            className="rounded-md bg-indigo-600 px-4 py-2 text-[12px] font-bold text-white hover:bg-indigo-700"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md font-bold text-[12px] text-white"
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => console.log("REGISTRAR NUEVO")}
           >
@@ -226,7 +227,7 @@ export default function VentasView() {
     if (opt?.__type === "tips") {
       return (
         <div
-          className="sticky bottom-0 bg-white px-4 py-3 border-t text-[12px] leading-5 text-gray-600"
+          className="bottom-0 sticky bg-white px-4 py-3 border-t text-[12px] text-gray-600 leading-5"
           onMouseDown={(e) => e.preventDefault()}
         >
           <div>
@@ -247,9 +248,9 @@ export default function VentasView() {
 
     // Ítem normal
     return (
-      <div className="px-3 py-2 hover:bg-gray-50">
+      <div className="hover:bg-gray-50 px-3 py-2">
         <div className="text-[12px] text-gray-500">{opt.documento}</div>
-        <div className="text-[13px] font-semibold text-gray-800">{opt.razonSocial}</div>
+        <div className="font-semibold text-[13px] text-gray-800">{opt.razonSocial}</div>
       </div>
     );
   };
@@ -349,7 +350,7 @@ export default function VentasView() {
           <select
             value={comprobante}
             onChange={(e) => setComprobante(e.target.value)}
-            className="px-2 py-2.5 h-11 border border-gray-300 rounded-md w-full text-[14px]"
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
           >
             <option value="">---Seleccionar---</option>
             {comprobantes.map((c) => (
@@ -364,7 +365,7 @@ export default function VentasView() {
           <select
             value={serie}
             onChange={(e) => setSerie(e.target.value)}
-            className="px-2 py-2.5 h-11 border border-gray-300 rounded-md w-full text-[14px]"
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
           >
             <option>---Seleccionar---</option>
             {seriesDisponibles.map((s) => (
@@ -376,7 +377,7 @@ export default function VentasView() {
         </div>
         <div>
           <label className="block mb-1 text-gray-500 text-xs">Tipo de operación</label>
-          <select className="px-2 py-2.5 h-11 border border-gray-300 rounded-md w-full text-[14px]">
+          <select className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]">
             <option>VENTA INTERNA</option>
           </select>
         </div>
@@ -387,7 +388,7 @@ export default function VentasView() {
           <input
             type="number"
             placeholder="0.00"
-            className="px-2 py-2.5 h-11 border border-gray-300 rounded-md w-full text-[14px]"
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
           />
         </div>
       </div>
