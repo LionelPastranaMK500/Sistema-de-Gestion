@@ -51,8 +51,7 @@ export default function Sidebar() {
 
     return (
         // FIXED + ocupa de top a bottom del viewport. Grid reparte verticalmente.
-        <aside className="fixed inset-y-0 left-0 w-96 bg-blue-800 text-white
-                      grid grid-rows-[auto,auto,1fr] overflow-hidden">
+        <aside className="left-0 fixed inset-y-0 grid grid-rows-[auto,auto,1fr] bg-blue-800 w-96 overflow-hidden text-white">
 
             {/* Logo + config */}
             <div className="relative flex items-center p-6">
@@ -127,7 +126,7 @@ export default function Sidebar() {
             <div className="space-y-6 px-5">
                 {/* EMPRESA */}
                 <div className="flex flex-col">
-                    <span className="self-start inline-flex w-fit rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold tracking-wide text-blue-100 uppercase mb-2">
+                    <span className="inline-flex self-start bg-blue-700 mb-2 px-2 py-[2px] rounded-md w-fit font-bold text-[11px] text-blue-100 uppercase tracking-wide">
                         Empresa
                     </span>
                     <div className="relative">
@@ -136,23 +135,24 @@ export default function Sidebar() {
                             id="empresa"
                             value={empresa}
                             onChange={(e) => setEmpresa(e.target.value)}
-                            className="w-full appearance-none rounded-xl border border-blue-600/40 bg-blue-700/50 px-4 pr-12 py-4 text-[15px] font-medium text-white placeholder-blue-200 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-300/40"
+                            className="bg-blue-700/50 px-4 py-4 pr-12 border border-blue-600/40 focus:border-blue-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-300/40 w-full font-medium text-[15px] text-white transition appearance-none placeholder-blue-200"
                         >
                             <option value="">Seleccione empresa</option>
                             {empresas.map((e) => (
                                 <option key={e.id} value={e.id}>{e.nombre}</option>
                             ))}
                         </select>
-                        <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 opacity-90 text-blue-100"
+                        <svg className="top-1/2 right-3 absolute opacity-90 w-6 h-6 text-blue-100 -translate-y-1/2 pointer-events-none"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
                 </div>
+                
 
                 {/* SUCURSAL */}
                 <div className="flex flex-col">
-                    <span className="self-start inline-flex w-fit rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold tracking-wide text-blue-100 uppercase mb-2">
+                    <span className="inline-flex self-start bg-blue-700 mb-2 px-2 py-[2px] rounded-md w-fit font-bold text-[11px] text-blue-100 uppercase tracking-wide">
                         Sucursal
                     </span>
                     <div className="relative">
@@ -161,14 +161,14 @@ export default function Sidebar() {
                             id="sucursal"
                             value={sucursal}
                             onChange={(e) => setSucursal(e.target.value)}
-                            className="w-full appearance-none rounded-xl border border-blue-600/40 bg-blue-700/50 px-4 pr-12 py-4 text-[15px] font-medium text-white placeholder-blue-200 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-300/40"
+                            className="bg-blue-700/50 px-4 py-4 pr-12 border border-blue-600/40 focus:border-blue-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-300/40 w-full font-medium text-[15px] text-white transition appearance-none placeholder-blue-200"
                         >
                             <option value="">Seleccione sucursal</option>
                             {sucursales.map((e) => (
                                 <option key={e.id} value={e.id}>{e.nombre}</option>
                             ))}
                         </select>
-                        <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 opacity-90 text-blue-100"
+                        <svg className="top-1/2 right-3 absolute opacity-90 w-6 h-6 text-blue-100 -translate-y-1/2 pointer-events-none"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
@@ -176,16 +176,16 @@ export default function Sidebar() {
                 </div>
             </div>
 
+            {/* Mejorar el margen en (Sidebar - ver todoist) */}
+
             {/* Menú — única zona con scroll */}
-            <nav className="row-start-3 row-end-4 min-h-0 overflow-y-auto p-5 grid grid-cols-2 gap-3
-                      scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300
-                      dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
+            <nav className="gap-3 grid grid-cols-2 row-start-3 row-end-4 p-5 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
                         <button
                             key={index}
-                            onClick={() => menuActions[item.action]?.({ navigate })}
+                            onClick={() => handleMenuAction(item.action)}
                             className={`${buttonColors[index]} flex flex-col items-center justify-center p-4 rounded-lg shadow hover:opacity-90`}
                         >
                             <Icon style={{ fontSize: "2rem" }} />
