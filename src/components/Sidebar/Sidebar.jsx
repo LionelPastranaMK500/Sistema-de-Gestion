@@ -52,7 +52,7 @@ export default function Sidebar() {
     return (
         // FIXED + ocupa de top a bottom del viewport. Grid reparte verticalmente.
         <aside className="fixed inset-y-0 left-0 w-96 bg-blue-800 text-white
-                      grid grid-rows-[auto,auto,1fr] overflow-hidden">
+                            grid grid-rows-[auto,auto,1fr] overflow-hidden">
 
             {/* Logo + config */}
             <div className="relative flex items-center p-6">
@@ -178,8 +178,8 @@ export default function Sidebar() {
 
             {/* Menú — única zona con scroll */}
             <nav className="row-start-3 row-end-4 min-h-0 overflow-y-auto p-5 grid grid-cols-2 gap-3
-                      scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300
-                      dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
+                        scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300
+                        dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
