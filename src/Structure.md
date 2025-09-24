@@ -10,6 +10,9 @@
         └── 📁assets
             ├── react.svg
         └── 📁components
+            └── 📁Loaders
+                ├── ContentLoader.jsx
+                ├── PublicLoader.jsx
             └── 📁Sidebar
                 ├── Sidebar.jsx
                 ├── SidebarSkeleton.jsx
@@ -25,6 +28,7 @@
         └── 📁hooks
             ├── useFormHandler.js
         └── 📁layouts
+            ├── AuthLayout.jsx
             ├── MainLayout.jsx
         └── 📁modules
             └── 📁auth
@@ -32,11 +36,13 @@
                 ├── LoginForm.jsx
                 ├── Register.jsx
                 ├── RegisterForm.jsx
-                ├── Reset_Password.jsx
+                ├── ResetPassword.jsx
                 ├── SunatForm.jsx
             └── 📁clientes
                 ├── ClienteModal.jsx
                 ├── ClientesView.jsx
+            └── 📁common
+                ├── NotFound.jsx
             └── 📁configuracion
                 └── 📁items
                     ├── ConfigurarAlmacen.jsx
@@ -82,11 +88,12 @@
                 ├── VentasView.jsx
         └── 📁routes
             ├── AppRoutes.jsx
+            ├── PrivateRoute.jsx
+            ├── PublicRoute.jsx
         └── 📁services
             └── 📁auth
                 ├── authLogic.js
                 ├── authServices.js
-                ├── reset_password.js
                 ├── validations.js
             └── 📁clientes
             └── 📁facturas
@@ -104,6 +111,7 @@
             ├── comprobantesUtils.js
             ├── configCalendar.js
             ├── menuActions.js
+            ├── notify.js
             ├── pdfConfig.js
             ├── pdfViewer.js
             ├── redirectWithDelay.js
