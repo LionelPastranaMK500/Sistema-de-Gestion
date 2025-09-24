@@ -46,25 +46,25 @@ export const validarRegister = (datos) => {
 
 export const validarSunat = (datos) => {
     const err = {};
-  
+
     if (!datos.ruc?.trim()) {
-      err.ruc = "El RUC es obligatorio";
+        err.ruc = "El RUC es obligatorio";
     } else if (!/^\d{11}$/.test(datos.ruc)) {
-      err.ruc = "El RUC debe tener 11 dígitos numéricos";
+        err.ruc = "El RUC debe tener 11 dígitos numéricos";
     }
-  
+
     if (!datos.usuarioSol?.trim()) {
-      err.usuarioSol = "El usuario SOL es obligatorio";
+        err.usuarioSol = "El usuario SOL es obligatorio";
     }
-  
+
     if (!datos.claveSol?.trim()) {
-      err.claveSol = "La clave SOL es obligatoria";
+        err.claveSol = "La clave SOL es obligatoria";
     }
-  
+
     return err;
-  };
-  
-  export const validateResetPassword = (form, step) => {
+};
+
+export const validateResetPassword = (form, step) => {
     const errors = {};
     if (step === 1) {
         if (!form.correo) errors.correo = "El correo es obligatorio";
