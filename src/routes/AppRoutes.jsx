@@ -4,13 +4,15 @@ import MainLayout from "@layouts/MainLayout";
 import AuthLayout from "@layouts/AuthLayout";
 import PublicRoute from "./PublicRoute";
 import PrivateRoute from "./PrivateRoute";
+import PublicLoader from "@components/Loaders/PublicLoader";
+import ContentLoader from "@components/Loaders/ContentLoader";
 
 //modulos common
-const NotFound = lazy(() => import("@modules/common/NotFound"));
+import NotFound from "@modules/common/NotFound";
 //modulos publi
-const Login = lazy(() => import("@modules/auth/Login"));
-const Register = lazy(() => import("@modules/auth/Register"));
-const ResetPassword = lazy(() => import("@modules/auth/ResetPassword"));
+import Login from "@modules/auth/Login";
+import Register from "@modules/auth/Register";
+import ResetPassword from "@modules/auth/ResetPassword";
 
 //modulos priv
 const SunatForm = lazy(() => import("@modules/auth/SunatForm"));
@@ -42,46 +44,44 @@ const ReporteGuias = lazy(() => import("@modules/reportes/items/ReporteGuias"));
 
 export default function AppRoutes() {
   return (
-    <Suspense fallback={'Cargando....'}>
-      <Routes>
-        {/* publicas */}
-        <Route element={<PublicRoute />}>
-          <Route element={<AuthLayout />}>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
+    <Routes>
+      {/* publicas */}
+      <Route element={<PublicRoute />}>
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<Suspense fallback={<PublicLoader />}><Login /></Suspense>} />
+          <Route path="/register" element={<Suspense fallback={<PublicLoader />}><Register /></Suspense>} />
+          <Route path="/reset-password" element={<Suspense fallback={<PublicLoader />}><ResetPassword /></Suspense>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
+      </Route>
 
-        {/* sidebar priv*/}
-        <Route element={<PrivateRoute />}>
-          <Route element={<MainLayout />}>
-            <Route path="/welcome" element={<SunatForm />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/estadistica" element={<EstadisticasView />} />
-            <Route path="/ventas" element={<VentasView />} />
-            <Route path="/guia_remision" element={<GuiaRemision />} />
-            <Route path="/facturas" element={<FacturasView />} />
-            <Route path="/proformas" element={<ProformasView />} />
-            <Route path="/reportes" element={<ReportesView />} />
-            <Route path="/reportes/ventas_general" element={<ReporteVentasGeneral />} />
-            <Route path="/reportes/ventas_detallado" element={<ReporteVentasDetallado />} />
-            <Route path="/reportes/productos" element={<ReporteProductos />} />
-            <Route path="/reportes/clientes_proveedores" element={<ReporteClientesProveedores />} />
-            <Route path="/reportes/guias" element={<ReporteGuias />} />
-            <Route path="/clientes" element={<ClienteView />} />
-            <Route path="/productos" element={<ProductosView />} />
-            <Route path="/configuracion" element={<ConfiguracionView />} />
-            <Route path="/configuracion/empresa" element={<ConfigurarEmpresa />} />
-            <Route path="/configuracion/usuarios" element={<ConfigurarUsuario />} />
-            <Route path="/configuracion/almacenes" element={<ConfigurarAlmacen />} />
-            <Route path="/configuracion/sucursales" element={<ConfigurarSucursal />} />
-            <Route path="/configuracion/impresion" element={<ConfigurarImpresion />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
+      {/* privadas */}
+      <Route element={<PrivateRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/welcome" element={<Suspense fallback={<ContentLoader />}><SunatForm /></Suspense>} />
+          <Route path="/dashboard" element={<Suspense fallback={<ContentLoader />}><Dashboard /></Suspense>} />
+          <Route path="/estadistica" element={<Suspense fallback={<ContentLoader />}><EstadisticasView /></Suspense>} />
+          <Route path="/ventas" element={<Suspense fallback={<ContentLoader />}><VentasView /></Suspense>} />
+          <Route path="/guia_remision" element={<Suspense fallback={<ContentLoader />}><GuiaRemision /></Suspense>} />
+          <Route path="/facturas" element={<Suspense fallback={<ContentLoader />}><FacturasView /></Suspense>} />
+          <Route path="/proformas" element={<Suspense fallback={<ContentLoader />}><ProformasView /></Suspense>} />
+          <Route path="/reportes" element={<Suspense fallback={<ContentLoader />}><ReportesView /></Suspense>} />
+          <Route path="/reportes/ventas_general" element={<Suspense fallback={<ContentLoader />}><ReporteVentasGeneral /></Suspense>} />
+          <Route path="/reportes/ventas_detallado" element={<Suspense fallback={<ContentLoader />}><ReporteVentasDetallado /></Suspense>} />
+          <Route path="/reportes/productos" element={<Suspense fallback={<ContentLoader />}><ReporteProductos /></Suspense>} />
+          <Route path="/reportes/clientes_proveedores" element={<Suspense fallback={<ContentLoader />}><ReporteClientesProveedores /></Suspense>} />
+          <Route path="/reportes/guias" element={<Suspense fallback={<ContentLoader />}><ReporteGuias /></Suspense>} />
+          <Route path="/clientes" element={<Suspense fallback={<ContentLoader />}><ClienteView /></Suspense>} />
+          <Route path="/productos" element={<Suspense fallback={<ContentLoader />}><ProductosView /></Suspense>} />
+          <Route path="/configuracion" element={<Suspense fallback={<ContentLoader />}><ConfiguracionView /></Suspense>} />
+          <Route path="/configuracion/empresa" element={<Suspense fallback={<ContentLoader />}><ConfigurarEmpresa /></Suspense>} />
+          <Route path="/configuracion/usuarios" element={<Suspense fallback={<ContentLoader />}><ConfigurarUsuario /></Suspense>} />
+          <Route path="/configuracion/almacenes" element={<Suspense fallback={<ContentLoader />}><ConfigurarAlmacen /></Suspense>} />
+          <Route path="/configuracion/sucursales" element={<Suspense fallback={<ContentLoader />}><ConfigurarSucursal /></Suspense>} />
+          <Route path="/configuracion/impresion" element={<Suspense fallback={<ContentLoader />}><ConfigurarImpresion /></Suspense>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-      </Routes>
-    </Suspense>
+      </Route>
+    </Routes>
   );
 }
