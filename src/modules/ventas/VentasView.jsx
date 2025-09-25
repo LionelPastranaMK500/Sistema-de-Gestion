@@ -30,7 +30,11 @@ export default function VentasView() {
     ? getSeries(mapTipo[DEFAULT_COMPROBANTE])
     : [];
 
-  const [cliente, setCliente] = useState(null);
+  // Estado cliente (input y selección real)
+  const [clienteInput, setClienteInput] = useState("");
+  const [clienteSel, setClienteSel] = useState(null);
+
+  // Productos
   const [producto, setProducto] = useState(null);
 
   // inicia con BOLETA DE VENTA ELECTRÓNICA
@@ -58,10 +62,20 @@ export default function VentasView() {
   const acClienteRef = useRef(null);
   const HEADER = { __type: "header" };
   const TIPS = { __type: "tips" };
+  const closePanelLater = () => setTimeout(() => setClientesFiltrados([]), 120);
 
   useEffect(() => {
     configCalendar();
   }, []);
+
+  // Helper: cómo mostrar el cliente dentro del input
+  const formatCliente = (c) => {
+    if (!c) return "";
+    const doc = c.documento ? String(c.documento).trim() : "";
+    const rs = c.razonSocial ? String(c.razonSocial).trim() : "";
+    if (doc && rs) return `${doc} — ${rs}`;
+    return rs || doc;
+  };
 
   // cuando cambia el tipo de comprobante recalculamos series (preferir B001)
   useEffect(() => {
@@ -89,7 +103,7 @@ export default function VentasView() {
       setSeriesDisponibles(nuevasSeries);
       setSerie(nuevasSeries[0] || "");
     } else {
-      // al desmarcar PROFORMA no imponemos defaults; queda a elección del flujo
+      // al desmarcar PROFORMA no imponemos defaults
       setComprobante("");
       setSerie("");
       setSeriesDisponibles([]);
@@ -97,7 +111,7 @@ export default function VentasView() {
   };
 
   const handleVistaPrevia = async () => {
-    let docCliente = cliente?.documento;
+    let docCliente = clienteSel?.documento;
     if (!docCliente) {
       if (comprobante.includes("FACTURA ELECTRÓNICA")) docCliente = generarRuc();
       else if (comprobante.includes("BOLETA DE VENTA ELECTRÓNICA")) docCliente = generarDni();
@@ -106,8 +120,8 @@ export default function VentasView() {
 
     const facturaPreview = {
       ruc: docCliente,
-      cliente: cliente?.razonSocial || "",
-      direccion: cliente?.direccion || "",
+      cliente: clienteSel?.razonSocial || "",
+      direccion: clienteSel?.direccion || "",
       tDocumento: comprobante,
       serie,
       numero: Date.now() % 10000,
@@ -204,17 +218,16 @@ export default function VentasView() {
   const clienteItemTemplate = (opt) => {
     if (opt?.__type === "header") {
       return (
-        //(Fix) Buscador - (no se puede seleccionar aun cliente)
         <div
-          className="top-0 z-10 sticky flex justify-between items-center bg-white px-4 py-3 border-b"
-          onMouseDown={(e) => e.preventDefault()} // evita seleccionar/cerrar
+          className="sticky top-0 z-10 flex items-center justify-between bg-white px-4 py-3 border-b"
+          onMouseDown={(e) => e.preventDefault()}
         >
-          <span className="font-semibold text-[13px] text-gray-600 uppercase tracking-wide">
+          <span className="text-[13px] font-semibold text-gray-600 uppercase tracking-wide">
             Resultados de la búsqueda
           </span>
           <button
             type="button"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md font-bold text-[12px] text-white"
+            className="rounded-md bg-indigo-600 px-4 py-2 text-[12px] font-bold text-white hover:bg-indigo-700"
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => console.log("REGISTRAR NUEVO")}
           >
@@ -227,7 +240,7 @@ export default function VentasView() {
     if (opt?.__type === "tips") {
       return (
         <div
-          className="bottom-0 sticky bg-white px-4 py-3 border-t text-[12px] text-gray-600 leading-5"
+          className="sticky bottom-0 bg-white px-4 py-3 border-t text-[12px] leading-5 text-gray-600"
           onMouseDown={(e) => e.preventDefault()}
         >
           <div>
@@ -246,11 +259,11 @@ export default function VentasView() {
       );
     }
 
-    // Ítem normal
+    // Ítem normal (¡sin preventDefault!)
     return (
-      <div className="hover:bg-gray-50 px-3 py-2">
+      <div className="px-3 py-2 hover:bg-gray-50">
         <div className="text-[12px] text-gray-500">{opt.documento}</div>
-        <div className="font-semibold text-[13px] text-gray-800">{opt.razonSocial}</div>
+        <div className="text-[13px] font-semibold text-gray-800">{opt.razonSocial}</div>
       </div>
     );
   };
@@ -281,36 +294,37 @@ export default function VentasView() {
             <AutoComplete
               ref={acClienteRef}
               appendTo="self"
-              panelStyle={{ width: "100%" }} // mismo ancho del contenedor
+              panelStyle={{ width: "100%" }}
               minLength={0}
-              value={cliente}
+              value={clienteInput} // <- TEXTO VISIBLE
               suggestions={clientesFiltrados}
               completeMethod={buscarClientes}
               field="razonSocial"
               onChange={(e) => {
-                setCliente(e.value);
-                // mantener header + tips aunque se borre todo
-                const raw = e.target?.value ?? "";
-                if (String(raw).trim() === "") {
+                // si el usuario escribe, “rompemos” la selección previa
+                if (clienteSel) setClienteSel(null);
+                setClienteInput(e.value ?? "");
+                if (String(e.value ?? "").trim() === "") {
                   setClientesFiltrados([HEADER, TIPS]);
-                  acClienteRef.current?.show();
+                  acClienteRef.current?.show?.();
                 }
               }}
               onFocus={() => {
-                // al enfocar, mostrar header + tips
                 setClientesFiltrados([HEADER, TIPS]);
-                acClienteRef.current?.show();
+                acClienteRef.current?.show?.();
               }}
-              onBlur={() => setClientesFiltrados([])} // se oculta al perder foco
-              onSelect={(e) => setCliente(e.value)}
+              // cierre diferido para no truncar la selección
+              onBlur={closePanelLater}
+              onSelect={(e) => {
+                setClienteSel(e.value);                 // objeto real
+                setClienteInput(formatCliente(e.value)); // RUC + Razón social en el input
+                closePanelLater();
+              }}
               placeholder="Cliente"
               className="w-full"
               inputClassName="h-11 rounded-md border border-gray-300 px-3 text-[14px] w-full focus:ring-2 focus:ring-blue-400"
               panelClassName="max-h-[340px] rounded-md border border-gray-300 shadow-lg overflow-y-auto"
               itemTemplate={clienteItemTemplate}
-              selectedItemTemplate={(item) =>
-                item ? `${item.documento} -> ${item.razonSocial}` : ""
-              }
               emptyMessage={null}
             />
           </div>
@@ -437,7 +451,7 @@ export default function VentasView() {
       </div>
 
       {/* FOOTER */}
-      <div className="bottom-0 sticky bg-white pt-4 border-gray-300 border-t">
+      <div className="sticky bottom-0 bg-white pt-4 border-t border-gray-300">
         {/* Buscar producto */}
         <div className="mb-4">
           <AutoComplete
@@ -462,7 +476,7 @@ export default function VentasView() {
                 TOTAL <span className="text-black">S/. {totalGeneral}</span>
               </strong>
             </p>
-            <div className="hidden group-hover:block bottom-full left-1/2 absolute bg-white shadow-lg mb-2 p-4 border rounded-lg w-52 text-gray-700 text-sm -translate-x-1/2">
+            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 bg-white border rounded-lg shadow-lg w-52 p-4 mb-2 text-gray-700 text-sm">
               {[
                 "Anticipios",
                 "DSCTO",

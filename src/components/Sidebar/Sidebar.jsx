@@ -51,45 +51,38 @@ export default function Sidebar() {
 
     return (
         // FIXED + ocupa de top a bottom del viewport. Grid reparte verticalmente.
-        <aside className="left-0 fixed inset-y-0 grid grid-rows-[auto,auto,1fr] bg-blue-800 w-96 overflow-hidden text-white">
-
+        <aside className="fixed inset-y-0 left-0 grid grid-rows-[auto,auto,1fr] w-96 overflow-hidden bg-blue-800 text-white">
             {/* Logo + config */}
             <div className="relative flex items-center p-6">
                 <img src="/images/Logo_WolfFur.avif" alt="Logo" />
                 <MoreVertIcon
                     onClick={() => setShowConfig(!showConfig)}
-                    className="top-6 right-6 absolute text-white cursor-pointer"
+                    className="absolute right-6 top-6 cursor-pointer text-white"
                 />
                 {showConfig && (
-                    <div className="top-16 right-6 z-50 absolute bg-white shadow-lg p-4 border border-gray-200 rounded-lg min-w-[16rem] max-w-md text-black">
-                        <div className="flex items-center gap-3 mb-3">
-                            {/* Círculo con iniciales */}
-                            <div className="flex flex-shrink-0 justify-center items-center bg-blue-600 shadow-md rounded-full w-14 h-14 font-extrabold text-white text-lg">
+                    <div className="absolute right-6 top-16 z-50 min-w-[16rem] max-w-md rounded-lg border border-gray-200 bg-white p-4 text-black shadow-lg">
+                        <div className="mb-3 flex items-center gap-3">
+                            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 font-extrabold text-white">
                                 {initials}
                             </div>
-
-                            {/* Nombre, apellido y correo */}
                             <div className="flex flex-col">
-                                <p className="font-bold text-gray-900 text-lg leading-tight">
+                                <p className="leading-tight text-lg font-bold text-gray-900">
                                     {user.nombres}{" "}
-                                    <span className="font-extrabold text-gray-800">
-                                        {user.apellidoPaterno}
-                                    </span>
+                                    <span className="font-extrabold text-gray-800">{user.apellidoPaterno}</span>
                                 </p>
-                                <p className="text-black text-sm break-words">{user.correo}</p>
+                                <p className="text-sm text-black">{user.correo}</p>
                             </div>
                         </div>
 
                         <h6 className="mb-2 font-bold">Empresa Seleccionada</h6>
                         <a href="">
-                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                            <div className="hover:bg-gray-100 flex items-center gap-2 rounded-md p-2">
                                 <BusinessIcon className="text-blue-600" fontSize="medium" />
                                 Gestionar plan
                             </div>
                         </a>
-
                         <a href="">
-                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                            <div className="hover:bg-gray-100 flex items-center gap-2 rounded-md p-2">
                                 <ReceiptIcon className="text-green-600" fontSize="medium" />
                                 Ordenes de pago
                             </div>
@@ -99,21 +92,20 @@ export default function Sidebar() {
 
                         <h3 className="mb-2 font-bold">Usuario</h3>
                         <a href="">
-                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                            <div className="hover:bg-gray-100 flex items-center gap-2 rounded-md p-2">
                                 <PeopleIcon className="text-purple-600" fontSize="medium" />
                                 Registrar nueva empresa
                             </div>
                         </a>
-
                         <a href="">
-                            <div className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md">
+                            <div className="hover:bg-gray-100 flex items-center gap-2 rounded-md p-2">
                                 <LockIcon className="text-orange-600" fontSize="medium" />
                                 Cambiar contraseña
                             </div>
                         </a>
 
                         <div
-                            className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md cursor-pointer"
+                            className="hover:bg-gray-100 flex cursor-pointer items-center gap-2 rounded-md p-2"
                             onClick={() => handleLogout(navigate)}
                         >
                             <ExitToAppIcon className="text-red-600" fontSize="medium" />
@@ -122,11 +114,13 @@ export default function Sidebar() {
                     </div>
                 )}
             </div>
+
             {/* Empresa / Sucursal (sin scroll) */}
-            <div className="space-y-6 px-5">
+            {/* >>> AQUI el margen inferior extra para que no “toquen” el menú <<< */}
+            <div className="px-5 space-y-6 mb-6">
                 {/* EMPRESA */}
                 <div className="flex flex-col">
-                    <span className="inline-flex self-start bg-blue-700 mb-2 px-2 py-[2px] rounded-md w-fit font-bold text-[11px] text-blue-100 uppercase tracking-wide">
+                    <span className="mb-2 inline-flex w-fit self-start rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold uppercase tracking-wide text-blue-100">
                         Empresa
                     </span>
                     <div className="relative">
@@ -135,24 +129,30 @@ export default function Sidebar() {
                             id="empresa"
                             value={empresa}
                             onChange={(e) => setEmpresa(e.target.value)}
-                            className="bg-blue-700/50 px-4 py-4 pr-12 border border-blue-600/40 focus:border-blue-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-300/40 w-full font-medium text-[15px] text-white transition appearance-none placeholder-blue-200"
+                            className="w-full appearance-none rounded-xl border border-blue-600/40 bg-blue-700/50 px-4 py-4 pr-12 text-[15px] font-medium text-white outline-none transition placeholder-blue-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-300/40"
                         >
                             <option value="">Seleccione empresa</option>
                             {empresas.map((e) => (
-                                <option key={e.id} value={e.id}>{e.nombre}</option>
+                                <option key={e.id} value={e.id}>
+                                    {e.nombre}
+                                </option>
                             ))}
                         </select>
-                        <svg className="top-1/2 right-3 absolute opacity-90 w-6 h-6 text-blue-100 -translate-y-1/2 pointer-events-none"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg
+                            className="pointer-events-none absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-blue-100 opacity-90"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
                 </div>
-                
 
                 {/* SUCURSAL */}
                 <div className="flex flex-col">
-                    <span className="inline-flex self-start bg-blue-700 mb-2 px-2 py-[2px] rounded-md w-fit font-bold text-[11px] text-blue-100 uppercase tracking-wide">
+                    <span className="mb-2 inline-flex w-fit self-start rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold uppercase tracking-wide text-blue-100">
                         Sucursal
                     </span>
                     <div className="relative">
@@ -161,35 +161,41 @@ export default function Sidebar() {
                             id="sucursal"
                             value={sucursal}
                             onChange={(e) => setSucursal(e.target.value)}
-                            className="bg-blue-700/50 px-4 py-4 pr-12 border border-blue-600/40 focus:border-blue-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-300/40 w-full font-medium text-[15px] text-white transition appearance-none placeholder-blue-200"
+                            className="w-full appearance-none rounded-xl border border-blue-600/40 bg-blue-700/50 px-4 py-4 pr-12 text-[15px] font-medium text-white outline-none transition placeholder-blue-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-300/40"
                         >
                             <option value="">Seleccione sucursal</option>
                             {sucursales.map((e) => (
-                                <option key={e.id} value={e.id}>{e.nombre}</option>
+                                <option key={e.id} value={e.id}>
+                                    {e.nombre}
+                                </option>
                             ))}
                         </select>
-                        <svg className="top-1/2 right-3 absolute opacity-90 w-6 h-6 text-blue-100 -translate-y-1/2 pointer-events-none"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <svg
+                            className="pointer-events-none absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-blue-100 opacity-90"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
                 </div>
             </div>
 
-            {/* Mejorar el margen en (Sidebar - ver todoist) */}
-
             {/* Menú — única zona con scroll */}
-            <nav className="gap-3 grid grid-cols-2 row-start-3 row-end-4 p-5 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
+            {/* margen superior suave para separar del bloque anterior */}
+            <nav className="row-start-3 row-end-4 grid min-h-0 grid-cols-2 gap-3 overflow-y-auto p-5 mt-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
                 {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     return (
                         <button
                             key={index}
                             onClick={() => handleMenuAction(item.action)}
-                            className={`${buttonColors[index]} flex flex-col items-center justify-center p-4 rounded-lg shadow hover:opacity-90`}
+                            className={`${buttonColors[index]} flex flex-col items-center justify-center rounded-lg p-4 shadow hover:opacity-90`}
                         >
                             <Icon style={{ fontSize: "2rem" }} />
-                            <span className="mt-2 font-medium text-white text-sm text-center">{item.name}</span>
+                            <span className="mt-2 text-center text-sm font-medium text-white">{item.name}</span>
                         </button>
                     );
                 })}
