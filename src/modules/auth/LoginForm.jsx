@@ -5,7 +5,7 @@ import { useFormHandler } from "@hooks/useFormHandler";
 import { handleLogin } from "@services/auth/authLogic";
 import {toast} from "react-toastify";
 
-export default function LoginForm() {
+const LoginForm = () => {
     const navigate = useNavigate();
     
     const {values,err,handleChange,handleSubmit} = useFormHandler(
@@ -104,4 +104,4 @@ export default function LoginForm() {
     );
 };
 
-
+export default LoginForm;
