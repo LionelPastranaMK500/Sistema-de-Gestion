@@ -1,4 +1,4 @@
-import { productosDesdeFacturas } from "@/data/dataFalsa";
+import { getProductos } from "@services/generadorData";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@constants/iconsConstants";
 
@@ -8,7 +8,11 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
     const [filtrados, setFiltrados] = useState([]);
 
     useEffect(() => {
-        setProductos(productosDesdeFacturas);
+        const cargarProductos = async () => {
+            const data = await getProductos();
+            setProductos(data);
+        };
+        cargarProductos();
     }, []);
 
     useEffect(() => {
