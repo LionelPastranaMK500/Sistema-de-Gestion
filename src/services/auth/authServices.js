@@ -1,5 +1,24 @@
+function safeParse(key) {
+    const raw = localStorage.getItem(key);
+    if (!raw || raw === "undefined") return null;
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        console.error(`Error al parsear localStorage[${key}]`, e);
+        return null;
+    }
+}
+
+function setAuthToken(token) {
+    localStorage.setItem("authToken", token);
+}
+
+export function getAuthToken() {
+    return localStorage.getItem("authToken");
+}
+
 export function registerUser(userData) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = safeParse("users") || [];
     const correoNormalizado = String(userData.correo || "").trim().toLowerCase();
 
     if (!correoNormalizado || !userData.clave) {
@@ -9,6 +28,7 @@ export function registerUser(userData) {
     if (users.some(u => u.correo === correoNormalizado)) {
         return { success: false, message: "El correo ya está registrado" };
     }
+
     users.push({
         correo: correoNormalizado,
         clave: String(userData.clave || "").trim(),
@@ -21,6 +41,7 @@ export function registerUser(userData) {
     localStorage.setItem("users", JSON.stringify(users));
     return { success: true, message: "Usuario registrado correctamente" };
 }
+
 export function loginUser(correo, clave) {
     const correoNormalizado = String(correo || "").trim().toLowerCase();
     const claveNormalizada = String(clave || "").trim();
@@ -29,7 +50,7 @@ export function loginUser(correo, clave) {
         return { success: false, message: "Correo y clave son obligatorios" };
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = safeParse("users") || [];
     const user = users.find(u => u.correo === correoNormalizado);
 
     if (!user) {
@@ -41,13 +62,16 @@ export function loginUser(correo, clave) {
     }
 
     localStorage.setItem("activeUser", JSON.stringify(user));
-
     if (user.empresa) {
         localStorage.setItem("activeCompany", JSON.stringify(user.empresa));
     }
 
-    return { success: true, message: `Bienvenido ${user.nombres.split(" ")[0]} ${user.apellidoPaterno}`, user };
+    const fakeToken = btoa(`${user.correo}:${Date.now()}`);
+    setAuthToken(fakeToken);
+
+    return { success: true, message: `Bienvenido ${user.nombres.split(" ")[0]} ${user.apellidoPaterno}`, user, token: fakeToken };
 }
+
 export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
     if (!ruc || !usuarioSol || !claveSol) {
         return { success: false, message: "Todos los campos son requeridos" };
@@ -62,39 +86,45 @@ export function loginSunatUser({ ruc, usuarioSol, claveSol }) {
 
         localStorage.setItem("activeCompany", JSON.stringify(empresa));
 
-        const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
+        const activeUser = safeParse("activeUser") || null;
         if (activeUser) {
             activeUser.empresa = empresa;
 
-            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const users = safeParse("users") || [];
             const idx = users.findIndex(u => u.correo === activeUser.correo);
             if (idx !== -1) {
                 users[idx] = activeUser;
                 localStorage.setItem("users", JSON.stringify(users));
-                //console.log(users[idx]);
             }
 
             localStorage.setItem("activeUser", JSON.stringify(activeUser));
         }
 
-        return { success: true, message: "Empresa registrada correctamente", empresa };
+        const fakeToken = btoa(`${ruc}:${Date.now()}`);
+        setAuthToken(fakeToken);
+
+        return { success: true, message: "Empresa registrada correctamente", empresa, token: fakeToken };
     }
     return { success: false, message: "Credenciales de SUNAT inválidas" };
 }
+
 export function getActiveUser() {
-    return JSON.parse(localStorage.getItem("activeUser"));
+    return safeParse("activeUser");
 }
+
 export function logoutUser() {
     localStorage.removeItem("activeUser");
     localStorage.removeItem("activeCompany");
     return { success: true, message: "Sesión cerrada" };
 }
+
 export function getActiveCompany() {
-    return JSON.parse(localStorage.getItem("activeCompany"));
+    return safeParse("activeCompany");
 }
+
 export function syncActiveCompany() {
-    const activeUser = JSON.parse(localStorage.getItem("activeUser")) || null;
-    const activeCompany = JSON.parse(localStorage.getItem("activeCompany")) || null;
+    const activeUser = safeParse("activeUser");
+    const activeCompany = safeParse("activeCompany");
 
     if (!activeUser) return null;
     if (!activeCompany || JSON.stringify(activeCompany) !== JSON.stringify(activeUser.empresa)) {
@@ -103,6 +133,7 @@ export function syncActiveCompany() {
     }
     return activeCompany;
 }
+
 export function requestResetPassword(correo) {
     const correoNormalizado = String(correo || "").trim().toLowerCase();
 
@@ -110,7 +141,7 @@ export function requestResetPassword(correo) {
         return { success: false, message: "El correo es obligatorio" };
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = safeParse("users") || [];
     const user = users.find(u => u.correo === correoNormalizado);
 
     if (!user) {
@@ -126,7 +157,7 @@ export function requestResetPassword(correo) {
 }
 
 export function verifyResetCode(correo, code) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = safeParse("users") || [];
     const user = users.find(u => u.correo === String(correo).trim().toLowerCase());
 
     if (!user || user.resetCode !== code) {
@@ -134,8 +165,9 @@ export function verifyResetCode(correo, code) {
     }
     return { success: true, message: "Codigo valido" };
 }
+
 export function resetPassword(correo, code, nuevaClave) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = safeParse("users") || [];
     const idx = users.findIndex(u => u.correo === String(correo).trim().toLowerCase());
 
     if (idx === -1 || users[idx].resetCode !== code) {
