@@ -13,8 +13,9 @@ import {
 import { visualizarPDF } from "@utils/pdfViewer";
 import { generarRuc, generarDni } from "@services/generadorDocumentos";
 import VentasModal from "./VentasModal";
+import { useProductosAgregados } from "@hooks/useProductosAgregados";
 
-export default function VentasView() {
+const VentasView = () => {
   const [fechaEmision, setFechaEmision] = useState(new Date());
   const [fechaVencimiento, setFechaVencimiento] = useState(null);
 
@@ -51,8 +52,6 @@ export default function VentasView() {
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [proformaChecked, setProformaChecked] = useState(false);
-
-  const [productosAgregados, setProductoAgregados] = useState([]);
 
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -166,51 +165,18 @@ export default function VentasView() {
   };
 
   // ====== Productos ======
-  const agregarProducto = (prod = null) => {
-    const productoSeleccionado = prod || producto;
-    if (!productoSeleccionado) return;
-
-    const idProd = productoSeleccionado.codigo;
-    const existe = productosAgregados.find((p) => p.codigo === idProd);
-
-    if (existe) {
-      setProductoAgregados(
-        productosAgregados.map((p) =>
-          p.codigo === idProd
-            ? { ...p, cantidad: p.cantidad + 1, total: (p.cantidad + 1) * p.precio }
-            : p
-        )
-      );
-    } else {
-      setProductoAgregados([
-        ...productosAgregados,
-        { ...productoSeleccionado, cantidad: 1, total: productoSeleccionado.precio },
-      ]);
-    }
-
-    setProducto(null);
-    setProductosFiltrados([]);
-  };
-
-  const totalGeneral = productosAgregados.reduce((sum, p) => sum + p.total, 0);
-
-  const actualizarCantidad = (codigo, cantidad) => {
-    if (cantidad < 1) return;
-    setProductoAgregados(
-      productosAgregados.map((p) =>
-        p.codigo === codigo ? { ...p, cantidad, total: cantidad * p.precio } : p
-      )
-    );
-  };
-
-  const eliminarProducto = (codigo) => {
-    setProductoAgregados((prev) => prev.filter((p) => p.codigo !== codigo));
-  };
+  const {
+    productosAgregados,
+    agregarProducto,
+    actualizarCantidad,
+    eliminarProducto,
+    totalGeneral,
+  } = useProductosAgregados();
 
   const handleKeyEnter = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      agregarProducto();
+      agregarProducto(productos);
     }
   };
 
@@ -219,15 +185,15 @@ export default function VentasView() {
     if (opt?.__type === "header") {
       return (
         <div
-          className="sticky top-0 z-10 flex items-center justify-between bg-white px-4 py-3 border-b"
+          className="top-0 z-10 sticky flex justify-between items-center bg-white px-4 py-3 border-b"
           onMouseDown={(e) => e.preventDefault()}
         >
-          <span className="text-[13px] font-semibold text-gray-600 uppercase tracking-wide">
+          <span className="font-semibold text-[13px] text-gray-600 uppercase tracking-wide">
             Resultados de la búsqueda
           </span>
           <button
             type="button"
-            className="rounded-md bg-indigo-600 px-4 py-2 text-[12px] font-bold text-white hover:bg-indigo-700"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md font-bold text-[12px] text-white"
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => console.log("REGISTRAR NUEVO")}
           >
@@ -240,7 +206,7 @@ export default function VentasView() {
     if (opt?.__type === "tips") {
       return (
         <div
-          className="sticky bottom-0 bg-white px-4 py-3 border-t text-[12px] leading-5 text-gray-600"
+          className="bottom-0 sticky bg-white px-4 py-3 border-t text-[12px] text-gray-600 leading-5"
           onMouseDown={(e) => e.preventDefault()}
         >
           <div>
@@ -261,9 +227,9 @@ export default function VentasView() {
 
     // Ítem normal (¡sin preventDefault!)
     return (
-      <div className="px-3 py-2 hover:bg-gray-50">
+      <div className="hover:bg-gray-50 px-3 py-2">
         <div className="text-[12px] text-gray-500">{opt.documento}</div>
-        <div className="text-[13px] font-semibold text-gray-800">{opt.razonSocial}</div>
+        <div className="font-semibold text-[13px] text-gray-800">{opt.razonSocial}</div>
       </div>
     );
   };
@@ -316,7 +282,7 @@ export default function VentasView() {
               // cierre diferido para no truncar la selección
               onBlur={closePanelLater}
               onSelect={(e) => {
-                setClienteSel(e.value);                 // objeto real
+                setClienteSel(e.value);// objeto real
                 setClienteInput(formatCliente(e.value)); // RUC + Razón social en el input
                 closePanelLater();
               }}
@@ -406,7 +372,7 @@ export default function VentasView() {
           />
         </div>
       </div>
-
+              
       {/* BOTONES DE OPCIONES */}
       <div className="gap-2 grid grid-cols-4 mb-6">
         <VentasModal />
@@ -429,19 +395,19 @@ export default function VentasView() {
               </tr>
             </thead>
             <tbody>
-              {productosAgregados.map((p) => (
-                <tr key={p.codigo} className="border-b">
-                  <td className="px-4 py-2 text-left">{p.descripcion}</td>
-                  <td className="px-4 py-2 text-center">S/ {p.precio.toFixed(2)}</td>
+              {productosAgregados.map((producto) => (
+                <tr key={producto.codigo} className="border-b">
+                  <td className="px-4 py-2 text-left">{producto.descripcion}</td>
+                  <td className="px-4 py-2 text-center">S/{producto.precio?.toFixed(2)}</td>
                   <td className="px-4 py-2 text-center">S/ 0.00</td>
-                  <td className="px-4 py-2 text-center">S/ {p.total.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-center">S/{totalGeneral.toFixed(2)}</td>
                   <td className="flex justify-center items-center gap-2 px-4 py-2">
-                    <button className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" onClick={() => actualizarCantidad(p.codigo, p.cantidad - 1)}>-</button>
-                    <span>{p.cantidad}</span>
-                    <button className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" onClick={() => actualizarCantidad(p.codigo, p.cantidad + 1)}>+</button>
+                    <button className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" onClick={() => actualizarCantidad(producto.codigo, producto.cantidad - 1)}>-</button>
+                    <span>{producto.cantidad}</span>
+                    <button className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" onClick={() => actualizarCantidad(producto.codigo, producto.cantidad + 1)}>+</button>
                   </td>
                   <td className="px-4 py-2 text-center">
-                    <button className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white" onClick={() => eliminarProducto(p.codigo)}>Eliminar</button>
+                    <button className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white" onClick={() => eliminarProducto(producto.codigo)}>Eliminar</button>
                   </td>
                 </tr>
               ))}
@@ -451,7 +417,7 @@ export default function VentasView() {
       </div>
 
       {/* FOOTER */}
-      <div className="sticky bottom-0 bg-white pt-4 border-t border-gray-300">
+      <div className="bottom-0 sticky bg-white pt-4 border-gray-300 border-t">
         {/* Buscar producto */}
         <div className="mb-4">
           <AutoComplete
@@ -476,7 +442,7 @@ export default function VentasView() {
                 TOTAL <span className="text-black">S/. {totalGeneral}</span>
               </strong>
             </p>
-            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 bg-white border rounded-lg shadow-lg w-52 p-4 mb-2 text-gray-700 text-sm">
+            <div className="hidden group-hover:block bottom-full left-1/2 absolute bg-white shadow-lg mb-2 p-4 border rounded-lg w-52 text-gray-700 text-sm -translate-x-1/2">
               {[
                 "Anticipios",
                 "DSCTO",
@@ -545,3 +511,5 @@ export default function VentasView() {
     </div>
   );
 }
+
+export default VentasView;
