@@ -5,7 +5,7 @@ import SidebarSkeleton from "@components/Sidebar/SidebarSkeleton";
 import { useSidebar } from "@utils/sidebarState";
 import { MenuIcon } from "@constants/iconsConstants";
 
-export default function MainLayout() {
+const MainLayout = () => {
     const { sidebarReady } = useSidebar();
     const [isOpen, setIsOpen] = useState(true);
 
@@ -20,11 +20,11 @@ export default function MainLayout() {
             </div>
 
             {/* Contenido dinámico */}
-            <main className="flex-1 bg-gray-50 p-6 min-w-0 overflow-auto relative">
+            <main className="relative flex-1 bg-gray-50 p-6 min-w-0 overflow-auto">
                 {/* Botón hamburguesa */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="absolute top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded-md shadow-md hover:bg-blue-700 transition"
+                    className="top-4 left-4 z-50 absolute bg-blue-600 hover:bg-blue-700 shadow-md p-2 rounded-md text-white transition"
                 >
                     <MenuIcon fontSize="medium" />
                 </button>
@@ -34,3 +34,5 @@ export default function MainLayout() {
         </div>
     );
 }
+
+export default MainLayout;
