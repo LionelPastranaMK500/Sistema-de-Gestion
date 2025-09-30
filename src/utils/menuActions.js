@@ -63,6 +63,6 @@ export const menuActionsReportes = {
         navigate("/reportes/clientes_proveedores");
     },
     guia_reporte: ({ navigate }) => {
-        navigate("/reportes/guia_remision");
+        navigate("/reportes/guia_reporte");
     }
 };
