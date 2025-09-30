@@ -1,9 +1,14 @@
-import ReportesModal from "./ReportesModal";
+import ReportesButtons from "./ReportesButtons";
+import { Outlet } from "react-router-dom";
 
-export default function ReportesView() {
+const ReportesView = () => {
     return (
         <div className="flex flex-col w-full h-full">
-            <ReportesModal/>
+            <ReportesButtons/>
+            <Outlet />
         </div>
     );
 }
+
+
+export default ReportesView;
