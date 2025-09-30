@@ -84,43 +84,42 @@ export const emisionesChartOptions = {
     },
 };
 
-export function buildVentasData(data, fechaFiltro = null) {
-    let filtrada = data;
-    if (fechaFiltro) {
-        const mes = fechaFiltro.getMonth();
-        const anio = fechaFiltro.getFullYear();
-        filtrada = data.filter((d) => {
-            const f = new Date(d.fecha);
-            return f.getMonth() === mes && f.getFullYear() === anio;
-        });
-    }
+export function buildVentasData(data, fechaFiltro = new Date()) {
+    if (!fechaFiltro) fechaFiltro = new Date();
+    const mes = fechaFiltro.getMonth();
+    const anio = fechaFiltro.getFullYear();
 
-    const dias = Array.from(
-        new Set(filtrada.map((d) => new Date(d.fecha).getDate()))
-    ).sort((a, b) => a - b);
+    const filtrada = data.filter(d => {
+        const f = new Date(d.fecha);
+        return f.getMonth() === mes && f.getFullYear() === anio;
+    });
 
-    const ventasPorDia = dias.map((dia) =>
+    const ultimoDia = new Date(anio, mes + 1, 0).getDate();
+
+    const dias = Array.from({ length: ultimoDia }, (_, i) => i + 1);
+
+    const ventasPorDia = dias.map(dia =>
         filtrada
-            .filter(
-                (d) =>
-                    ["Factura Electrónica", "Boleta de Venta Electrónica"].includes(d.tDocumento) &&
-                    new Date(d.fecha).getDate() === dia
+            .filter(d =>
+                ["FACTURA ELECTRÓNICA", "BOLETA DE VENTA ELECTRÓNICA"].includes(d.tDocumento) &&
+                new Date(d.fecha).getDate() === dia
             )
             .reduce((acc, cur) => acc + cur.monto, 0)
     );
 
-    const proformasPorDia = dias.map((dia) =>
+    const proformasPorDia = dias.map(dia =>
         filtrada
-            .filter(
-                (d) =>
-                    d.tDocumento === "Proforma" &&
-                    new Date(d.fecha).getDate() === dia
+            .filter(d =>
+                d.tDocumento === "PROFORMA ELECTRÓNICA" &&
+                new Date(d.fecha).getDate() === dia
             )
             .reduce((acc, cur) => acc + cur.monto, 0)
     );
+
+    const labels = dias.map(d => d.toString().padStart(2, "0"));
 
     return {
-        labels: dias,
+        labels,
         datasets: [
             {
                 label: "Ventas",
@@ -128,6 +127,8 @@ export function buildVentasData(data, fechaFiltro = null) {
                 borderColor: "rgba(75,192,192,1)",
                 backgroundColor: "rgba(75,192,192,0.2)",
                 tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6,
             },
             {
                 label: "Proformas",
@@ -135,6 +136,8 @@ export function buildVentasData(data, fechaFiltro = null) {
                 borderColor: "rgba(255,99,132,1)",
                 backgroundColor: "rgba(255,99,132,0.2)",
                 tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6,
             },
         ],
         totals: {
@@ -158,53 +161,3 @@ export const ventasChartOptions = {
     },
 };
 
-export function buildComprasData(data, fechaFiltro = null) {
-    let filtrada = data.filter(d => d.tipoOperacion === "compra");
-    if (fechaFiltro) {
-        const mes = fechaFiltro.getMonth();
-        const anio = fechaFiltro.getFullYear();
-        filtrada = filtrada.filter(d => {
-            const f = new Date(d.fecha);
-            return f.getMonth() === mes && f.getFullYear() === anio;
-        });
-    }
-
-    const dias = Array.from(
-        new Set(filtrada.map(d => new Date(d.fecha).getDate()))
-    ).sort((a, b) => a - b);
-
-    const comprasPorDia = dias.map(dia =>
-        filtrada
-            .filter(d => new Date(d.fecha).getDate() === dia)
-            .reduce((acc, cur) => acc + cur.monto, 0)
-    );
-    return {
-        labels: dias,
-        datasets: [
-            {
-                label: "Compras",
-                data: comprasPorDia,
-                borderColor: "rgba(54,162,235,1)",
-                backgroundColor: "rgba(54,162,235,0.2)",
-                tension: 0.3,
-            }
-        ],
-        totals: {
-            compras: comprasPorDia.reduce((a, b) => a + b, 0)
-        }
-    };
-}
-
-export const comprasChartOptions = {
-    responsive: true,
-    plugins: {
-        legend: { position: "top" },
-        title: { display: true, text: "Compras por día" },
-    },
-    scales: {
-        y: {
-            beginAtZero: true,
-            ticks: { callback: value => `S/ ${value}` },
-        },
-    },
-};
