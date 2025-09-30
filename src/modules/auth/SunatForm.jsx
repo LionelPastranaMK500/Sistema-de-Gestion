@@ -100,7 +100,7 @@ export default function SunatForm() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate(-1)} // Pastrana arregla (esto solo funciona cuando el usuario entro desde otra pagina)
                             className="hover:bg-blue-50 py-2 border border-blue-600 rounded-lg w-full font-medium text-blue-600 transition"
                         >
                             Regresar
