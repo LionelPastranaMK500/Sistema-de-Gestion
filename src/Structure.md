@@ -1,13 +1,15 @@
 ```
 └── 📁Facturacion
+    └── 📁.vscode
+        ├── settings.json
     └── 📁public
         └── 📁images
             ├── Logo_WolfFur.avif
-            ├── Logo_WolfFur.jpg
             ├── Logo_WolfFur.webp
         ├── vite.svg
     └── 📁src
         └── 📁assets
+            ├── Logo_WolfFur.png
             ├── react.svg
         └── 📁components
             └── 📁Loaders
@@ -23,8 +25,6 @@
             ├── iconsConstants.js
             ├── menuItemsConstants.js
             ├── patternConstants.js
-        └── 📁data
-            ├── dataFalsa.js
         └── 📁hooks
             ├── useFormHandler.js
         └── 📁layouts
@@ -39,7 +39,8 @@
                 ├── ResetPassword.jsx
                 ├── SunatForm.jsx
             └── 📁clientes
-                ├── ClienteModal.jsx
+                └── 📁items
+                ├── ClienteNuevo.jsx
                 ├── ClientesView.jsx
             └── 📁common
                 ├── NotFound.jsx
@@ -77,7 +78,7 @@
                     ├── ReporteProductos.jsx
                     ├── ReporteVentasDetallado.jsx
                     ├── ReporteVentasGeneral.jsx
-                ├── ReportesModal.jsx
+                ├── ReportesButtons.jsx
                 ├── ReportesView.jsx
             └── 📁ventas
                 └── 📁components
@@ -98,6 +99,9 @@
             └── 📁clientes
             └── 📁facturas
             └── 📁guia_remision
+            └── 📁reportes
+                ├── excelBuilder.js
+                ├── reportesLogic.js
             └── 📁ventas
             ├── api.js
             ├── generadorData.js
