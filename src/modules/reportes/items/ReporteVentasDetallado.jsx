@@ -1,3 +1,5 @@
-export default function ReporteVentasDetallado(){
+const ReporteVentasDetallado=()=>{
     
 }
+
+export default ReporteVentasDetallado;
