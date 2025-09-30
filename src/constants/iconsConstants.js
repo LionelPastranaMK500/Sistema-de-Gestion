@@ -25,7 +25,9 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import DescriptionIcon from '@mui/icons-material/Description';
 export {
+   DescriptionIcon,
    MoreVertIcon,
    CloseIcon,
    RemoveCircleIcon,
