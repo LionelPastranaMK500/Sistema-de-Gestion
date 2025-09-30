@@ -6,7 +6,7 @@ import { handleRegister } from "@services/auth/authLogic";
 import { useFormHandler } from "@hooks/useFormHandler";
 import {toast} from "react-toastify";
 
-export default function RegisterForm() {
+const RegisterForm = () => {
     const navigate = useNavigate();
 
     const {values,err,handleChange,handleSubmit} = useFormHandler(
@@ -168,3 +168,5 @@ export default function RegisterForm() {
         </main>
     );
 }
+
+export default RegisterForm;
