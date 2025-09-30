@@ -11,7 +11,7 @@ import { Calendar } from "primereact/calendar";
 import GuiaRemisionModal from "./GuiaRemisionModal";
 import GuiaRemisionNuevo from "./GuiaRemisionNuevo";
 
-export default function GuiaRemision() {
+const GuiaRemision = () => {
     const [guia_remision] = useState([]);
     const [selectedGuiaRemision, setSelectedGuiaRemision] = useState(null);
     const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
@@ -118,7 +118,7 @@ export default function GuiaRemision() {
 
                     {/* Registrar Nuevo */}
                     <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
                         onClick={() => setMostrarNuevo(true)}
                     >
                         Registrar Nuevo
@@ -127,7 +127,7 @@ export default function GuiaRemision() {
             </div>
 
             {/* CONTENIDO */}
-            <div className="flex-1 min-h-0 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
+            <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
                 {fechaSeleccionada ? (
                     guiaRemisionFiltradas.length > 0 ? (
                         <div className="flex flex-col gap-6 w-full">
@@ -135,7 +135,7 @@ export default function GuiaRemision() {
                                 <div
                                     key={f.id}
                                     onClick={() => setSelectedGuiaRemision(f)}
-                                    className="flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white border-gray-250"
+                                    className="flex justify-between items-center bg-white shadow-md hover:shadow-lg px-6 py-5 border border-gray-250 rounded-xl transition cursor-pointer"
                                     style={{ minHeight: "110px" }}
                                 >
                                     {/* Izquierda */}
@@ -157,7 +157,7 @@ export default function GuiaRemision() {
 
                                     {/* Derecha */}
                                     <div className="text-right">
-                                        <p className="text-xl font-extrabold text-blue-700">
+                                        <p className="font-extrabold text-blue-700 text-xl">
                                             S/ {Math.abs(f.monto).toFixed(2)}
                                         </p>
                                     </div>
@@ -202,3 +202,5 @@ export default function GuiaRemision() {
         </div>
     );
 }
+
+export default GuiaRemision;

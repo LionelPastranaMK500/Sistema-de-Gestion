@@ -3,7 +3,7 @@ import { getActiveUser } from "@services/auth/authServices";
 import PublicLoader from "@components/Loaders/PublicLoader";
 import { useEffect, useState } from "react";
 
-export default function PublicRoute() {
+const PublicRoute = () => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     useEffect(() => {
@@ -19,3 +19,4 @@ export default function PublicRoute() {
     }
     return <Outlet />;
 }
+export default PublicRoute;

@@ -1,6 +1,6 @@
 import { Dialog } from "primereact/dialog";
 
-export default function CondicionPagoModal({ visible, onHide }) {
+const CondicionPagoModal = ({ visible, onHide })  => {
     return (
         <Dialog
             header="Condición de Pago"
@@ -16,3 +16,5 @@ export default function CondicionPagoModal({ visible, onHide }) {
         </Dialog>
     );
 }
+
+export default CondicionPagoModal;

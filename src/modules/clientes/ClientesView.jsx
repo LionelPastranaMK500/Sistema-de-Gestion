@@ -10,10 +10,12 @@ import {
     KeyboardArrowLeftIcon,
     KeyboardArrowRightIcon,
 } from "@constants/iconsConstants";
+import ClienteNuevo from "./ClienteNuevo";
 
-export default function ClientesView() {
+const ClientesView = () => {
     const [search, setSearch] = useState("");
     const [filteredClientes, setFilteredClientes] = useState([]);
+    const [mostrarNuevo, setMostrarNuevo] = useState(false);
 
     useEffect(() => {
         setFilteredClientes(clientes);
@@ -34,7 +36,7 @@ export default function ClientesView() {
     const clienteCard = (c, i) => (
         <div
             key={`${c.documento || c.razonSocial}-${i}`}
-            className="rounded-md border border-gray-300 bg-white px-4 py-4 text-sm shadow-sm transition hover:shadow-md"
+            className="bg-white shadow-sm hover:shadow-md px-4 py-4 border border-gray-300 rounded-md text-sm transition"
         >
             <div className="flex items-center gap-4">
                 <Avatar
@@ -43,19 +45,19 @@ export default function ClientesView() {
                     shape="circle"
                     className="!bg-gray-100 !text-gray-600"
                 />
-                <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-800">
+                <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800 truncate">
                         {c.razonSocial || "-"}
                     </p>
-                    <div className="mt-1 flex items-center gap-3">
-                        <span className="rounded-full bg-blue-100 px-2 py-[2px] text-[11px] font-semibold text-blue-700">
+                    <div className="flex items-center gap-3 mt-1">
+                        <span className="bg-blue-100 px-2 py-[2px] rounded-full font-semibold text-[11px] text-blue-700">
                             RUC
                         </span>
                         <small className="text-gray-500">{c.documento}</small>
                     </div>
                 </div>
                 <Button
-                    className="!h-9 !w-9 !rounded-full !border-0 !bg-transparent hover:!bg-gray-100"
+                    className="!bg-transparent hover:!bg-gray-100 !border-0 !rounded-full !w-9 !h-9"
                     text
                     aria-label="Más acciones"
                     icon={<MoreVertIcon className="text-gray-500" />}
@@ -67,7 +69,7 @@ export default function ClientesView() {
     const listTemplate = (items) => {
         if (!items || items.length === 0) {
             return (
-                <div className="flex h-40 items-center justify-center rounded-md border border-dashed border-gray-300 bg-white text-sm text-gray-500">
+                <div className="flex justify-center items-center bg-white border border-gray-300 border-dashed rounded-md h-40 text-gray-500 text-sm">
                     No hay Clientes o Proveedores
                 </div>
             );
@@ -76,19 +78,20 @@ export default function ClientesView() {
     };
 
     return (
-        <div className="flex h-screen w-full flex-col rounded-lg bg-white p-6 shadow-md overflow-hidden">
+        <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-screen overflow-hidden">
             {/* HEADER */}
-            <div className="mb-6 flex items-center justify-between">
-                <h2 className="ml-5 text-xl font-bold text-gray-800">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="ml-5 font-bold text-gray-800 text-xl">
                     Clientes / Proveedores
                 </h2>
                 <div className="flex items-center gap-2">
                     <Button
                         label="REGISTRAR NUEVO"
-                        className="!rounded-md !bg-indigo-600 !px-4 !py-2 !text-sm !font-semibold hover:!bg-indigo-700"
+                        className="!bg-indigo-600 hover:!bg-indigo-700 !px-4 !py-2 !rounded-md !font-semibold !text-sm"
+                        onClick={() => setMostrarNuevo(true)}
                     />
                     <Button
-                        className="!h-10 !w-10 !rounded-full !border !border-gray-300 !bg-white hover:!bg-gray-50"
+                        className="!bg-white hover:!bg-gray-50 !border !border-gray-300 !rounded-full !w-10 !h-10"
                         icon={<MoreVertIcon className="text-gray-600" />}
                         aria-label="Opciones"
                     />
@@ -96,13 +99,13 @@ export default function ClientesView() {
             </div>
 
             {/* CONTENEDOR SCROLLABLE */}
-            <div className="flex-1 min-h-0 flex flex-col">
+            <div className="flex flex-col flex-1 min-h-0">
                 {/* Fila buscador + chevrons */}
-                <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="flex justify-between items-center gap-3 mb-4">
                     {/* contenedor relativo para posicionar el icono */}
                     <div className="relative w-full max-w-xl">
                         {/* Ícono de lupa (de tu set) */}
-                        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 !h-5 !w-5 text-gray-400" />
+                        <SearchIcon className="top-1/2 left-3 z-10 absolute !w-5 !h-5 text-gray-400 -translate-y-1/2 pointer-events-none" />
 
                         <AutoComplete
                             value={search}
@@ -121,16 +124,16 @@ export default function ClientesView() {
                         />
                     </div>
 
-                    <div className="shrink-0 flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                         <button
-                            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
+                            className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
                             aria-label="Anterior"
                             title="Anterior"
                         >
                             <KeyboardArrowLeftIcon />
                         </button>
                         <button
-                            className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
+                            className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
                             aria-label="Siguiente"
                             title="Siguiente"
                         >
@@ -140,10 +143,17 @@ export default function ClientesView() {
                 </div>
 
                 {/* Lista con scroll interno */}
-                <div className="flex-1 min-h-0 overflow-y-auto rounded-md border border-gray-300 bg-gray-50 p-4">
+                <div className="flex-1 bg-gray-50 p-4 border border-gray-300 rounded-md min-h-0 overflow-y-auto">
                     <DataView value={filteredClientes} listTemplate={listTemplate} layout="list" />
                 </div>
             </div>
+
+            {mostrarNuevo && (
+                <div>
+                    <ClienteNuevo onClose={() => setMostrarNuevo(false)} />
+                </div>
+            )}
         </div>
     );
 }
+export default ClientesView;

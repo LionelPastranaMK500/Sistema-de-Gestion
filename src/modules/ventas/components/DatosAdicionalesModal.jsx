@@ -1,6 +1,6 @@
 import { Dialog } from "primereact/dialog";
 
-export default function DatosAdicionalesModal({ visible, onHide }) {
+const DatosAdicionalesModal = ({ visible, onHide }) => {
     return (
         <Dialog
             header="Datos Adicionales"
@@ -16,3 +16,5 @@ export default function DatosAdicionalesModal({ visible, onHide }) {
         </Dialog>
     );
 }
+
+export default DatosAdicionalesModal;

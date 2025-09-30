@@ -1,7 +1,6 @@
-// import { useState } from "react";
 import { CloseIcon } from "@constants/iconsConstants";
 
-export default function GuiaRemisionModal() {
+const GuiaRemisionModal = () => {
     return (
         <div>
             <div>
@@ -96,3 +95,5 @@ export default function GuiaRemisionModal() {
         </div>
     );
 }
+
+export default GuiaRemisionModal;

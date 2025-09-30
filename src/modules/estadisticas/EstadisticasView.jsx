@@ -6,25 +6,26 @@ import { generarDataFalsa, keyMap} from "@services/generadorData";
 import { contarComprobantes } from "@utils/comprobantesUtils";
 import {
     buildEmisionesData, emisionesChartOptions,
-    buildVentasData, ventasChartOptions,
-    buildComprasData, comprasChartOptions
+    buildVentasData, ventasChartOptions
 } from "@utils/chartUtils";
 import { toast } from "react-toastify";
 
-export default function EstadisticasView() {
+const EstadisticasView = () => {
     const [data, setData] = useState([]);
     const [fechaEmisiones, setFechaEmisiones] = useState(null);
     const [fechaVentas, setFechaVentas] = useState(null);
-    const [fechaCompras, setFechaCompras] = useState(null);
     const [ventas, setVentas] = useState(0);
-    const [compras, setCompras] = useState(0);
-    const [dataVentasFiltrada, setDataVentasFiltrada] = useState([]);
-    const [dataCompras, setDataCompras] = useState(null);
+
     const [emisiones, setEmisiones] = useState({
         total: 0, facturas: 0, boletas: 0, notasCredito: 0,
         notasDebito: 0, proformas: 0, guiasRemision: 0,
     });
 
+    const [dataVentasFiltrada, setDataVentasFiltrada] = useState([]);
+
+    const refCalEmi = useRef(null);
+    const refCalVen = useRef(null);
+    
     const filtrarPorFecha = (fechaFiltro, data) => {
         if (!fechaFiltro) return data;
         const mes = fechaFiltro.getMonth();
@@ -42,7 +43,7 @@ export default function EstadisticasView() {
     };
 
     useEffect(() => {
-        const datosGenerados = generarDataFalsa(2);
+        const datosGenerados = generarDataFalsa(2, new Date());
         setData(datosGenerados);
         configCalendar();
     }, []);
@@ -56,28 +57,16 @@ export default function EstadisticasView() {
 
     useEffect(() => {
         if (!data.length) return;
-        const filtrada = filtrarPorFecha(fechaVentas, data).filter(d => d.tipoOperacion === "venta");
+        let filtrada = filtrarPorFecha(fechaVentas, data).filter(d => d.tipoOperacion === "venta");
+        if (!filtrada.length) filtrada = [{ fecha: new Date(), monto: 0 }];
         const total = filtrada.reduce((acc, cur) => acc + cur.monto, 0);
         setVentas(total);
         setDataVentasFiltrada(filtrada);
         if (fechaVentas) toast.success("Ventas actualizadas", { autoClose: 1000 });
     }, [fechaVentas, data]);
 
-    useEffect(() => {
-        if (!data.length) return;
-        const filtrada = filtrarPorFecha(fechaCompras, data).filter(d => d.tipoOperacion === "compra");
-        const total = filtrada.reduce((acc, cur) => acc + cur.monto, 0);
-        setCompras(total);
-        setDataCompras(buildComprasData(filtrada, fechaCompras));
-        if (fechaCompras) toast.success("Compras actualizadas", { autoClose: 1000 });
-    }, [fechaCompras, data]);
-
     const emisionesData = buildEmisionesData(emisiones);
     const ventasData = buildVentasData(dataVentasFiltrada);
-
-    const refCalEmi = useRef(null);
-    const refCalVen = useRef(null);
-    const refCalCom = useRef(null);
 
     return (
         <div className="flex flex-col w-full h-screen">
@@ -190,10 +179,10 @@ export default function EstadisticasView() {
 
                     <div className="relative px-5 py-6">
                         <div className="top-6 right-6 absolute flex flex-col items-end gap-2 pointer-events-none">
-                            <span className="bg-indigo-600 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
+                            <span className="bg-cyan-500 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {ventas.toFixed(2)}
                             </span>
-                            <span className="bg-blue-500 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
+                            <span className="bg-pink-500 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {(0).toFixed(2)}
                             </span>
                         </div>
@@ -206,56 +195,9 @@ export default function EstadisticasView() {
                         </div>
                     </div>
                 </div>
-
-                {/* === COMPRAS === */}
-                <div className="bg-white shadow-sm border border-gray-200 rounded-xl">
-                    <div className="flex justify-between items-center px-5 py-4 border-b">
-                        <h3 className="font-semibold text-gray-800 text-lg">Compras</h3>
-                        <div className="flex items-center gap-2">
-                            <select className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 text-sm">
-                                <option>PEN</option>
-                            </select>
-                            <div className="relative">
-                                <Calendar
-                                    ref={refCalCom}
-                                    value={fechaCompras}
-                                    onChange={(e) => setFechaCompras(e.value)}
-                                    dateFormat="mm/yy"
-                                    view="month"
-                                    showIcon={false}
-                                    appendTo={document.body}
-                                    panelClassName="z-50"
-                                    className="absolute inset-0 opacity-0 pointer-events-none"
-                                />
-                                <button
-                                    onClick={() => refCalCom.current?.show?.()}
-                                    className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
-                                >
-                                    {fmtMesAnio(fechaCompras)}
-                                    <i className="text-gray-500 pi pi-chevron-down" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative px-5 py-6">
-                        <div className="top-6 right-6 absolute pointer-events-none">
-                            <span className="bg-emerald-600 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
-                                S/ {compras.toFixed(2)}
-                            </span>
-                        </div>
-
-                        <div className="w-full h-[360px]">
-                            {dataCompras && (
-                                <Line
-                                    data={dataCompras}
-                                    options={{ ...comprasChartOptions, maintainAspectRatio: false, responsive: true }}
-                                />
-                            )}
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );
 }
+
+export default EstadisticasView;

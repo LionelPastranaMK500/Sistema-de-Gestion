@@ -10,7 +10,7 @@ import {
   KeyboardArrowRightIcon,
 } from '@constants/iconsConstants';
 
-export default function ProductosView() {
+const ProductosView = () => {
   const [filteredProductos, setFilteredProductos] = useState([]);
   const [search, setSearch] = useState('');
 
@@ -35,38 +35,38 @@ export default function ProductosView() {
     return (
       <div
         key={`${p.codigo}-${i}`}
-        className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm transition hover:shadow-md"
+        className="bg-white shadow-sm hover:shadow-md px-4 py-2.5 border border-gray-200 rounded-xl transition"
       >
         {/* fila principal (altura contenida) */}
-        <div className="flex min-h-[65px] items-center gap-4">
+        <div className="flex items-center gap-4 min-h-[65px]">
           {/* imagen (un poco más grande) */}
           <img
             src={defaultImage}
             alt={p.descripcion}
-            className="h-14 w-14 rounded-md object-cover ring-1 ring-gray-200"
+            className="rounded-md ring-1 ring-gray-200 w-14 h-14 object-cover"
           />
 
           {/* info centro */}
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-semibold text-gray-800">
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-[13px] text-gray-800 truncate">
               {p.descripcion}
             </p>
 
-            <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-1 text-[10.5px] text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mt-1 text-[10.5px] text-gray-500">
               <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-400" />
+                <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
                 {(p.codigo ?? '').toString().padStart(3, '0')}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-400" />
+                <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
                 {p.categoria ? p.categoria : 'SIN CATEGORÍA'}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-400" />
+                <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
                 SIN CÓDIGO DE BARRAS
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-400" />
+                <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
                 UNIDADES: {p.unidad}
               </span>
             </div>
@@ -75,17 +75,17 @@ export default function ProductosView() {
           {/* acciones derecha: precio + stock (columna) y more aparte */}
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-end gap-1">
-              <span className="rounded-md bg-green-50 px-2 py-0.5 text-[11px] font-extrabold text-emerald-600">
+              <span className="bg-green-50 px-2 py-0.5 rounded-md font-extrabold text-[11px] text-emerald-600">
                 S/ {Number(p.precio ?? 0).toFixed(2)}
               </span>
               <Button
                 label="VER STOCK"
-                className="!rounded-md !bg-blue-600 !px-2.5 !py-1.5 !text-[11px] !font-semibold !text-white hover:!bg-blue-700"
+                className="!bg-blue-600 hover:!bg-blue-700 !px-2.5 !py-1.5 !rounded-md !font-semibold !text-[11px] !text-white"
               />
             </div>
 
             <Button
-              className="shrink-0 !h-8 !w-8 !rounded-full !border-0 !bg-transparent hover:!bg-gray-100"
+              className="!bg-transparent hover:!bg-gray-100 !border-0 !rounded-full !w-8 !h-8 shrink-0"
               text
               aria-label="Más"
               icon={<MoreVertIcon className="text-gray-500" />}
@@ -99,7 +99,7 @@ export default function ProductosView() {
   const listTemplate = (items) => {
     if (!items || items.length === 0) {
       return (
-        <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white text-gray-500">
+        <div className="flex justify-center items-center bg-white border border-gray-300 border-dashed rounded-xl h-40 text-gray-500">
           No hay productos
         </div>
       );
@@ -108,17 +108,17 @@ export default function ProductosView() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden rounded-lg bg-white p-6 shadow-md">
+    <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-screen overflow-hidden">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="ml-5 text-xl font-bold text-gray-800">Productos / Servicios</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="ml-5 font-bold text-gray-800 text-xl">Productos / Servicios</h2>
         <div className="flex items-center gap-2">
           <Button
             label="REGISTRAR NUEVO"
-            className="!rounded-lg !bg-indigo-600 !px-4 !py-2 !text-sm !font-semibold hover:!bg-indigo-700"
+            className="!bg-indigo-600 hover:!bg-indigo-700 !px-4 !py-2 !rounded-lg !font-semibold !text-sm"
           />
           <Button
-            className="!h-10 !w-10 !rounded-full !border !border-gray-300 !bg-white hover:!bg-gray-50"
+            className="!bg-white hover:!bg-gray-50 !border !border-gray-300 !rounded-full !w-10 !h-10"
             icon={<MoreVertIcon className="text-gray-600" />}
             aria-label="Opciones"
           />
@@ -126,11 +126,11 @@ export default function ProductosView() {
       </div>
 
       {/* Contenido scrollable */}
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex flex-col flex-1 min-h-0">
         {/* Buscador + chevrons (MISMO ESTILO) */}
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="flex justify-between items-center gap-3 mb-4">
           <div className="relative w-full max-w-xl">
-             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 !h-5 !w-5 text-gray-400" />
+             <SearchIcon className="top-1/2 left-3 z-10 absolute !w-5 !h-5 text-gray-400 -translate-y-1/2 pointer-events-none" />
             <AutoComplete
               value={search}
               onChange={onSearchChange}
@@ -144,16 +144,16 @@ export default function ProductosView() {
             />
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
+              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
               aria-label="Anterior"
               title="Anterior"
             >
               <KeyboardArrowLeftIcon />
             </button>
             <button
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-600 hover:bg-gray-50"
+              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
               aria-label="Siguiente"
               title="Siguiente"
             >
@@ -163,10 +163,12 @@ export default function ProductosView() {
         </div>
 
         {/* Lista con scroll */}
-        <div className="min-h-0 flex-1 overflow-y-auto rounded-md border border-gray-300 bg-gray-50 p-4">
+        <div className="flex-1 bg-gray-50 p-4 border border-gray-300 rounded-md min-h-0 overflow-y-auto">
           <DataView value={filteredProductos} listTemplate={listTemplate} layout="list" />
         </div>
       </div>
     </div>
   );
 }
+
+export default ProductosView;

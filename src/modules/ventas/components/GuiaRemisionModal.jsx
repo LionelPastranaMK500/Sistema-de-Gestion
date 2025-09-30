@@ -1,6 +1,6 @@
 import { Dialog } from "primereact/dialog";
 
-export default function GuiaRemisionModal({ visible, onHide }) {
+const GuiaRemisionModal = ({ visible, onHide }) => {
     return (
         <Dialog
             header="Guía de Remisión"
@@ -16,3 +16,4 @@ export default function GuiaRemisionModal({ visible, onHide }) {
         </Dialog>
     );
 }
+export default GuiaRemisionModal;

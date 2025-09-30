@@ -11,7 +11,7 @@ import { Calendar } from "primereact/calendar";
 import ProformasModal from "./ProformasModal";
 import { menuItemsProformas } from "@constants/menuItemsConstants";
 
-export default function ProformasView() {
+const ProformasView = () => {
     const [proformas] = useState([]); // sin cambios de data ni lógica
     const [showConfig, setShowConfig] = useState(false);
     const [selectedProformas, setSelectedProformas] = useState(null);
@@ -122,7 +122,7 @@ export default function ProformasView() {
                         onClick={() => setShowConfig(!showConfig)}
                     />
                     {showConfig && (
-                        <div className="top-14 right-6 absolute z-40 bg-white shadow-lg p-2 rounded-md">
+                        <div className="top-14 right-6 z-40 absolute bg-white shadow-lg p-2 rounded-md">
                             {menuItemsProformas.map((item, index) => (
                                 <div
                                     key={index}
@@ -138,7 +138,7 @@ export default function ProformasView() {
             </div>
 
             {/* CONTENIDO */}
-            <div className="flex-1 min-h-0 px-6 py-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
+            <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
                 {fechaSeleccionada ? (
                     proformasFiltradas.length > 0 ? (
                         <div className="flex flex-col gap-6 w-full">
@@ -146,7 +146,7 @@ export default function ProformasView() {
                                 <div
                                     key={f.id}
                                     onClick={() => setSelectedProformas(f)}
-                                    className="flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white border-gray-250"
+                                    className="flex justify-between items-center bg-white shadow-md hover:shadow-lg px-6 py-5 border border-gray-250 rounded-xl transition cursor-pointer"
                                     style={{ minHeight: "110px" }}
                                 >
                                     {/* Izquierda */}
@@ -168,7 +168,7 @@ export default function ProformasView() {
 
                                     {/* Derecha */}
                                     <div className="text-right">
-                                        <p className="text-xl font-extrabold text-blue-700">
+                                        <p className="font-extrabold text-blue-700 text-xl">
                                             S/ {Math.abs(f.monto).toFixed(2)}
                                         </p>
                                     </div>
@@ -206,3 +206,5 @@ export default function ProformasView() {
         </div>
     );
 }
+
+export default ProformasView;

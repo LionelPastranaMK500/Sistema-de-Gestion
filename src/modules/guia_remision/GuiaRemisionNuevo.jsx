@@ -1,11 +1,11 @@
 import { Calendar } from "primereact/calendar";
 import { configCalendar } from "@utils/configCalendar";
 import { useEffect, useState } from "react";
-import { guiaTabs } from "@constants/menuItemsConstants";
+import { guiaTabsGuiaRemision } from "@constants/menuItemsConstants";
 import { CloseIcon, RemoveCircleIcon } from "@constants/iconsConstants";
 import AgregarProductoModal from "./items/AgregarProductoModal";
 
-export default function GuiaRemisionNuevo({ onClose }) {
+const GuiaRemisionNuevo = ({ onClose }) => {
     const [fechaEnvio, setFechaEnvio] = useState(null);
     const [activeTab, setActiveTab] = useState("infoBasica");
     const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
@@ -16,17 +16,17 @@ export default function GuiaRemisionNuevo({ onClose }) {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="z-10 fixed inset-0 flex justify-center items-center">
             {/* overlay */}
-            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/50"/>
             {/* modal */}
-            <div className="relative z-10 flex max-h-[92vh] w-[min(980px,95vw)] flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
+            <div className="relative flex flex-col bg-white shadow-2xl rounded-xl w-[min(980px,95vw)] max-h-[92vh] overflow-hidden">
                 {/* header */}
-                <div className="flex items-center justify-between bg-blue-700 px-5 py-4 text-white">
-                    <h3 className="text-lg font-semibold">Guía de Remisión - Remitente</h3>
+                <div className="flex justify-between items-center bg-blue-700 px-5 py-4 text-white">
+                    <h3 className="font-semibold text-lg">Guía de Remisión - Remitente</h3>
                     <button
                         onClick={onClose}
-                        className="rounded p-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/40"
+                        className="hover:bg-white/10 p-1 rounded focus:outline-none focus:ring-2 focus:ring-white/40"
                         aria-label="Cerrar"
                     >
                         <CloseIcon />
@@ -36,7 +36,7 @@ export default function GuiaRemisionNuevo({ onClose }) {
                 {/* tabs */}
                 <div className="bg-blue-700 px-3">
                     <div className="flex gap-2 overflow-x-auto">
-                        {guiaTabs.map((tab) => {
+                        {guiaTabsGuiaRemision.map((tab) => {
                             const Icon = tab.icon;
                             const active = activeTab === tab.action;
                             return (
@@ -49,7 +49,7 @@ export default function GuiaRemisionNuevo({ onClose }) {
                                     <Icon />
                                     {tab.name}
                                     {active && (
-                                        <span className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t bg-white"></span>
+                                        <span className="right-0 bottom-0 left-0 absolute bg-white rounded-t h-[3px]"></span>
                                     )}
                                 </button>
                             );
@@ -58,20 +58,20 @@ export default function GuiaRemisionNuevo({ onClose }) {
                 </div>
 
                 {/* body (scrollable) */}
-                <div className="flex-1 overflow-y-auto bg-white px-5 py-5">
+                <div className="flex-1 bg-white px-5 py-5 overflow-y-auto">
                     {/* INFO BÁSICA */}
                     {activeTab === "infoBasica" && (
-                        <div className="grid grid-cols-12 gap-4">
+                        <div className="gap-4 grid grid-cols-12">
                             {/* Serie */}
                             <div className="col-span-12 md:col-span-6">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Serie *</label>
-                                <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Serie *</label>
+                                <select className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm">
                                     <option value="T004">T004</option>
                                 </select>
                             </div>
                             {/* Fecha emisión */}
                             <div className="col-span-12 md:col-span-6">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Fecha de emisión</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Fecha de emisión</label>
                                 <Calendar
                                     value={fechaEnvio}
                                     onChange={(e) => setFechaEnvio(e.value)}
@@ -84,58 +84,58 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* Destinatario */}
                             <div className="col-span-12">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Destinatario *</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Destinatario *</label>
                                 <input
                                     type="search"
                                     placeholder="Destinatario"
                                     required
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                    className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                 />
                             </div>
 
                             {/* Observaciones */}
                             <div className="col-span-12">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Observaciones</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Observaciones</label>
                                 <input
                                     type="text"
                                     placeholder="Observaciones"
                                     required
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                    className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                 />
                             </div>
 
                             {/* Origen / Destino títulos */}
                             <div className="col-span-12 md:col-span-6">
-                                <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500">ORIGEN</p>
+                                <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">ORIGEN</p>
                                 <div className="space-y-3">
                                     <input
                                         type="search"
                                         placeholder="Ubigeo *"
                                         required
-                                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                        className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Dirección *"
                                         required
-                                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                        className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                     />
                                 </div>
                             </div>
                             <div className="col-span-12 md:col-span-6">
-                                <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500">DESTINO</p>
+                                <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">DESTINO</p>
                                 <div className="space-y-3">
                                     <input
                                         type="search"
                                         placeholder="Ubigeo *"
                                         required
-                                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                        className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                     />
                                     <input
                                         type="text"
                                         placeholder="Dirección *"
                                         required
-                                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                        className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                     />
                                 </div>
                             </div>
@@ -143,11 +143,11 @@ export default function GuiaRemisionNuevo({ onClose }) {
                     )}
 
                     {activeTab === "datosEnvio" && (
-                        <div className="grid grid-cols-12 gap-4">
+                        <div className="gap-4 grid grid-cols-12">
                             {/* Tipo del envío */}
                             <div className="col-span-12 md:col-span-6">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Tipo del envío *</label>
-                                <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Tipo del envío *</label>
+                                <select className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm">
                                     <option>OTROS</option>
                                     <option>VENTA SUJETA A CONFIRMACION DEL COMPRADOR</option>
                                     <option>TRASLADO EMISOR ITINERANTE DE COMPROBANTES DE PAGO</option>
@@ -157,7 +157,7 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* Fecha del envío */}
                             <div className="col-span-12 md:col-span-6">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Fecha del envío</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Fecha del envío</label>
                                 <Calendar
                                     value={fechaEnvio}
                                     onChange={(e) => setFechaEnvio(e.value)}
@@ -170,24 +170,24 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* Bultos / Peso / Unidad */}
                             <div className="col-span-12 md:col-span-4">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Cantidad de bultos *</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Cantidad de bultos *</label>
                                 <input
                                     type="text"
                                     placeholder="0"
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                    className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                 />
                             </div>
                             <div className="col-span-12 md:col-span-4">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Peso total *</label>
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Peso total *</label>
                                 <input
                                     type="text"
                                     placeholder="0.00"
-                                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                    className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                 />
                             </div>
                             <div className="col-span-12 md:col-span-4">
-                                <label className="mb-1 block text-xs font-medium text-gray-500">Peso total (Unidad) *</label>
-                                <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                <label className="block mb-1 font-medium text-gray-500 text-xs">Peso total (Unidad) *</label>
+                                <select className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm">
                                     <option>KILOGRAMOS</option>
                                     <option>TONELADAS</option>
                                 </select>
@@ -195,12 +195,12 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* ---------- TRASLADO ---------- */}
                             <div className="col-span-12">
-                                <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500">TRASLADO</p>
-                                <div className="grid grid-cols-12 gap-4">
+                                <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">TRASLADO</p>
+                                <div className="gap-4 grid grid-cols-12">
                                     {/* Modalidad */}
                                     <div className="col-span-12">
-                                        <label className="mb-1 block text-xs font-medium text-gray-500">Modalidad *</label>
-                                        <select className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                                        <label className="block mb-1 font-medium text-gray-500 text-xs">Modalidad *</label>
+                                        <select className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm">
                                             <option>TRANSPORTE PUBLICO</option>
                                             <option>TRANSPORTE PRIVADO</option>
                                         </select>
@@ -208,15 +208,15 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                                     {/* Switch M1 o L */}
                                     <div className="col-span-12">
-                                        <label className="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                                        <label className="flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md w-full text-gray-700 text-sm">
                                             <span>Traslado en vehículos de categoría M1 o L (Sin datos del transporte)</span>
                                             <input
                                                 type="checkbox"
-                                                className="peer sr-only"
+                                                className="sr-only peer"
                                             />
                                             {/* simple switch */}
-                                            <span className="ml-3 inline-flex h-6 w-10 items-center rounded-full bg-gray-300 transition peer-checked:bg-blue-600">
-                                                <span className="ml-1 inline-block h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-4"></span>
+                                            <span className="inline-flex items-center bg-gray-300 peer-checked:bg-blue-600 ml-3 rounded-full w-10 h-6 transition">
+                                                <span className="inline-block bg-white shadow ml-1 rounded-full w-5 h-5 transition peer-checked:translate-x-4"></span>
                                             </span>
                                         </label>
                                     </div>
@@ -225,30 +225,30 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* ---------- TRANSPORTISTA ---------- */}
                             <div className="col-span-12">
-                                <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500">TRANSPORTISTA</p>
-                                <div className="grid grid-cols-12 gap-4">
+                                <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">TRANSPORTISTA</p>
+                                <div className="gap-4 grid grid-cols-12">
                                     <div className="col-span-12">
-                                        <label className="mb-1 block text-xs font-medium text-gray-500">Empresa de transporte *</label>
+                                        <label className="block mb-1 font-medium text-gray-500 text-xs">Empresa de transporte *</label>
                                         <div className="relative">
                                             <input
                                                 type="search"
                                                 placeholder="Empresa de transporte"
-                                                className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                                className="px-3 py-2 pr-10 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                             />
-                                            <i className="pi pi-search pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <i className="top-1/2 right-3 absolute text-gray-400 -translate-y-1/2 pointer-events-none pi pi-search" />
                                         </div>
                                     </div>
 
                                     {/* Registrar vehículos/conductores */}
                                     <div className="col-span-12">
-                                        <label className="flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700">
+                                        <label className="flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md w-full text-gray-700 text-sm">
                                             <span>Registrar vehículos y conductores del transportista</span>
                                             <input
                                                 type="checkbox"
-                                                className="peer sr-only"
+                                                className="sr-only peer"
                                             />
-                                            <span className="ml-3 inline-flex h-6 w-10 items-center rounded-full bg-gray-300 transition peer-checked:bg-blue-600">
-                                                <span className="ml-1 inline-block h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-4"></span>
+                                            <span className="inline-flex items-center bg-gray-300 peer-checked:bg-blue-600 ml-3 rounded-full w-10 h-6 transition">
+                                                <span className="inline-block bg-white shadow ml-1 rounded-full w-5 h-5 transition peer-checked:translate-x-4"></span>
                                             </span>
                                         </label>
                                     </div>
@@ -257,10 +257,10 @@ export default function GuiaRemisionNuevo({ onClose }) {
 
                             {/* ---------- DOCUMENTOS RELACIONADOS ---------- */}
                             <div className="col-span-12">
-                                <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500">DOCUMENTOS RELACIONADOS</p>
+                                <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">DOCUMENTOS RELACIONADOS</p>
                                 <button
                                     type="button"
-                                    className="w-full rounded-md border border-blue-300 bg-blue-50 px-4 py-2 text-center text-sm font-semibold text-blue-600 hover:bg-blue-100"
+                                    className="bg-blue-50 hover:bg-blue-100 px-4 py-2 border border-blue-300 rounded-md w-full font-semibold text-blue-600 text-sm text-center"
                                 >
                                     AGREGAR DOCUMENTO
                                 </button>
@@ -275,12 +275,12 @@ export default function GuiaRemisionNuevo({ onClose }) {
                             {productoSeleccionado.map((producto, index) => (
                                 <div
                                     key={producto.codigo || index}
-                                    className="rounded-xl bg-white shadow-sm ring-1 ring-gray-200"
+                                    className="bg-white shadow-sm rounded-xl ring-1 ring-gray-200"
                                 >
-                                    <div className="grid grid-cols-12 items-center gap-3 p-3">
+                                    <div className="items-center gap-3 grid grid-cols-12 p-3">
                                         {/* Placeholder imagen */}
                                         <div className="col-span-12 sm:col-span-2">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gray-100 text-gray-400">
+                                            <div className="flex justify-center items-center bg-gray-100 rounded-md w-16 h-16 text-gray-400">
                                                 <i className="pi pi-image" />
                                             </div>
                                         </div>
@@ -289,18 +289,18 @@ export default function GuiaRemisionNuevo({ onClose }) {
                                         <div className="col-span-12 sm:col-span-9">
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="mb-1 block text-xs font-medium text-gray-500">Nombre</label>
+                                                    <label className="block mb-1 font-medium text-gray-500 text-xs">Nombre</label>
                                                     <input
                                                         type="text"
                                                         value={producto.descripcion}
                                                         readOnly
-                                                        className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                                                        className="bg-white px-3 py-2 border border-gray-300 rounded-md w-full text-sm cursor-not-allowed"
                                                     />
                                                 </div>
 
-                                                <div className="grid grid-cols-12 gap-3">
+                                                <div className="gap-3 grid grid-cols-12">
                                                     <div className="col-span-12 sm:col-span-4">
-                                                        <label className="mb-1 block text-xs font-medium text-gray-500">Cantidad</label>
+                                                        <label className="block mb-1 font-medium text-gray-500 text-xs">Cantidad</label>
                                                         <input
                                                             type="number"
                                                             min={1}
@@ -311,11 +311,11 @@ export default function GuiaRemisionNuevo({ onClose }) {
                                                                     prev.map((p, i) => (i === index ? { ...p, cantidad: nuevaCantidad } : p))
                                                                 );
                                                             }}
-                                                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                                            className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                                         />
                                                     </div>
                                                     <div className="col-span-12 sm:col-span-8">
-                                                        <label className="mb-1 block text-xs font-medium text-gray-500">Detalle adicional</label>
+                                                        <label className="block mb-1 font-medium text-gray-500 text-xs">Detalle adicional</label>
                                                         <input
                                                             type="text"
                                                             value={producto.detalle}
@@ -325,7 +325,7 @@ export default function GuiaRemisionNuevo({ onClose }) {
                                                                     prev.map((p, i) => (i === index ? { ...p, detalle: nuevoDetalle } : p))
                                                                 );
                                                             }}
-                                                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                                            className="px-3 py-2 border border-gray-300 focus:border-blue-500 rounded-md focus:ring-2 focus:ring-blue-200 w-full text-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -333,9 +333,9 @@ export default function GuiaRemisionNuevo({ onClose }) {
                                         </div>
 
                                         {/* Quitar producto */}
-                                        <div className="col-span-12 sm:col-span-1 flex justify-end">
+                                        <div className="flex justify-end col-span-12 sm:col-span-1">
                                             <button
-                                                className="rounded-md p-2 text-red-600 hover:bg-red-50"
+                                                className="hover:bg-red-50 p-2 rounded-md text-red-600"
                                                 onClick={() =>
                                                     setProductoSeleccionado((prev) => prev.filter((_, i) => i !== index))
                                                 }
@@ -352,7 +352,7 @@ export default function GuiaRemisionNuevo({ onClose }) {
                             {/* CTA: Agregar producto */}
                             <button
                                 onClick={() => setMostrarModalProducto(true)}
-                                className="w-full rounded-md border border-blue-300 bg-blue-50 px-4 py-2 text-center text-sm font-semibold uppercase tracking-wide text-blue-600 hover:bg-blue-100"
+                                className="bg-blue-50 hover:bg-blue-100 px-4 py-2 border border-blue-300 rounded-md w-full font-semibold text-blue-600 text-sm text-center uppercase tracking-wide"
                             >
                                 Agregar producto
                             </button>
@@ -378,14 +378,14 @@ export default function GuiaRemisionNuevo({ onClose }) {
                 </div>
 
                 {/* footer pegado */}
-                <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t bg-white px-5 py-3">
+                <div className="bottom-0 sticky flex justify-end items-center gap-3 bg-white px-5 py-3 border-t">
                     <button
                         onClick={onClose}
-                        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                        className="hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 text-sm"
                     >
                         CANCELAR
                     </button>
-                    <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                    <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold text-white text-sm">
                         PROCESAR
                     </button>
                 </div>
@@ -393,3 +393,5 @@ export default function GuiaRemisionNuevo({ onClose }) {
         </div>
     );
 }
+
+export default GuiaRemisionNuevo;

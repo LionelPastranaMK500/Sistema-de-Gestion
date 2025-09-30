@@ -6,7 +6,7 @@ import { validateResetPassword } from "@services/auth/validations";
 import { InputOtp } from "primereact/inputotp";
 import { notifyError, notifySuccess } from "@utils/notify";
 
-export default function ResetPassword() {
+const ResetPassword = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
@@ -62,18 +62,18 @@ export default function ResetPassword() {
             <aside>
                 <main className="relative flex min-h-screen overflow-hidden">
                     {/* Lado izquierdo con curva (igual al Login) */}
-                    <aside className="relative hidden w-1/2 items-center justify-center overflow-hidden bg-blue-700 text-white md:flex">
+                    <aside className="hidden relative md:flex justify-center items-center bg-blue-700 w-1/2 overflow-hidden text-white">
                         {/* Logo */}
-                        <div className="absolute left-6 top-6 z-10">
+                        <div className="top-6 left-6 z-10 absolute">
                             <img src="/images/Logo_WolfFur.webp" alt="Logo" className="h-20" />
                         </div>
 
                         {/* Contenido */}
-                        <div className="z-10 -translate-x-6 px-10 text-center">
-                            <h2 className="mb-3 text-3xl font-bold">¿Recordaste tu contraseña?</h2>
+                        <div className="z-10 px-10 text-center -translate-x-6">
+                            <h2 className="mb-3 font-bold text-3xl">¿Recordaste tu contraseña?</h2>
                             <Link
                                 to="/"
-                                className="rounded border border-white px-6 py-2 transition hover:bg-white hover:text-blue-700"
+                                className="hover:bg-white px-6 py-2 border border-white rounded hover:text-blue-700 transition"
                             >
                                 VOLVER A INICIAR SESIÓN
                             </Link>
@@ -81,21 +81,21 @@ export default function ResetPassword() {
 
                         {/* Curva de separación */}
                         <div
-                            className="pointer-events-none absolute right-0 top-0 h-full w-24 md:w-20 bg-white"
+                            className="top-0 right-0 absolute bg-white w-24 md:w-20 h-full pointer-events-none"
                             style={{ clipPath: "ellipse(80% 60% at 90% 50%)" }}
                         />
                     </aside>
 
                     {/* Lado derecho (form por pasos) */}
-                    <section className="flex w-full items-center justify-center bg-white p-8 md:w-1/2">
+                    <section className="flex justify-center items-center bg-white p-8 w-full md:w-1/2">
                         <div className="w-full max-w-sm">
                             {/* Título */}
-                            <h2 className="mb-2 text-center text-2xl font-semibold text-blue-800">
+                            <h2 className="mb-2 font-semibold text-blue-800 text-2xl text-center">
                                 Recuperar contraseña
                             </h2>
 
                             {/* Indicador de pasos */}
-                            <div className="mb-6 flex items-center justify-center gap-2 text-xs">
+                            <div className="flex justify-center items-center gap-2 mb-6 text-xs">
                                 {[1, 2, 3].map((s) => (
                                     <span
                                         key={s}
@@ -115,23 +115,23 @@ export default function ResetPassword() {
                                             placeholder="Correo electrónico"
                                             value={values.correo}
                                             onChange={handleChange}
-                                            className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                         />
                                         {err?.correo && (
-                                            <p className="mt-1 text-sm text-red-500">{err.correo}</p>
+                                            <p className="mt-1 text-red-500 text-sm">{err.correo}</p>
                                         )}
                                     </div>
 
                                     <button
                                         type="submit"
-                                        className="w-full rounded-lg bg-blue-600 p-3 text-white transition hover:bg-blue-700"
+                                        className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
                                     >
                                         Enviar código
                                     </button>
 
                                     <Link
                                         to="/"
-                                        className="block text-center text-sm text-gray-500 hover:text-blue-600"
+                                        className="block text-gray-500 hover:text-blue-600 text-sm text-center"
                                     >
                                         Volver al inicio de sesión
                                     </Link>
@@ -141,7 +141,7 @@ export default function ResetPassword() {
                             {/* PASO 2: código */}
                             {step === 2 && (
                                 <form onSubmit={handleSubmitCode} noValidate className="space-y-5">
-                                    <div className="text-center text-sm text-gray-600">
+                                    <div className="text-gray-600 text-sm text-center">
                                         Hemos enviado un código a <span className="font-semibold">{email}</span>
                                     </div>
 
@@ -157,7 +157,7 @@ export default function ResetPassword() {
                                                     type="tel"
                                                     inputMode="numeric"
                                                     autoComplete="one-time-code"
-                                                    className="mx-1 h-12 w-10 rounded-md border text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="mx-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-10 h-12 text-lg text-center"
                                                 />
                                             )}
                                             onChange={(code) =>
@@ -171,14 +171,14 @@ export default function ResetPassword() {
                                     </div>
 
                                     {err?.codigo && (
-                                        <p className="mt-1 text-center text-sm text-red-500">{err.codigo}</p>
+                                        <p className="mt-1 text-red-500 text-sm text-center">{err.codigo}</p>
                                     )}
 
                                     <div className="space-y-3">
                                         <button
                                             type="submit"
                                             disabled={(values.codigo || "").length !== 6}
-                                            className="w-full rounded-lg bg-blue-600 p-3 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                            className="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 p-3 rounded-lg w-full text-white transition disabled:cursor-not-allowed"
                                         >
                                             Validar código
                                         </button>
@@ -186,7 +186,7 @@ export default function ResetPassword() {
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
-                                            className="w-full rounded-lg border p-3 text-gray-700 transition hover:bg-gray-50"
+                                            className="hover:bg-gray-50 p-3 border rounded-lg w-full text-gray-700 transition"
                                         >
                                             Cambiar correo
                                         </button>
@@ -204,16 +204,16 @@ export default function ResetPassword() {
                                             placeholder="Nueva contraseña"
                                             value={values.nuevaClave}
                                             onChange={handleChange}
-                                            className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                                         />
                                         {err?.nuevaClave && (
-                                            <p className="mt-1 text-sm text-red-500">{err.nuevaClave}</p>
+                                            <p className="mt-1 text-red-500 text-sm">{err.nuevaClave}</p>
                                         )}
                                     </div>
 
                                     <button
                                         type="submit"
-                                        className="w-full rounded-lg bg-blue-600 p-3 text-white transition hover:bg-blue-700"
+                                        className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
                                     >
                                         Actualizar contraseña
                                     </button>
@@ -226,3 +226,5 @@ export default function ResetPassword() {
         </main>
     );
 }
+
+export default ResetPassword;

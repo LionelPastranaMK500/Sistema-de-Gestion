@@ -3,7 +3,7 @@ import { generarPDF } from "@utils/pdfConfig";
 import { CloseIcon } from "@constants/iconsConstants";
 import { getActiveUser } from "@services/auth/authServices";
 
-export default function FacturaModal({ f, onClose }) {
+const FacturaModal = ({ f, onClose }) => {
     const [mostrarFormatos, setMostrarFormatos] = useState(false);
     const btnRef = useRef(null);
 
@@ -145,3 +145,5 @@ export default function FacturaModal({ f, onClose }) {
         </div>
     );
 }
+
+export default FacturaModal;

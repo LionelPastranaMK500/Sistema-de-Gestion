@@ -6,7 +6,7 @@ import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
 import { MenuIcon } from "@constants/iconsConstants";
 
-export default function VentasModal() {
+const VentasModal = () => {
     const [modals, setModals] = useState({});
     const [inlineInputs, setInlineInputs] = useState({});
     const menuRef = useRef(null);
@@ -67,7 +67,7 @@ export default function VentasModal() {
     return (
         <div className="col-span-4 w-full">
             {/* 4 columnas simétricas; estiro hijos para igualar alturas */}
-            <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+            <div className="items-stretch gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                 {/* Botones tipo input (PLACA, O. COMPRA, OBSERVACIONES, D. ADICIONALES) */}
                 {inputItems.map(({ name, action, placeholder }) => (
                     <div key={action} className="h-full">
@@ -101,7 +101,7 @@ export default function VentasModal() {
                     >
                         OTROS
                         {/* Limito el tamaño del ícono para no variar la altura */}
-                        <MenuIcon className="h-4 w-4" />
+                        <MenuIcon className="w-4 h-4" />
                     </button>
                 </div>
             </div>
@@ -115,3 +115,6 @@ export default function VentasModal() {
         </div>
     );
 }
+
+
+export default VentasModal;
