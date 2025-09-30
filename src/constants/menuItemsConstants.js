@@ -50,8 +50,24 @@ export const menuItemsConfig = [
     { name: "Impresión", action: "configurar_impresion", icon: I.LocalPrintshopIcon },
 ];
 
-export const guiaTabs = [
+export const guiaTabsGuiaRemision = [
     { name: "Información Básica", action: "infoBasica", icon: I.PermIdentityTwoToneIcon },
     { name: "Datos de Envío", action: "datosEnvio", icon: I.LocalPrintshopIcon },
     { name: "Productos", action: "productos", icon: I.InventoryIcon },
+];
+
+export const guiaTabsClienteProveedor = [
+    { name: "Información Básica", action: "infoBasica", icon: I.PermIdentityTwoToneIcon },
+    { name: "Ventas", action: "ventas", icon: I.DescriptionIcon },
+    { name: "Proformas", action: "proformas", icon: I.AssignmentIcon },
+    { name: "Guias de Remisión", action: "guias", icon: I.FilePresentIcon },
+];
+
+export const condicionPago = [
+    { name: "Contado", days: 0 },
+    { name: "Crédito 7 días", days: 7 },
+    { name: "Crédito 15 días", days: 15 },
+    { name: "Crédito 30 días", days: 30 },
+    { name: "Crédito 60 días", days: 60 },
+    { name: "Crédito 90 días", days: 90 },
 ];
