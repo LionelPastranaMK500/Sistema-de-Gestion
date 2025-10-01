@@ -1,4 +1,24 @@
-//hacer el loader para las paginas publicas
-export default function PublicLoader(){
-    return (<div>aca va un loader mejor obvio :v</div>);
-}
+// src/components/Loaders/PublicLoader.jsx
+import React, { forwardRef } from "react";
+import "@styles/PublicLoader.css";
+
+const PublicLoader = forwardRef(function PublicLoader(_, ref) {
+    return (
+        <div ref={ref} className="public-loader-overlay">
+            <div className="loader">
+                <span>
+                    <span></span><span></span><span></span><span></span>
+                </span>
+                <div className="base">
+                    <span></span>
+                    <div className="face"></div>
+                </div>
+            </div>
+            <div className="longfazers">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+    );
+});
+
+export default PublicLoader;
