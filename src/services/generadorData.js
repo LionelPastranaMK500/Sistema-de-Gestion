@@ -4,7 +4,8 @@ import {
     generarDni,
     generarItemsAleatorios,
     calcularMonto,
-    generarEstado
+    generarEstado,
+    resolverEstado
 } from "./generadorDocumentos";
 import { getActiveCompany } from "@services/auth/authServices";
 
@@ -111,6 +112,8 @@ export const clientes = [
     { razonSocial: 'Asian Imports LLC', direccion: 'Shanghai Tower, China', tipo: 'Cliente', documentoTipo: 'NO DOMICILIADO, SIN RUC(EXPORTACIÓN)', documento: 'EXT00010', email: 'support@asianimports.cn' }
 ];
 
+export const guia_remision = [];
+
 export const productos = [
     { codigo: '001', unidad: 'UND', descripcion: 'Filtro de aire', precio: 150, isc: 0 },
     { codigo: '002', unidad: 'UND', descripcion: 'Aceite Shell Helix 10W40', precio: 162, isc: 0.10 * 162 },
@@ -185,35 +188,51 @@ export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
             const claveTipo = mapTipo[tDocumento];
             const seriesDisponibles = getSeries(claveTipo);
             const serie = seriesDisponibles.length > 0 ? elegirAleatorio(seriesDisponibles) : DEFAULT_SERIE;
+
             if (!counters[serie]) counters[serie] = 0;
             counters[serie]++;
             const numero = counters[serie].toString().padStart(6, "0");
 
+            const clienteElegido = elegirAleatorio(getClientes());
+            const esEmpresa = clienteElegido.documentoTipo === "RUC";
+            
+            const documentoTipo = clienteElegido.documentoTipo || (esEmpresa ? "RUC" : "DNI");
+            const documento = clienteElegido.documento || (documentoTipo === "RUC" ? generarRuc() : generarDni());
+
             const items = generarItemsAleatorios(getProductos());
             const totalItems = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
-            const monto = calcularMonto(tDocumento, totalItems);
-            const clienteElegido = elegirAleatorio(getClientes());
-            const tipoOperacion = i % 2 === 0 ? "venta" : "compra";
+            const montoBase = calcularMonto(tDocumento, totalItems);
 
-            const isRuc = Math.random() < 0.6;
-            const documento = isRuc ? generarRuc() : generarDni();
+            const monto = tDocumento === "NOTA DE CRÉDITO ELECTRÓNICA" ? -Math.abs(montoBase) : montoBase;
+
+            let state = generarEstado(tDocumento);
+            state = resolverEstado(state);
+
+
+            const tipoOperacion = i % 2 === 0 ? "venta" : "compra";
 
             data.push({
                 id: idCounter++,
                 serie,
                 numero,
-                cliente: clienteElegido.razonSocial,
+                cliente: esEmpresa
+                    ? clienteElegido.razonSocial
+                    : clienteElegido.nombre || "PÚBLICO EN GENERAL (S/D)",
+                documentoTipo,
                 documento,
-                fecha: fecha.toISOString(),
                 direccion: clienteElegido.direccion,
+                email: clienteElegido.email,
+                fecha: fecha.toISOString(),
                 monto,
                 tDocumento,
-                state: generarEstado(),
+                state,
                 items,
                 tipoOperacion
             });
         }
     });
+
     return data;
 };
+
 
