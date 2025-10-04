@@ -229,7 +229,7 @@ const VentasView = () => {
     return (
       <div className="hover:bg-gray-50 px-3 py-2">
         <div className="text-[12px] text-gray-500">{opt.documento}</div>
-        <div className="font-semibold text-[13px] text-gray-800">{opt.razonSocial}</div>
+        <div className="font-semibold text-[13px] text-gray-800"> {opt.razonSocial || opt.nombres || "NO DOMICILIADO, SIN RUC (EXPORTACIÓN)"}</div>
       </div>
     );
   };
