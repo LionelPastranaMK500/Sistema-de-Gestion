@@ -26,7 +26,9 @@
             ├── menuItemsConstants.js
             ├── patternConstants.js
         └── 📁hooks
+            ├── useClienteSeleccionado.js
             ├── useFormHandler.js
+            ├── useProductosAgregados.js
         └── 📁layouts
             ├── AuthLayout.jsx
             ├── MainLayout.jsx
@@ -108,8 +110,10 @@
             ├── generadorDocumentos.js
         └── 📁styles
             ├── App.css
+            ├── ContentLoader.css
             ├── index.css
             ├── primereact-styles.css
+            ├── PublicLoader.css
         └── 📁utils
             ├── chartUtils.js
             ├── comprobantesUtils.js
