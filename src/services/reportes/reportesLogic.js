@@ -30,13 +30,15 @@ export const handleReportes = (a, params = {}) => {
             break;
         }
 
+        case "guia_remision":{
+            
+            break;
+        }
+
         case "cliente_proveedor_listado": {
             const { type } = params;
             const clientes = getClientes();
             let filteredData = clientes;
-
-
-            //console.log(clientes);
 
             if (type === "dni") {
                 filteredData = clientes.filter(c => c.documentoTipo === "DNI");
@@ -77,8 +79,7 @@ export const handleReportes = (a, params = {}) => {
             break;
         }
 
-        case "venta_reporte":
-        case "venta_detallado_reporte": {
+        case "venta_reporte": {
             const data = generarDataFalsa(50);
             const groupedData = {};
             tiposComprobante.forEach(tipo => {
