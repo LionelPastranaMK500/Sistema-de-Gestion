@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { generarPDF } from "@utils/pdfConfig";
 import { CloseIcon } from "@constants/iconsConstants";
 import { getActiveUser } from "@services/auth/authServices";
+import { formatearFechaComprobante } from "@utils/fechaComprobante";
 
 const FacturaModal = ({ f, onClose }) => {
     const [mostrarFormatos, setMostrarFormatos] = useState(false);
@@ -20,6 +21,10 @@ const FacturaModal = ({ f, onClose }) => {
         setMostrarFormatos(false);
     };
 
+    const mostrarSelloAnulado =
+        f.state?.toLowerCase() === "anulado" ||
+        f.tDocumento?.toLowerCase().includes("nota de crédito");
+
     return (
         <div className="z-50 fixed inset-0 flex justify-center items-center">
             {/* Overlay oscuro */}
@@ -30,6 +35,14 @@ const FacturaModal = ({ f, onClose }) => {
 
             {/* Contenido del modal */}
             <div className="z-50 relative flex flex-col bg-white shadow-xl rounded-lg w-full max-w-lg max-h-[80vh]">
+                {mostrarSelloAnulado && (
+                    <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+                        <div className="opacity-20 px-12 py-8 border-4 border-red-600 rounded-xl font-extrabold text-red-600 text-6xl rotate-[-25deg] select-none">
+                            ANULADO
+                        </div>
+                    </div>
+                )}
+
                 {/* Header */}
                 <div className="flex justify-between items-center bg-blue-600 px-4 py-3 rounded-t-lg">
                     <h3 className="font-bold text-white text-lg">
@@ -56,7 +69,7 @@ const FacturaModal = ({ f, onClose }) => {
                     <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">CLIENTE</strong>
                         <p className="text-gray-700">{f.cliente}</p>
-                        <p className="text-gray-500">RUC {f.ruc}</p>
+                        <p className="text-gray-500">RUC {f.documento}</p>
                     </div>
 
                     {/* Usuario */}
@@ -68,14 +81,16 @@ const FacturaModal = ({ f, onClose }) => {
                                 : "Usuario no disponible"}
                         </p>
                         <p className="text-gray-500">
-                            {new Date(f.fecha).toLocaleString("es-ES")}
+                            {formatearFechaComprobante(f.fecha)}
                         </p>
                     </div>
 
                     {/* Estado SUNAT */}
                     <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">ESTADO SUNAT</strong>
-                        <p className="font-medium text-green-600">{f.state}</p>
+                        <p className={`font-medium ${f.state?.toLowerCase() === "anulado" ? "text-red-600" : "text-green-600"}`}>
+                            {f.state}
+                        </p>
                     </div>
 
                     {/* Botonera */}
