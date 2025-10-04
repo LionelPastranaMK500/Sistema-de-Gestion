@@ -151,7 +151,9 @@ const FacturasView = () => {
                     <p className="flex items-center gap-2 text-gray-700 text-base">
                       <PermIdentityTwoToneIcon fontSize="small" />
                       <span>
-                        {f.cliente} ({f.ruc})
+                        {f.cliente.toUpperCase() === "PÚBLICO EN GENERAL (S/D)"
+                          ? f.cliente
+                          : `${f.cliente} (${f.documento})`}
                       </span>
                     </p>
                     <p className="flex items-center gap-2 text-gray-500 text-sm">
