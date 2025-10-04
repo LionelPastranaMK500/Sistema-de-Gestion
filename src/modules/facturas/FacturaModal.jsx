@@ -69,7 +69,7 @@ const FacturaModal = ({ f, onClose }) => {
                     <div className="bg-white shadow px-4 py-3 rounded-md">
                         <strong className="block text-gray-800">CLIENTE</strong>
                         <p className="text-gray-700">{f.cliente}</p>
-                        <p className="text-gray-500">RUC {f.documento}</p>
+                        <p className="text-gray-500">{f.documentoTipo} {f.documento}</p>
                     </div>
 
                     {/* Usuario */}
