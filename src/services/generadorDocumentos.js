@@ -30,25 +30,34 @@ export const generarItemsAleatorios = (catalogo, maxItems = 2) => {
         let precio = item.precio || 0;
         if (precio < 20 || precio > 200) {
             precio = Math.floor(Math.random() * (200 - 20 + 1)) + 20;
-        }        
+        }
         return { ...item, cantidad: 1, unidad: "UND", precio };
     });
 };
 
 export const calcularMonto = (tipoDocumento, totalItems) => {
     switch (tipoDocumento) {
-        case "Nota de Credito":
-            return -Math.round(totalItems * 0.5);
-        case "Guia de Remision":
+        case "NOTA DE CRÉDITO ELECTRÓNICA":
+            return -Math.abs(totalItems);
+        case "GUÍA DE REMISIÓN ELECTRÓNICA":
             return 0;
         default:
             return totalItems;
     }
 };
 
-export const generarEstado = () => {
+export const generarEstado = (tipoDocumento) => {
+    if (tipoDocumento === "NOTA DE CRÉDITO ELECTRÓNICA") return "ANULADO";
+
     const rnd = Math.random();
-    if (rnd < 0.05) return "RECHAZADO";      // 5%
-    if (rnd < 0.525) return "EN PROCESO";    // 47%
-    return "ACEPTADO";                      // 47%
+    if (rnd < 0.01) return "RECHAZADO";  // 1%
+    if (rnd < 0.55) return "EN PROCESO";  // 54%
+    return "ACEPTADO";                    // 45%
+};
+
+export const resolverEstado = (estadoActual) => {
+    if (estadoActual !== "EN PROCESO") return estadoActual;
+    const rnd = Math.random();
+    if (rnd < 0.01) return "RECHAZADO"; // 1%
+    return "ACEPTADO";                   // 99%
 };
