@@ -36,10 +36,9 @@ const ConfigurarImpresion = lazy(() => import("@modules/configuracion/items/Conf
 //modulo reportes
 const ReportesView = lazy(() => import("@modules/reportes/ReportesView"));
 const ReporteVentasGeneral = lazy(() => import("@modules/reportes/items/ReporteVentasGeneral"));
-const ReporteVentasDetallado = lazy(() => import("@modules/reportes/items/ReporteVentasDetallado"));
 const ReporteClientesProveedores = lazy(() => import("@modules/reportes/items/ReporteClientesProveedores"));
 const ReporteProductos = lazy(() => import("@modules/reportes/items/ReporteProductos"));
-const ReporteGuias = lazy(() => import("@modules/reportes/items/ReporteGuias"));
+const ReporteGuiasRemision = lazy(() => import("@modules/reportes/items/ReporteGuiasRemision"));
 
 
 const AppRoutes = () => {
@@ -67,10 +66,9 @@ const AppRoutes = () => {
           <Route path="/proformas" element={<Suspense fallback={<ContentLoader />}><ProformasView /></Suspense>} />
           <Route path="/reportes/*" element={<Suspense fallback={<ContentLoader />}><ReportesView /></Suspense>}>
             <Route path="ventas_general" element={<ReporteVentasGeneral />} />
-            <Route path="ventas_detallado" element={<ReporteVentasDetallado />} />
             <Route path="productos" element={<ReporteProductos />} />
             <Route path="clientes_proveedores" element={<ReporteClientesProveedores />} />
-            <Route path="guia_remision" element={<ReporteGuias />} />
+            <Route path="guia_remision" element={<ReporteGuiasRemision />} />
           </Route>
           <Route path="/clientes" element={<Suspense fallback={<ContentLoader />}><ClienteView /></Suspense>} />
           <Route path="/productos" element={<Suspense fallback={<ContentLoader />}><ProductosView /></Suspense>} />
