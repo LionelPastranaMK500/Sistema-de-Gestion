@@ -1,26 +1,27 @@
 /* src/styles/PublicLoader.css */
 
-/* Fondo overlay */
-.private-loader-overlay {
-  position: absolute;
-  inset: 0;
-  background: #fff;
-  z-index: 60;        /* antes 40; ahora tapa el botón z-50 también */
-  display: grid;
-  place-items: center;
-  overflow: hidden;
+/* Overlay: ahora azul de marca */
+.public-loader-overlay {
+    position: absolute;
+    inset: 0;
+    background: #1857C3;
+    /* azul */
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
 }
 
 /* Loader principal */
 .loader {
     position: absolute;
     top: 50%;
-    margin-left: -50px;
     left: 50%;
+    margin-left: -50px;
     animation: speeder 0.4s linear infinite;
 }
 
-/* parte larga atrás del "vehículo/persona" */
+/* “cola” */
 .loader>span {
     height: 5px;
     width: 35px;
@@ -32,6 +33,7 @@
     border-radius: 2px 10px 1px 0;
 }
 
+/* cuerpo base */
 .base span {
     position: absolute;
     width: 0;
@@ -67,6 +69,7 @@
     right: -98px;
 }
 
+/* cara */
 .face {
     position: absolute;
     height: 12px;
@@ -93,7 +96,7 @@
     border-radius: 0 0 0 2px;
 }
 
-/* rayitas que salen */
+/* rayitas */
 .loader>span>span:nth-child(1),
 .loader>span>span:nth-child(2),
 .loader>span>span:nth-child(3),
@@ -123,7 +126,7 @@
     animation-delay: -1s;
 }
 
-/* partículas largas en movimiento */
+/* partículas largas */
 .longfazers {
     position: absolute;
     width: 100%;
@@ -138,165 +141,165 @@
     /* blanco */
 }
 
-/* --- Animaciones (sin cambios, solo colores ya arriba en blanco) --- */
+/* --- Animaciones --- */
 @keyframes fazer1 {
     0% {
-        left: 0;
+        left: 0
     }
 
     100% {
         left: -80px;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes fazer2 {
     0% {
-        left: 0;
+        left: 0
     }
 
     100% {
         left: -100px;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes fazer3 {
     0% {
-        left: 0;
+        left: 0
     }
 
     100% {
         left: -50px;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes fazer4 {
     0% {
-        left: 0;
+        left: 0
     }
 
     100% {
         left: -150px;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes speeder {
     0% {
-        transform: translate(2px, 1px) rotate(0deg);
+        transform: translate(2px, 1px) rotate(0)
     }
 
     10% {
-        transform: translate(-1px, -3px) rotate(-1deg);
+        transform: translate(-1px, -3px) rotate(-1deg)
     }
 
     20% {
-        transform: translate(-2px, 0px) rotate(1deg);
+        transform: translate(-2px, 0) rotate(1deg)
     }
 
     30% {
-        transform: translate(1px, 2px) rotate(0deg);
+        transform: translate(1px, 2px) rotate(0)
     }
 
     40% {
-        transform: translate(1px, -1px) rotate(1deg);
+        transform: translate(1px, -1px) rotate(1deg)
     }
 
     50% {
-        transform: translate(-1px, 3px) rotate(-1deg);
+        transform: translate(-1px, 3px) rotate(-1deg)
     }
 
     60% {
-        transform: translate(-1px, 1px) rotate(0deg);
+        transform: translate(-1px, 1px) rotate(0)
     }
 
     70% {
-        transform: translate(3px, 1px) rotate(-1deg);
+        transform: translate(3px, 1px) rotate(-1deg)
     }
 
     80% {
-        transform: translate(-2px, -1px) rotate(1deg);
+        transform: translate(-2px, -1px) rotate(1deg)
     }
 
     90% {
-        transform: translate(2px, 1px) rotate(0deg);
+        transform: translate(2px, 1px) rotate(0)
     }
 
     100% {
-        transform: translate(1px, -2px) rotate(-1deg);
+        transform: translate(1px, -2px) rotate(-1deg)
     }
 }
 
 .longfazers span:nth-child(1) {
     top: 20%;
-    animation: lf 0.6s linear infinite;
+    animation: lf .6s linear infinite;
     animation-delay: -5s;
 }
 
 .longfazers span:nth-child(2) {
     top: 40%;
-    animation: lf2 0.8s linear infinite;
+    animation: lf2 .8s linear infinite;
     animation-delay: -1s;
 }
 
 .longfazers span:nth-child(3) {
     top: 60%;
-    animation: lf3 0.6s linear infinite;
+    animation: lf3 .6s linear infinite;
 }
 
 .longfazers span:nth-child(4) {
     top: 80%;
-    animation: lf4 0.5s linear infinite;
+    animation: lf4 .5s linear infinite;
     animation-delay: -3s;
 }
 
 @keyframes lf {
     0% {
-        left: 200%;
+        left: 200%
     }
 
     100% {
         left: -200%;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes lf2 {
     0% {
-        left: 200%;
+        left: 200%
     }
 
     100% {
         left: -200%;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes lf3 {
     0% {
-        left: 200%;
+        left: 200%
     }
 
     100% {
         left: -100%;
-        opacity: 0;
+        opacity: 0
     }
 }
 
 @keyframes lf4 {
     0% {
-        left: 200%;
+        left: 200%
     }
 
     100% {
         left: -100%;
-        opacity: 0;
+        opacity: 0
     }
 }
 
-/* Aparición inicial (primer montaje) */
+/* Fades */
 .fade-appear {
     opacity: 0;
 }
@@ -310,7 +313,6 @@
     opacity: 1;
 }
 
-/* Aparición para montajes subsecuentes (si re-montas) */
 .fade-enter {
     opacity: 0;
 }
@@ -324,8 +326,11 @@
     opacity: 1;
 }
 
-.fade-exit { opacity: 1; }
+.fade-exit {
+    opacity: 1;
+}
+
 .fade-exit-active {
-  opacity: 0;
-  transition: opacity 2000ms ease-out; /* FADE_OUT_MS */
+    opacity: 0;
+    transition: opacity 2000ms ease-out;
 }

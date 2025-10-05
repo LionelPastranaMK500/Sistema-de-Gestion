@@ -4,21 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { getActiveUser } from "@services/auth/authServices";
 import PublicLoader from "@components/Loaders/PublicLoader";
-import useDelay from "@utils/redirectWithDelay.js"; // o @utils/useDelay.js
+import useDelay from "@utils/redirectWithDelay.js";
 
 const PublicRoute = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const activeUser = getActiveUser();
-        setUser(activeUser);
+        setUser(getActiveUser());
     }, []);
 
-    const TOTAL_MS = 7000;     // tiempo total deseado
-    const FADE_MS = 2000;     // mismo para aparecer/desaparecer (ajústalo si quieres)
-    const HOLD_MS = Math.max(0, TOTAL_MS - 2 * FADE_MS);
+    const TOTAL_MS = 7000;
+    const FADE_MS = 2000;
+    const HOLD_MS = Math.max(0, TOTAL_MS - 2 * FADE_MS); // = 3000
+    const VISIBLE_MS = FADE_MS + HOLD_MS;                  // = 5000  (2s in + 3s hold)
 
-    const gateDone = useDelay(HOLD_MS);
+    // ⬅️ el loader estará montado VISIBLE_MS y luego hará fade-out por FADE_MS
+    const gateDone = useDelay(VISIBLE_MS);
     const showLoader = !gateDone;
 
     const nodeRef = useRef(null);
@@ -27,7 +28,7 @@ const PublicRoute = () => {
         <>
             <CSSTransition
                 in={showLoader}
-                timeout={FADE_MS}      // coincide con CSS
+                timeout={{ appear: FADE_MS, enter: FADE_MS, exit: FADE_MS }}
                 classNames="fade"
                 unmountOnExit
                 appear
