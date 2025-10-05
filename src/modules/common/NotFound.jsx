@@ -1,11 +1,18 @@
 export default function NotFound() {
     return (
-        <div>
+        <main>
+            <h1>404</h1>
             <div>
-                <h1>404</h1>
-                <p>Pagina no encontrada</p>
-                <a href="/dashboard">Volver al inicio</a>
+                Pagina no encontrada
             </div>
-        </div>
+            <a
+                href="/"
+            >
+                <span></span>
+                <span>
+                    Ir al inicio
+                </span>
+            </a>
+        </main>
     );
 }
