@@ -24,6 +24,16 @@ export const menuItemsProformas = [
     { name: "Ver resumen del dia", icon: I.ReceiptLongIcon },
 ];
 
+export const menuItemsEmpresaSidebar = [
+    { name: "Gestionar plan", action: "gestion_plan", icon: I.BusinessIcon },
+    { name: "Ordenes de pago", action: "ordenes_pago", icon: I.PaymentsIcon },
+];
+
+export const menuItemsUsuarioSidebar = [
+    { name: "Registrar nueva empresa", action: "registrar_empresa", icon: I.AddIcon },
+    { name: " Cambiar contraseña", action: "cambiar_contraseña", icon: I.LockIcon },   
+];
+
 export const componentsVentas = [
     { name: "PLACA", action: "placa", isInput: true, placeholder: "PLACA VEHICULO" },
     { name: "O. COMPRA", action: "ordenCompra", isInput: true, placeholder: "ORDEN DE COMPRA" },
@@ -33,10 +43,8 @@ export const componentsVentas = [
     { name: "COND. PAGO", action: "condicionPago", isInput: false }
 ];
 
-
 export const menuItemsReportes = [
     { name: "Ventas", description: "Reporte General", action: "venta_reporte", icon: I.RealEstateAgentIcon },
-    { name: "Ventas", description: "Reporte Detallado", action: "venta_detallado_reporte", icon: I.RealEstateAgentIcon },
     { name: "Productos", description: "Listado", action: "producto_listado", icon: I.InventoryIcon },
     { name: "Cliente/Proveedores", description: "Listado", action: "cliente_proveedor_listado", icon: I.PeopleAltIcon },
     { name: "Guias de Remisión", description: "Reporte General", action: "guia_reporte", icon: I.FilePresentIcon },
