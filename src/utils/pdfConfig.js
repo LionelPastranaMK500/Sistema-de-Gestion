@@ -232,7 +232,7 @@ export function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     y += lineH;
 
     doc.setFont("helvetica", "bold").setFontSize(fs.lg + 2);
-    doc.text(`RUC ${factura.emisorRuc || "20043553445"}`, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" });
+    doc.text(`RUC ${factura.emisorRuc}`, W / 2, y, { align: "center", charSpace: -0.3, renderingMode: "fill" });
     y += lineH;
 
     doc.setFont("helvetica", "normal").setFontSize(fs.sm + 1);
@@ -249,7 +249,7 @@ export function renderFactura80mm(doc, factura, cfg, W, H, nombreCompleto) {
     });
 
     doc.setFont("helvetica", "bold").setFontSize(fs.sm + 3);
-    doc.text(`${(factura.tDocumento || "").toUpperCase()}`, W / 2, y, { align: "center", charSpace: -0.0, renderingMode: "fill" });
+    doc.text(`${(factura.documento).toUpperCase()}`, W / 2, y, { align: "center", charSpace: -0.0, renderingMode: "fill" });
     y += lineH;
 
     doc.setFont("helvetica", "bold").setFontSize(fs.lg + 2);
