@@ -35,14 +35,32 @@ export const generarItemsAleatorios = (catalogo, maxItems = 2) => {
     });
 };
 
-export const calcularMonto = (tipoDocumento, totalItems) => {
+export const calcularMonto = (tipoDocumento, items) => {
+    const subtotal = items.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
+    const igv = subtotal * 0.18;
+    const isc = items.some((i) => i.afectoISC) ? subtotal * 0.10 : 0;
+    const total = subtotal + igv + isc;
+
+    const round = (n) => Number(n.toFixed(2));
+
+    const base = {
+        gravado: round(subtotal),
+        exonerado: 0,
+        inafecto: 0,
+        igv: round(igv),
+        isc: round(isc),
+        total: round(total),
+    };
+
     switch (tipoDocumento) {
         case "NOTA DE CRÉDITO ELECTRÓNICA":
-            return -Math.abs(totalItems);
-        case "GUÍA DE REMISIÓN ELECTRÓNICA":
-            return 0;
+            return Object.fromEntries(Object.entries(base).map(([k, v]) => [k, round(-v)]));
+
+        case "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA":
+            return { gravado: 0, exonerado: 0, inafecto: 0, igv: 0, isc: 0, total: 0 };
+
         default:
-            return totalItems;
+            return base;
     }
 };
 
@@ -50,14 +68,14 @@ export const generarEstado = (tipoDocumento) => {
     if (tipoDocumento === "NOTA DE CRÉDITO ELECTRÓNICA") return "ANULADO";
 
     const rnd = Math.random();
-    if (rnd < 0.01) return "RECHAZADO";  // 1%
-    if (rnd < 0.55) return "EN PROCESO";  // 54%
-    return "ACEPTADO";                    // 45%
+    if (rnd < 0.01) return "RECHAZADO"; // 1%
+    if (rnd < 0.55) return "EN PROCESO"; // 54%
+    return "ACEPTADO"; // 45%
 };
 
 export const resolverEstado = (estadoActual) => {
     if (estadoActual !== "EN PROCESO") return estadoActual;
     const rnd = Math.random();
     if (rnd < 0.01) return "RECHAZADO"; // 1%
-    return "ACEPTADO";                   // 99%
+    return "ACEPTADO"; // 99%
 };
