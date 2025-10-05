@@ -7,7 +7,7 @@ export default function ContentLoader() {
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("content-loader:show", {
-        detail: { total: 5000, fade: 2000 }, // total=7s, fade in/out=2s => hold=3s
+        detail: { total: 3000, fade: 2000 }, // total=7s, fade in/out=2s => hold=3s
       })
     );
 
