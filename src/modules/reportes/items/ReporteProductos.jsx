@@ -1,4 +1,3 @@
-// src/modules/reportes/items/ReporteProductos.jsx
 import { useState, useEffect } from "react";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
@@ -91,7 +90,7 @@ const ReporteProductos = () => {
     const dialogContent = () => {
         if (isLoading) {
             return (
-                <div className="min-h-[calc(100vh-140px)] grid place-items-center">
+                <div className="place-items-center grid min-h-[calc(100vh-140px)]">
                     <ProgressSpinner />
                 </div>
             );
@@ -99,7 +98,7 @@ const ReporteProductos = () => {
 
         if (error) {
             return (
-                <div className="min-h-[calc(100vh-140px)] grid place-items-center gap-3">
+                <div className="place-items-center gap-3 grid min-h-[calc(100vh-140px)]">
                     <Message severity="error" text={error} />
                     <Button label="Reintentar" onClick={() => setSheetsData({})} />
                 </div>
@@ -109,14 +108,14 @@ const ReporteProductos = () => {
         // Pantalla inicial (tarjetas)
         if (!mode) {
             return (
-                <div className="min-h-[calc(100vh-180px)] flex items-center justify-center gap-10">
+                <div className="flex justify-center items-center gap-10 min-h-[calc(100vh-180px)]">
                     {/* VISTA PREVIA */}
                     <button
                         type="button"
                         onClick={() => setMode("visualize")}
-                        className="w-[240px] h-[120px] bg-white border border-blue-400 rounded-lg shadow-sm hover:shadow-lg transition-all duration-150 hover:-translate-y-0.5 flex flex-col items-center justify-center gap-2 text-blue-600"
+                        className="flex flex-col justify-center items-center gap-2 bg-white shadow-sm hover:shadow-lg border border-blue-400 rounded-lg w-[240px] h-[120px] text-blue-600 transition-all hover:-translate-y-0.5 duration-150"
                     >
-                        <i className="pi pi-eye text-[28px]" />
+                        <i className="text-[28px] pi pi-eye" />
                         <span className="font-semibold tracking-wide">VISTA PREVIA</span>
                     </button>
 
@@ -125,9 +124,9 @@ const ReporteProductos = () => {
                         type="button"
                         onClick={handleExportExcel}
                         disabled={isLoading || Object.keys(sheetsData).length === 0}
-                        className="w-[240px] h-[120px] bg-white border border-blue-400 rounded-lg shadow-sm hover:shadow-lg transition-all duration-150 hover:-translate-y-0.5 flex flex-col items-center justify-center gap-2 text-blue-600 disabled:opacity-60 disabled:hover:shadow-sm disabled:hover:translate-y-0"
+                        className="flex flex-col justify-center items-center gap-2 bg-white disabled:opacity-60 shadow-sm hover:shadow-lg disabled:hover:shadow-sm border border-blue-400 rounded-lg w-[240px] h-[120px] text-blue-600 transition-all hover:-translate-y-0.5 disabled:hover:translate-y-0 duration-150"
                     >
-                        <i className="pi pi-download text-[28px]" />
+                        <i className="text-[28px] pi pi-download" />
                         <span className="font-semibold tracking-wide">DESCARGAR</span>
                     </button>
                 </div>
@@ -141,14 +140,14 @@ const ReporteProductos = () => {
                     <button
                         type="button"
                         onClick={() => setMode(null)} // 👈 ya NO borramos sheetsData
-                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4"
+                        className="inline-flex items-center gap-2 mb-4 font-semibold text-blue-600 hover:text-blue-700"
                     >
-                        <i className="pi pi-arrow-left text-base" />
+                        <i className="pi-arrow-left text-base pi" />
                         Volver
                     </button>
 
                     {Object.keys(sheetsData).length === 0 ? (
-                        <div className="min-h-[calc(100vh-180px)] grid place-items-center">
+                        <div className="place-items-center grid min-h-[calc(100vh-180px)]">
                             <Message severity="info" text="No hay datos disponibles para mostrar." />
                         </div>
                     ) : (
@@ -159,26 +158,14 @@ const ReporteProductos = () => {
                         >
                             {Object.keys(sheetsData).map((tipo, index) => (
                                 <TabPanel header={tipo} key={index}>
-                                    <div className="bg-white rounded-lg shadow-sm">
+                                    <div className="bg-white shadow-sm rounded-lg">
                                         <DataTable
                                             value={getTableData(sheetsData[tipo])}
                                             paginator
                                             rows={10}
                                             scrollable
                                             emptyMessage="No hay datos para mostrar."
-                                            className="
-                        [&_.p-datatable-thead>tr>th]:bg-[#1857C3]
-                        [&_.p-datatable-thead>tr>th]:text-white
-                        [&_.p-datatable-thead>tr>th]:font-bold
-                        [&_.p-datatable-thead>tr>th]:text-[15px]
-                        [&_.p-datatable-thead>tr>th]:py-3
-                        [&_.p-sortable-column-icon]:text-white
-                        [&_.p-sortable-column]:text-white
-                        [&_.p-datatable-tbody>tr>td]:border-b
-                        [&_.p-datatable-tbody>tr>td]:border-slate-200
-                        [&_.p-datatable-tbody>tr:hover]:bg-slate-50
-                        [&_.p-paginator]:rounded-b-lg [&_.p-paginator]:border-0 [&_.p-paginator]:bg-white
-                      "
+                                            className="[&_.p-datatable-tbody>tr:hover]:bg-slate-50 [&_.p-datatable-thead>tr>th]:bg-[#1857C3] [&_.p-paginator]:bg-white [&_.p-datatable-thead>tr>th]:py-3 [&_.p-datatable-tbody>tr>td]:border-slate-200 [&_.p-paginator]:border-0 [&_.p-datatable-tbody>tr>td]:border-b [&_.p-paginator]:rounded-b-lg [&_.p-datatable-thead>tr>th]:font-bold [&_.p-datatable-thead>tr>th]:text-[15px] [&_.p-datatable-thead>tr>th]:text-white [&_.p-sortable-column-icon]:text-white [&_.p-sortable-column]:text-white"
                                         >
                                             {(sheetsData[tipo][2] || []).map((header, colIndex) => (
                                                 <Column
