@@ -26,7 +26,10 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import DescriptionIcon from '@mui/icons-material/Description';
+import PaymentsIcon from '@mui/icons-material/Payments';
+
 export {
+   PaymentsIcon,
    DescriptionIcon,
    MoreVertIcon,
    CloseIcon,
