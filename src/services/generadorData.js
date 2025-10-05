@@ -7,7 +7,7 @@ import {
     generarEstado,
     resolverEstado
 } from "./generadorDocumentos";
-import { getActiveCompany } from "@services/auth/authServices";
+import { getActiveCompany, getActiveUser, syncActiveCompany } from "@services/auth/authServices";
 
 //variables predterminados
 const DEFAULT_SERIE = "XX01";
@@ -78,16 +78,16 @@ export const clientes = [
     { razonSocial: 'Lubricantes Premium del Perú S.A.', direccion: 'Av. República 101, Lima', tipo: 'Cliente', documentoTipo: 'RUC', documento: '20444555666', email: 'info@lubricantespremium.com' },
     { razonSocial: 'Tecnologías Innovadoras S.A.C.', direccion: 'Av. Javier Prado 876, Lima', tipo: 'Cliente', documentoTipo: 'RUC', documento: '20555666777', email: 'ventas@tecnologiasinnovadoras.com' },
 
-    { nombre: 'John Carter', direccion: 'Av. Venezuela 123, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000001', email: 'john.carter@correo.com' },
-    { nombre: 'Mary White', direccion: 'Calle Amazonas 456, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000002', email: 'mary.white@correo.com' },
-    { nombre: 'David Miller', direccion: 'Av. Brasil 789, Callao', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000003', email: 'david.miller@correo.com' },
-    { nombre: 'Sophia Johnson', direccion: 'Av. La Marina 890, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000004', email: 'sophia.johnson@correo.com' },
-    { nombre: 'Michael Anderson', direccion: 'Jr. Junín 234, Cusco', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000005', email: 'michael.anderson@correo.com' },
-    { nombre: 'Emily Davis', direccion: 'Av. Grau 567, Trujillo', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000006', email: 'emily.davis@correo.com' },
-    { nombre: 'Daniel Martinez', direccion: 'Calle Bolívar 123, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000007', email: 'daniel.martinez@correo.com' },
-    { nombre: 'Olivia Thompson', direccion: 'Av. Arequipa 678, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000008', email: 'olivia.thompson@correo.com' },
-    { nombre: 'James Wilson', direccion: 'Calle Puno 234, Arequipa', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000009', email: 'james.wilson@correo.com' },
-    { nombre: 'Isabella Brown', direccion: 'Av. Tacna 876, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CE000010', email: 'isabella.brown@correo.com' },
+    { nombre: 'John Carter', direccion: 'Av. Venezuela 123, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00001', email: 'john.carter@correo.com' },
+    { nombre: 'Mary White', direccion: 'Calle Amazonas 456, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00002', email: 'mary.white@correo.com' },
+    { nombre: 'David Miller', direccion: 'Av. Brasil 789, Callao', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00003', email: 'david.miller@correo.com' },
+    { nombre: 'Sophia Johnson', direccion: 'Av. La Marina 890, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00004', email: 'sophia.johnson@correo.com' },
+    { nombre: 'Michael Anderson', direccion: 'Jr. Junín 234, Cusco', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00005', email: 'michael.anderson@correo.com' },
+    { nombre: 'Emily Davis', direccion: 'Av. Grau 567, Trujillo', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00006', email: 'emily.davis@correo.com' },
+    { nombre: 'Daniel Martinez', direccion: 'Calle Bolívar 123, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00007', email: 'daniel.martinez@correo.com' },
+    { nombre: 'Olivia Thompson', direccion: 'Av. Arequipa 678, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00008', email: 'olivia.thompson@correo.com' },
+    { nombre: 'James Wilson', direccion: 'Calle Puno 234, Arequipa', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00009', email: 'james.wilson@correo.com' },
+    { nombre: 'Isabella Brown', direccion: 'Av. Tacna 876, Lima', tipo: 'Cliente', documentoTipo: 'CARNET DE EXTRANJERÍA', documento: 'CEE00010', email: 'isabella.brown@correo.com' },
 
     { nombre: 'Robert Johnson', direccion: 'Av. Pardo 123, Lima', tipo: 'Cliente', documentoTipo: 'PASAPORTE', documento: 'P1234567', email: 'robert.johnson@correo.com' },
     { nombre: 'Emma Williams', direccion: 'Calle San Martín 234, Lima', tipo: 'Cliente', documentoTipo: 'PASAPORTE', documento: 'P2345678', email: 'emma.williams@correo.com' },
@@ -165,7 +165,7 @@ export const getSeries = (tipo) => {
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 
-export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
+export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
     const data = [];
     const counters = [];
 
@@ -173,8 +173,8 @@ export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
     const year = fechaBase.getFullYear();
     const mesReferencia = fechaBase.getMonth();
 
-    const start = new Date(year, 0, 1);
-    const end = new Date(year, mesReferencia, today.getDate());
+    const start = new Date(year, mesReferencia, 1);
+    const end = new Date(year, mesReferencia + 1, 0); // Fin del mes
 
     const dias = [];
     for (let d = new Date(start); d <= end && d <= today; d.setDate(d.getDate() + 1)) {
@@ -182,8 +182,13 @@ export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
     }
 
     let idCounter = 1;
+    const empresa = syncActiveCompany() || getActiveCompany() || { sucursal: "Lubricantes Claudia", ruc: "20123456789" };
+    const usuarioActivo = getActiveUser() || { correo: "juan@example.com", nombre: "Juan Santos" };
+    console.log(empresa);
+    console.log(usuarioActivo);
+
     dias.forEach((fecha) => {
-        for (let i = 0; i < cantidad; i++) {
+        for (let i = 0; i < cantidad / dias.length; i++) {
             const tDocumento = elegirAleatorio(getTiposComprobante());
             const claveTipo = mapTipo[tDocumento];
             const seriesDisponibles = getSeries(claveTipo);
@@ -200,14 +205,12 @@ export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
             const documento = clienteElegido.documento || (documentoTipo === "RUC" ? generarRuc() : generarDni());
 
             const items = generarItemsAleatorios(getProductos());
-            const totalItems = items.reduce((acc, it) => acc + it.precio * it.cantidad, 0);
-            const montoBase = calcularMonto(tDocumento, totalItems);
+            const montoBase = calcularMonto(tDocumento, items);
 
-            const monto = tDocumento === "NOTA DE CRÉDITO ELECTRÓNICA" ? -Math.abs(montoBase) : montoBase;
+            const monto = tDocumento === "NOTA DE CRÉDITO ELECTRÓNICA" ? { ...montoBase, total: -Math.abs(montoBase.total) } : montoBase;
 
             let state = generarEstado(tDocumento);
             state = resolverEstado(state);
-
 
             const tipoOperacion = i % 2 === 0 ? "venta" : "compra";
 
@@ -227,11 +230,14 @@ export const generarDataFalsa = (cantidad = 10, fechaBase = new Date()) => {
                 tDocumento,
                 state,
                 items,
-                tipoOperacion
+                tipoOperacion,
+                sucursal: empresa.sucursal,
+                usuario: usuarioActivo.correo
             });
         }
     });
 
+    console.log(data);
     return data;
 };
 
