@@ -1,4 +1,3 @@
-// src/modules/reportes/items/ReporteClientesProveedores.jsx
 import { useState, useEffect } from "react";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
@@ -100,7 +99,7 @@ const ReporteClientesProveedores = () => {
     const dialogContent = () => {
         if (isLoading) {
             return (
-                <div className="min-h-[calc(100vh-140px)] grid place-items-center">
+                <div className="place-items-center grid min-h-[calc(100vh-140px)]">
                     <ProgressSpinner />
                 </div>
             );
@@ -108,7 +107,7 @@ const ReporteClientesProveedores = () => {
 
         if (error) {
             return (
-                <div className="min-h-[calc(100vh-140px)] grid place-items-center gap-3">
+                <div className="place-items-center gap-3 grid min-h-[calc(100vh-140px)]">
                     <Message severity="error" text={error} />
                     <Button
                         label="Volver a intentar"
@@ -126,16 +125,16 @@ const ReporteClientesProveedores = () => {
         if (mode === "filter") {
             return (
                 <div className="p-5">
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div className="bg-white shadow-sm border border-slate-200 rounded-xl">
                         {/* Header Filtros */}
-                        <div className="px-6 py-4 border-b border-slate-200">
-                            <h3 className="text-slate-800 font-semibold text-lg">Filtros</h3>
+                        <div className="px-6 py-4 border-slate-200 border-b">
+                            <h3 className="font-semibold text-slate-800 text-lg">Filtros</h3>
                         </div>
 
                         {/* Body Filtros */}
-                        <div className="px-6 py-5 space-y-4">
+                        <div className="space-y-4 px-6 py-5">
                             <div className="w-full">
-                                <label htmlFor="filter" className="block text-[13px] font-semibold text-slate-700 mb-2">
+                                <label htmlFor="filter" className="block mb-2 font-semibold text-[13px] text-slate-700">
                                     Tipo
                                 </label>
                                 <Dropdown
@@ -144,16 +143,7 @@ const ReporteClientesProveedores = () => {
                                     options={filterOptions}
                                     onChange={(e) => setFilter(e.value)}
                                     placeholder="Selecciona una opción"
-                                    className="
-                    w-full
-                    [&_.p-dropdown-label]:py-3
-                    [&_.p-dropdown-label]:px-4
-                    [&_.p-dropdown-label]:text-slate-700
-                    [&_.p-dropdown]:border-blue-500
-                    [&_.p-dropdown]:rounded-lg
-                    [&_.p-dropdown]:shadow-[0_0_0_1px_rgba(59,130,246,0.15)]
-                    [&_.p-dropdown-trigger]:text-slate-500
-                  "
+                                    className="[&_.p-dropdown]:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] [&_.p-dropdown-label]:px-4 [&_.p-dropdown-label]:py-3 [&_.p-dropdown]:border-blue-500 [&_.p-dropdown]:rounded-lg w-full [&_.p-dropdown-label]:text-slate-700 [&_.p-dropdown-trigger]:text-slate-500"
                                     panelClassName="rounded-lg overflow-hidden"
                                 />
                             </div>
@@ -164,14 +154,7 @@ const ReporteClientesProveedores = () => {
                                     icon="pi pi-refresh"
                                     onClick={generateReport}
                                     disabled={!filter || filter === null}
-                                    className="
-    bg-[#1e40af] hover:bg-[#1b3a9c] border-[#1e40af]
-    px-5 py-3 rounded-md font-semibold tracking-wide
-    text-white
-    [&_.p-button-label]:text-white
-    [&_.p-button-icon]:text-white
-    disabled:opacity-60 disabled:hover:bg-[#1e40af]
-  "
+                                    className="bg-[#1e40af] hover:bg-[#1b3a9c] disabled:hover:bg-[#1e40af] disabled:opacity-60 px-5 py-3 border-[#1e40af] rounded-md font-semibold text-white [&_.p-button-icon]:text-white [&_.p-button-label]:text-white tracking-wide"
                                 />
                             </div>
                         </div>
@@ -189,26 +172,21 @@ const ReporteClientesProveedores = () => {
                             setMode("filter");
                             setFilter(null);
                         }}
-                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-6"
+                        className="inline-flex items-center gap-2 mb-6 font-semibold text-blue-600 hover:text-blue-700"
                     >
-                        <i className="pi pi-arrow-left text-base" />
+                        <i className="pi-arrow-left text-base pi" />
                         Volver a filtros
                     </button>
 
-                    <div className="min-h-[calc(100vh-220px)] flex items-center justify-center gap-10">
+                    <div className="flex justify-center items-center gap-10 min-h-[calc(100vh-220px)]">
                         {/* VISTA PREVIA */}
                         <button
                             type="button"
                             onClick={() => setMode("visualize")}
                             disabled={Object.keys(sheetsData).length === 0}
-                            className="
-                w-[240px] h-[120px] bg-white border border-blue-400 rounded-lg shadow-sm
-                hover:shadow-lg transition-all duration-150 hover:-translate-y-0.5
-                flex flex-col items-center justify-center gap-2 text-blue-600
-                disabled:opacity-60 disabled:hover:shadow-sm disabled:hover:translate-y-0
-              "
+                            className="flex flex-col justify-center items-center gap-2 bg-white disabled:opacity-60 shadow-sm hover:shadow-lg disabled:hover:shadow-sm border border-blue-400 rounded-lg w-[240px] h-[120px] text-blue-600 transition-all hover:-translate-y-0.5 disabled:hover:translate-y-0 duration-150"
                         >
-                            <i className="pi pi-eye text-[28px]" />
+                            <i className="text-[28px] pi pi-eye" />
                             <span className="font-semibold tracking-wide">VISTA PREVIA</span>
                         </button>
 
@@ -217,14 +195,9 @@ const ReporteClientesProveedores = () => {
                             type="button"
                             onClick={handleExportExcel}
                             disabled={Object.keys(sheetsData).length === 0}
-                            className="
-                w-[240px] h-[120px] bg-white border border-blue-400 rounded-lg shadow-sm
-                hover:shadow-lg transition-all duration-150 hover:-translate-y-0.5
-                flex flex-col items-center justify-center gap-2 text-blue-600
-                disabled:opacity-60 disabled:hover:shadow-sm disabled:hover:translate-y-0
-              "
+                            className="flex flex-col justify-center items-center gap-2 bg-white disabled:opacity-60 shadow-sm hover:shadow-lg disabled:hover:shadow-sm border border-blue-400 rounded-lg w-[240px] h-[120px] text-blue-600 transition-all hover:-translate-y-0.5 disabled:hover:translate-y-0 duration-150"
                         >
-                            <i className="pi pi-download text-[28px]" />
+                            <i className="text-[28px] pi pi-download" />
                             <span className="font-semibold tracking-wide">DESCARGAR</span>
                         </button>
                     </div>
@@ -238,14 +211,14 @@ const ReporteClientesProveedores = () => {
                     <button
                         type="button"
                         onClick={() => setMode("generated")}
-                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-4"
+                        className="inline-flex items-center gap-2 mb-4 font-semibold text-blue-600 hover:text-blue-700"
                     >
-                        <i className="pi pi-arrow-left text-base" />
+                        <i className="pi-arrow-left text-base pi" />
                         Volver
                     </button>
 
                     {Object.keys(sheetsData).length === 0 ? (
-                        <div className="min-h-[calc(100vh-220px)] grid place-items-center">
+                        <div className="place-items-center grid min-h-[calc(100vh-220px)]">
                             <Message severity="info" text="No hay datos disponibles para mostrar." />
                         </div>
                     ) : (
@@ -256,26 +229,14 @@ const ReporteClientesProveedores = () => {
                         >
                             {Object.keys(sheetsData).map((tipo, index) => (
                                 <TabPanel header={tipo} key={index}>
-                                    <div className="bg-white rounded-lg shadow-sm">
+                                    <div className="bg-white shadow-sm rounded-lg">
                                         <DataTable
                                             value={getTableData(sheetsData[tipo])}
                                             paginator
                                             rows={10}
                                             scrollable
                                             emptyMessage="No hay datos para mostrar."
-                                            className="
-                        [&_.p-datatable-thead>tr>th]:bg-[#1857C3]
-                        [&_.p-datatable-thead>tr>th]:text-white
-                        [&_.p-datatable-thead>tr>th]:font-bold
-                        [&_.p-datatable-thead>tr>th]:text-[15px]
-                        [&_.p-datatable-thead>tr>th]:py-3
-                        [&_.p-sortable-column-icon]:text-white
-                        [&_.p-sortable-column]:text-white
-                        [&_.p-datatable-tbody>tr>td]:border-b
-                        [&_.p-datatable-tbody>tr>td]:border-slate-200
-                        [&_.p-datatable-tbody>tr:hover]:bg-slate-50
-                        [&_.p-paginator]:rounded-b-lg [&_.p-paginator]:border-0 [&_.p-paginator]:bg-white
-                      "
+                                            className="[&_.p-datatable-tbody>tr:hover]:bg-slate-50 [&_.p-datatable-thead>tr>th]:bg-[#1857C3] [&_.p-paginator]:bg-white [&_.p-datatable-thead>tr>th]:py-3 [&_.p-datatable-tbody>tr>td]:border-slate-200 [&_.p-paginator]:border-0 [&_.p-datatable-tbody>tr>td]:border-b [&_.p-paginator]:rounded-b-lg [&_.p-datatable-thead>tr>th]:font-bold [&_.p-datatable-thead>tr>th]:text-[15px] [&_.p-datatable-thead>tr>th]:text-white [&_.p-sortable-column-icon]:text-white [&_.p-sortable-column]:text-white"
                                         >
                                             {(sheetsData[tipo][2] || []).map((header, colIndex) => (
                                                 <Column
