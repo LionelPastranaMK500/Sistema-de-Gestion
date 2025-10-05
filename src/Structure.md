@@ -118,6 +118,7 @@
             ├── chartUtils.js
             ├── comprobantesUtils.js
             ├── configCalendar.js
+            ├── fechaComprobante.js
             ├── menuActions.js
             ├── notify.js
             ├── pdfConfig.js
