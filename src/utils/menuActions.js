@@ -27,7 +27,7 @@ export const menuActions = {
         navigate("/configuracion");
     },
     ayuda: ({ navigate }) => {
-        navigate("/dashboard");
+        navigate("/");
     },
 };
 
@@ -63,6 +63,6 @@ export const menuActionsReportes = {
         navigate("/reportes/clientes_proveedores");
     },
     guia_reporte: ({ navigate }) => {
-        navigate("/reportes/guia_reporte");
+        navigate("/reportes/guia_remision");
     }
 };
