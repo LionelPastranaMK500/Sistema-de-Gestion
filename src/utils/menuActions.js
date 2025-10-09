@@ -33,7 +33,7 @@ export const menuActions = {
 
 export const menuActionsConfig = {
     configurar_empresa: ({ navigate }) => {
-        navigate("/configuracion/empresas");
+        navigate("/configuracion/empresa");
     },
     configurar_usuario: ({ navigate }) => {
         navigate("/configuracion/usuarios");
