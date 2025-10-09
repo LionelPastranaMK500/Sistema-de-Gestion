@@ -84,7 +84,7 @@ const EstadisticasView = () => {
         <div className="flex flex-col w-full h-full p-6">
             {/* 1. HEADER (Fijo) */}
             <div className="flex-shrink-0 flex justify-between items-center pb-4 border-b">
-                <h2 className="font-bold text-gray-800 text-2xl ml-16">
+                <h2 className="font-bold text-gray-800 text-3xl ml-16">
                     Estadísticas
                 </h2>
             </div>
