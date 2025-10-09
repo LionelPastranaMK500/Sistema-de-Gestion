@@ -7,9 +7,8 @@ const ConfiguracionView = () => {
     const outlet = useOutlet(); // Hook para detectar si hay una ruta hija activa
 
     return (
-        <div className="flex flex-col w-full h-full">
-            {/* HEADER */}
-            <div className="flex justify-between items-center bg-gray-50/60 px-6 py-5 border-b">
+        <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-full">
+            <div className="flex justify-between items-center mb-6">
                 <h2 className="ml-16 font-bold text-gray-800 text-3xl">Configuración</h2>
 
                 {/* El buscador solo se muestra si NO estamos en una sub-ruta */}
