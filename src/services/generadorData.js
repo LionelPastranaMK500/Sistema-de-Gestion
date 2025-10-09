@@ -157,6 +157,39 @@ export const productos = [
     { codigo: '040', unidad: 'UND', descripcion: 'Sistema de lubricación automática', precio: 500, isc: 0 },
 ];
 
+// Añadimos una lista de usuarios ficticios
+export const usuarios = [
+    {
+        nombres: "Juan",
+        apellidoPaterno: "Santos",
+        apellidoMaterno: "Pimentel",
+        correo: "manuel.santosp58@hotmail.com",
+        rol: "ADMINISTRADOR"
+    },
+    {
+        nombres: "Maria",
+        apellidoPaterno: "Lopez",
+        apellidoMaterno: "Garcia",
+        correo: "maria.lopez@example.com",
+        rol: "VENDEDOR"
+    },
+    {
+        nombres: "Carlos",
+        apellidoPaterno: "Gomez",
+        apellidoMaterno: "Fernandez",
+        correo: "carlos.gomez@example.com",
+        rol: "VENDEDOR"
+    },
+    {
+        nombres: "Ana",
+        apellidoPaterno: "Martinez",
+        apellidoMaterno: "Rodriguez",
+        correo: "ana.martinez@example.com",
+        rol: "CONTADOR"
+    }
+];
+// --- FIN NUEVO ---
+
 export const getTiposComprobante = () => tiposComprobante;
 export const getSeries = (tipo) => {
     const company = getActiveCompany();
@@ -164,6 +197,7 @@ export const getSeries = (tipo) => {
 };
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
+export const getUsuarios = () => usuarios;
 
 export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
     const data = [];
