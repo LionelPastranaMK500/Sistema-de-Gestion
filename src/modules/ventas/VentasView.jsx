@@ -5,6 +5,7 @@ import { Dialog } from "primereact/dialog";
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { InputText } from 'primereact/inputtext';
+import { Menu } from "primereact/menu"; // AÑADIDO: Importar el componente Menu
 import { configCalendar } from "@utils/configCalendar";
 import {
   getClientes,
@@ -15,12 +16,16 @@ import {
 } from "@services/generadorData";
 import { visualizarPDF } from "@utils/pdfViewer";
 import { generarRuc, generarDni } from "@services/generadorDocumentos";
-import VentasModal from "./VentasModal";
 import { useProductosAgregados } from "@hooks/useProductosAgregados";
-import { PermIdentityTwoToneIcon, CloseIcon } from "@constants/iconsConstants";
+import { PermIdentityTwoToneIcon, CloseIcon, MenuIcon } from "@constants/iconsConstants"; // AÑADIDO: MenuIcon
 import useVentaStore from "@stores/ventasStore";
+import { componentsVentas } from "@constants/menuItemsConstants"; // AÑADIDO: Para el menú
 
-// Objeto para configurar los títulos del modal dinámicamente
+// AÑADIDO: Importar los modales que se abrirán desde el menú
+import CondicionPagoModal from "./components/CondicionPagoModal";
+import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
+import GuiaRemisionModal from "./components/GuiaRemisionModal";
+
 const modalConfig = {
   placa: { title: 'Agregar Placa Vehicular' },
   ordenCompra: { title: 'Agregar Orden de Compra' },
@@ -28,7 +33,6 @@ const modalConfig = {
 };
 
 const VentasView = () => {
-  // Zustand store
   const {
     placa,
     ordenCompra,
@@ -38,7 +42,6 @@ const VentasView = () => {
     setObservaciones,
   } = useVentaStore();
 
-  // Estados locales
   const [fechaEmision, setFechaEmision] = useState(new Date());
   const [fechaVencimiento, setFechaVencimiento] = useState(null);
   const [clienteInput, setClienteInput] = useState("");
@@ -55,24 +58,29 @@ const VentasView = () => {
   const [tipoPdf, setTipoPdf] = useState("A4");
   const acClienteRef = useRef(null);
 
-  // Modal reutilizable (placa / o.compra / observaciones)
   const [modalState, setModalState] = useState({ visible: false, type: null });
   const [modalInputValue, setModalInputValue] = useState('');
+  
+  // AÑADIDO: Lógica para el menú "OTROS"
+  const menuOtrosRef = useRef(null);
+  const [modalsOtros, setModalsOtros] = useState({});
+  const handleHideModalOtros = (action) => setModalsOtros((prev) => ({ ...prev, [action]: false }));
+  const otrosModalItems = componentsVentas
+    .filter((c) => !c.isInput)
+    .map(({ name, action }) => ({
+        label: name,
+        command: () => setModalsOtros((prev) => ({ ...prev, [action]: true })),
+    }));
 
-  // Nuevo: visibilidad del Dialog que contiene VentasModal (se abre con OTROS)
-  const [ventasModalVisible, setVentasModalVisible] = useState(false);
 
-  // Datos/util
   const clientes = getClientes();
   const productos = getProductos();
   const comprobantes = getTiposComprobante();
   const DEFAULT_COMPROBANTE = "BOLETA DE VENTA ELECTRÓNICA";
   const DEFAULT_SERIE = "B001";
 
-  // Productos hook
   const { productosAgregados, agregarProducto, actualizarCantidad, eliminarProducto, totalGeneral } = useProductosAgregados();
 
-  // Manejo del Dialog reutilizable (placa / orden / observaciones)
   const handleOpenModal = (type) => {
     if (type === 'placa') setModalInputValue(placa ?? '');
     if (type === 'ordenCompra') setModalInputValue(ordenCompra ?? '');
@@ -196,7 +204,6 @@ const VentasView = () => {
         </div>
       </div>
 
-      {/* Campos: Tipo Comprobante, Serie, etc. */}
       <div className="gap-4 grid grid-cols-4 mb-4">
         <div>
           <label className="block mb-1 text-gray-500 text-xs">Tipo de comprobante</label>
@@ -225,9 +232,6 @@ const VentasView = () => {
         </div>
       </div>
 
-      {/* VentasModal ya no está insertado aquí fijo; se abre desde OTROS (Dialog abajo) */}
-
-      {/* Botones (placa / orden / observaciones / OTROS) */}
       <div className="flex items-center gap-4 mb-4">
         <button
           type="button"
@@ -252,18 +256,20 @@ const VentasView = () => {
         >
           OBSERVACIONES {observaciones && '✓'}
         </button>
-
-        {/* ESTE es el cambio clave: OTROS abre el Dialog que monta VentasModal */}
-        <button
-          type="button"
-          onClick={() => { console.log('OTROS click -> abrir dialog'); setVentasModalVisible(true); }}
-          className="w-full py-2 px-4 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2"
-        >
-          OTROS <span>≡</span>
-        </button>
+        
+        {/* CAMBIADO: Botón "OTROS" ahora usa el menú desplegable */}
+        <div className="relative w-full">
+            <Menu model={otrosModalItems} popup ref={menuOtrosRef} />
+            <button
+                type="button"
+                onClick={(e) => menuOtrosRef.current?.toggle(e)}
+                className="w-full py-2 px-4 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2"
+            >
+                OTROS <MenuIcon className="w-4 h-4" />
+            </button>
+        </div>
       </div>
 
-      {/* Tabla de productos */}
       <div className="flex-1 bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md overflow-auto text-gray-500 text-sm text-center">
         {productosAgregados.length === 0 ? (
           <div className="p-6 text-gray-500 text-sm text-center">Busca un producto....</div>
@@ -324,7 +330,6 @@ const VentasView = () => {
         </Dialog>
       </div>
 
-      {/* Modal reutilizable (PLACA / O.COMPRA / OBSERVACIONES) */}
       <Dialog
         header={modalConfig[modalState.type]?.title || ''}
         visible={modalState.visible}
@@ -354,19 +359,12 @@ const VentasView = () => {
             />
         )}
       </Dialog>
+      
+      {/* AÑADIDO: Renderizado de los modales del menú "OTROS" */}
+      <GuiaRemisionModal visible={!!modalsOtros.guia} onHide={() => handleHideModalOtros('guia')} />
+      <DatosAdicionalesModal visible={!!modalsOtros.adicionales} onHide={() => handleHideModalOtros('adicionales')} />
+      <CondicionPagoModal visible={!!modalsOtros.condicionPago} onHide={() => handleHideModalOtros('condicionPago')} />
 
-      {/* DIALOG que contiene VentasModal (se abre con el botón OTROS) */}
-      <Dialog
-        header="Más opciones"
-        visible={ventasModalVisible}
-        modal={true}
-        appendTo={document.body}
-        baseZIndex={10000}
-        onHide={() => setVentasModalVisible(false)}
-        style={{ width: '70vw', maxWidth: '1000px' }}
-      >
-        <VentasModal />
-      </Dialog>
     </div>
   );
 };
