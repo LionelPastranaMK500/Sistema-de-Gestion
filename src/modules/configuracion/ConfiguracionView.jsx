@@ -21,7 +21,7 @@ const ConfiguracionView = () => {
     <div className="flex flex-col w-full h-full">
       {/* HEADER */}
       <div className="flex justify-between items-center bg-gray-50/60 px-6 py-5 border-b">
-        <h2 className="font-semibold text-gray-800 text-2xl">Configuración</h2>
+        <h2 className="ml-16 font-bold text-gray-800 text-3xl">Configuración</h2>
 
         {/* Buscador */}
         <div className="relative w-full max-w-xs">
