@@ -6,10 +6,9 @@ import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { useState, useMemo } from 'react';
 import { getSucursales } from '@services/generadorData';
-import { CloseIcon } from '@constants/iconsConstants'; // Importar CloseIcon
+import { CloseIcon } from '@constants/iconsConstants'; 
 import { toast } from 'react-toastify';
 
-// Estilos de campo compactos
 const inputStyle = "w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm";
 const dropdownStyle = "w-full p-0 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm [&_.p-dropdown-label]:py-2.5 [&_.p-dropdown-label]:px-3";
 
@@ -69,24 +68,22 @@ export default function AlmacenModalAgregar({ visible, onHide, modo = 'add', dat
         </div>
     );
         const footerContent = (
-        <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-200 mt-6 px-6">
-            {/* BOTÓN CANCELAR (Diseño: Texto con ícono "X") */}
-            <Button
-                label="CANCELAR"
-                icon="pi pi-times" 
-                onClick={() => onHide(false)}
-                className="p-button-text !text-gray-600 !font-semibold !p-2 hover:!bg-gray-100"
-                disabled={loading}
-            />
-            {/* BOTÓN GUARDAR (Diseño: Azul primario con ícono de check "✓") */}
-            <Button
-                label="GUARDAR"
-                icon={loading ? "pi pi-spin pi-spinner" : "pi pi-check"} 
-                onClick={handleGuardar}
-                className="!bg-blue-600 hover:!bg-blue-700 !text-white !font-bold !py-2 !px-5 !rounded-lg"
-                disabled={loading}
-            />
-        </div>
+         <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-200 mt-6 px-6">
+        <Button
+            label="CANCELAR"
+            icon="pi pi-times"
+            onClick={() => onHide(false)}
+            className="p-button-text !text-sm !font-bold !text-gray-600 hover:!bg-gray-100"
+            disabled={loading}
+        />
+        <Button
+            label="GUARDAR"
+            icon={loading ? "pi pi-spin pi-spinner" : "pi pi-check"}
+            onClick={handleGuardar}
+            className="!bg-blue-600 hover:!bg-blue-700 !text-white !font-bold !py-2 !px-5 !rounded-lg !text-sm"
+            disabled={loading}
+        />
+    </div>
     );
 
 
