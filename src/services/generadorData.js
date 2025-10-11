@@ -194,7 +194,7 @@ export const sucursalesData = [
         id: "SC001",
         nombre: "LUBRICANTES CLAUDIA (Principal)",
         direccion: "Av. Alfredo Mendiola 6376",
-        vendedores: [], // Array de emails de vendedores
+        vendedores: [], 
         almacenes: ["LUBRICANTES CLAUDIA"],
         isPrincipal: true,
         numeracion: [
@@ -238,6 +238,26 @@ export const almacenesData = [
     },
 ];
 
+export const impresionConfigData = {
+    basica: {
+        formatoDefecto: 'A4',
+        decimales: 2,
+        infoCabecera: 'Venta de Aceites, Aditivos, Filtros y Ventas al por Mayor y Menor\nCambio de aceite y pulverizado Gratis.',
+        cuentasBancarias: 'Cta. BCP: 192-330 26997-0-01\nCCI. BCP: 002-192 13302699 700138\n\nCta. INTERBANK: 378-330 8394360\nCCI. INTERBANK: 003-378 013308394360 74',
+        infoPiePagina: 'Gracias por su preferencia.',
+    },
+    formatos: {
+        A4: {
+            disponibles: ["Valor unitario", "IGV", "ISC", "ICBPER", "Descuento", "Valor venta"],
+            visibles: ["1 - Número orden", "2 - Unidad", "3 - Código", "4 - Descripción", "5 - Cantidad", "6 - Precio unitario", "7 - Total"],
+        },
+        A5: {
+            disponibles: ["Valor unitario", "IGV", "ISC", "ICBPER", "Descuento", "Valor venta"],
+            visibles: ["1 - Número orden", "2 - Unidad", "3 - Código", "4 - Descripción", "5 - Cantidad", "6 - Precio unitario", "7 - Total"],
+        },
+    }
+};
+
 // --- FIN NUEVO ---
 
 export const getTiposComprobante = () => tiposComprobante;
@@ -250,6 +270,7 @@ export const getProductos = () => productos;
 export const getUsuarios = () => usuarios;
 export const getSucursales = () => sucursalesData;
 export const getAlmacenes = () => almacenesData;
+export const getImpresionConfig = () => impresionConfigData;
 
 export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
     const data = [];
