@@ -4,7 +4,6 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 
-// Estilos comunes para los inputs para mantener consistencia
 const inputStyle = "w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors";
 
 const UsuarioModal = ({ visible, mode, userData, onHide }) => {
@@ -65,7 +64,7 @@ const UsuarioModal = ({ visible, mode, userData, onHide }) => {
             header={header}
             footer={footer}
             modal
-            closable={true} // Usamos el botón de PrimeReact por defecto
+            closable={true} 
             draggable={false}
             className="w-[min(500px,90vw)]"
             headerClassName="bg-blue-700 text-white p-4"
@@ -100,8 +99,7 @@ const UsuarioModal = ({ visible, mode, userData, onHide }) => {
                         placeholder="Seleccionar Rol"
                         value={formData.rol}
                         onChange={(e) => handleInputChange(e, 'rol')}
-                        className={`${inputStyle} p-0`} // Quitamos padding para que no se duplique
-                        // PrimeReact a veces necesita estilos directos en el panel
+                        className={`${inputStyle} p-0`} 
                         panelClassName="rounded-lg"
                     />
                 </div>
