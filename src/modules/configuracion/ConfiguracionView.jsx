@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Outlet, useOutlet } from "react-router-dom";
-import ConfiguracionButtons from "./ConfiguracionButtons"; // Importamos el componente de botones
+import ConfiguracionButtons from "./ConfiguracionButtons";
 
 const ConfiguracionView = () => {
     const [query, setQuery] = useState("");
-    const outlet = useOutlet(); // Hook para detectar si hay una ruta hija activa
+    const outlet = useOutlet(); 
 
     return (
         <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-full">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="ml-16 font-bold text-gray-800 text-3xl">Configuración</h2>
 
-                {/* El buscador solo se muestra si NO estamos en una sub-ruta */}
                 {!outlet && (
                     <div className="relative w-full max-w-xs">
                         <input
@@ -28,12 +27,6 @@ const ConfiguracionView = () => {
                     </div>
                 )}
             </div>
-
-            {/*
-              AQUÍ ESTÁ LA LÓGICA CLAVE:
-              - Si 'outlet' tiene un componente (ej. <ConfigurarEmpresa />), lo renderiza.
-              - Si 'outlet' es null (estamos en /configuracion), renderiza <ConfiguracionButtons />.
-            */}
             {outlet ? <Outlet /> : <ConfiguracionButtons query={query} />}
         </div>
     );
