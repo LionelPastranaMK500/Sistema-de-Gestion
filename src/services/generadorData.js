@@ -194,7 +194,7 @@ export const sucursalesData = [
         id: "SC001",
         nombre: "LUBRICANTES CLAUDIA (Principal)",
         direccion: "Av. Alfredo Mendiola 6376",
-        vendedores: [], 
+        vendedores: [],
         almacenes: ["LUBRICANTES CLAUDIA"],
         isPrincipal: true,
         numeracion: [
@@ -223,21 +223,20 @@ export const sucursalesData = [
     },
 ];
 
+
 export const almacenesData = [
     {
         id: "ALM001",
         nombre: "LUBRICANTES CLAUDIA",
         direccion: "-", // Coincide con la imagen de referencia
-        isPrincipal: true,
     },
     {
         id: "ALM002",
         nombre: "SUCURSAL",
         direccion: "-", // Coincide con la imagen de referencia
-        isPrincipal: false,
+
     },
 ];
-
 export const impresionConfigData = {
     basica: {
         formatoDefecto: 'A4',
@@ -307,7 +306,7 @@ export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
 
             const clienteElegido = elegirAleatorio(getClientes());
             const esEmpresa = clienteElegido.documentoTipo === "RUC";
-            
+
             const documentoTipo = clienteElegido.documentoTipo || (esEmpresa ? "RUC" : "DNI");
             const documento = clienteElegido.documento || (documentoTipo === "RUC" ? generarRuc() : generarDni());
 
