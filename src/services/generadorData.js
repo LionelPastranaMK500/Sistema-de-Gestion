@@ -188,6 +188,41 @@ export const usuarios = [
         rol: "CONTADOR"
     }
 ];
+
+export const sucursalesData = [
+    {
+        id: "SC001",
+        nombre: "LUBRICANTES CLAUDIA (Principal)",
+        direccion: "Av. Alfredo Mendiola 6376",
+        vendedores: [], // Array de emails de vendedores
+        almacenes: ["LUBRICANTES CLAUDIA"],
+        isPrincipal: true,
+        numeracion: [
+            { tipo: "FACTURA ELECTRÓNICA", serie: "FF01", inicial: 1 },
+            { tipo: "BOLETA DE VENTA ELECTRÓNICA", serie: "BB01", inicial: 1 },
+            { tipo: "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA", serie: "T001", inicial: 1 },
+            { tipo: "PROFORMA", serie: "P001", inicial: 1 },
+        ]
+    },
+    {
+        id: "SC002",
+        nombre: "SUCURSAL (Secundaria)",
+        direccion: "Calle Los Olivos 123",
+        vendedores: ["maria.lopez@example.com"],
+        almacenes: ["SUCURSAL"],
+        isPrincipal: false,
+        numeracion: [
+            { tipo: "FACTURA ELECTRÓNICA", serie: "FF04", inicial: 1 },
+            { tipo: "BOLETA DE VENTA ELECTRÓNICA", serie: "BB04", inicial: 1 },
+            { tipo: "NOTA DE CRÉDITO ELECTRÓNICA", serie: "FC04", inicial: 1 },
+            { tipo: "NOTA DE DÉBITO ELECTRÓNICA", serie: "FD04", inicial: 1 },
+            { tipo: "NOTA DE DÉBITO ELECTRÓNICA", serie: "BD04", inicial: 1 },
+            { tipo: "GUÍA DE REMISIÓN REMITENTE ELECTRÓNICA", serie: "T004", inicial: 1 },
+            { tipo: "PROFORMA", serie: "0004", inicial: 1 },
+        ]
+    },
+];
+
 // --- FIN NUEVO ---
 
 export const getTiposComprobante = () => tiposComprobante;
@@ -198,6 +233,7 @@ export const getSeries = (tipo) => {
 export const getClientes = () => clientes;
 export const getProductos = () => productos;
 export const getUsuarios = () => usuarios;
+export const getSucursales = () => sucursalesData;
 
 export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
     const data = [];
