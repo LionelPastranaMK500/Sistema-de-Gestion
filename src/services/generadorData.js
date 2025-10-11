@@ -223,6 +223,21 @@ export const sucursalesData = [
     },
 ];
 
+export const almacenesData = [
+    {
+        id: "ALM001",
+        nombre: "LUBRICANTES CLAUDIA",
+        direccion: "-", // Coincide con la imagen de referencia
+        isPrincipal: true,
+    },
+    {
+        id: "ALM002",
+        nombre: "SUCURSAL",
+        direccion: "-", // Coincide con la imagen de referencia
+        isPrincipal: false,
+    },
+];
+
 // --- FIN NUEVO ---
 
 export const getTiposComprobante = () => tiposComprobante;
@@ -234,6 +249,7 @@ export const getClientes = () => clientes;
 export const getProductos = () => productos;
 export const getUsuarios = () => usuarios;
 export const getSucursales = () => sucursalesData;
+export const getAlmacenes = () => almacenesData;
 
 export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
     const data = [];
