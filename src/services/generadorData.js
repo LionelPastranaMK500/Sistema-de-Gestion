@@ -271,30 +271,34 @@ export const getSucursales = () => sucursalesData;
 export const getAlmacenes = () => almacenesData;
 export const getImpresionConfig = () => impresionConfigData;
 
-export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
+export const generarDataFalsa = (cantidad = 1000, mesesAtras = 6) => {
     const data = [];
-    const counters = [];
-
-    const today = new Date();
-    const year = fechaBase.getFullYear();
-    const mesReferencia = fechaBase.getMonth();
-
-    const start = new Date(year, mesReferencia, 1);
-    const end = new Date(year, mesReferencia + 1, 0); // Fin del mes
-
-    const dias = [];
-    for (let d = new Date(start); d <= end && d <= today; d.setDate(d.getDate() + 1)) {
-        dias.push(new Date(d));
-    }
+    const counters = {};
 
     let idCounter = 1;
     const empresa = syncActiveCompany() || getActiveCompany() || { sucursal: "Lubricantes Claudia", ruc: "20123456789" };
     const usuarioActivo = getActiveUser() || { correo: "juan@example.com", nombre: "Juan Santos" };
-    console.log(empresa);
-    console.log(usuarioActivo);
 
-    dias.forEach((fecha) => {
-        for (let i = 0; i < cantidad / dias.length; i++) {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    
+    // Determinar la fecha de inicio (X meses atrás)
+    const startDate = new Date();
+    startDate.setMonth(today.getMonth() - mesesAtras);
+    startDate.setDate(1); // Empezar siempre el día 1 de ese mes
+    startDate.setHours(0, 0, 0, 0);
+
+    const totalDays = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    // Calculamos una base promedio por día para asegurar que la cantidad se cumpla.
+    const baseDocsPerDay = Math.ceil(cantidad / totalDays);
+
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= today) {
+        // Variar la cantidad de documentos por día (promedio +/- 3)
+        const numDocsToday = Math.max(1, Math.floor(baseDocsPerDay + (Math.random() * 6 - 3)));
+
+        for (let i = 0; i < numDocsToday; i++) {
             const tDocumento = elegirAleatorio(getTiposComprobante());
             const claveTipo = mapTipo[tDocumento];
             const seriesDisponibles = getSeries(claveTipo);
@@ -310,15 +314,20 @@ export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
             const documentoTipo = clienteElegido.documentoTipo || (esEmpresa ? "RUC" : "DNI");
             const documento = clienteElegido.documento || (documentoTipo === "RUC" ? generarRuc() : generarDni());
 
-            const items = generarItemsAleatorios(getProductos());
+            const items = generarItemsAleatorios(getProductos(), 3);
             const montoBase = calcularMonto(tDocumento, items);
 
-            const monto = tDocumento === "NOTA DE CRÉDITO ELECTRÓNICA" ? { ...montoBase, total: -Math.abs(montoBase.total) } : montoBase;
+            const monto = tDocumento.includes("NOTA DE CRÉDITO") ? { ...montoBase, total: -Math.abs(montoBase.total) } : montoBase;
 
             let state = generarEstado(tDocumento);
             state = resolverEstado(state);
 
             const tipoOperacion = i % 2 === 0 ? "venta" : "compra";
+            
+            // Variar la hora del día (ej. entre 8 am y 8 pm)
+            const horaAleatoria = Math.floor(Math.random() * 12) + 8; 
+            const fechaConHora = new Date(currentDate.getTime());
+            fechaConHora.setHours(horaAleatoria, Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
 
             data.push({
                 id: idCounter++,
@@ -331,7 +340,7 @@ export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
                 documento,
                 direccion: clienteElegido.direccion,
                 email: clienteElegido.email,
-                fecha: fecha.toISOString(),
+                fecha: fechaConHora.toISOString(),
                 monto,
                 tDocumento,
                 state,
@@ -341,10 +350,12 @@ export const generarDataFalsa = (cantidad = 100, fechaBase = new Date()) => {
                 usuario: usuarioActivo.correo
             });
         }
-    });
-
-    console.log(data);
+        
+        // Avanzar al siguiente día
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    console.log(`Generados ${data.length} documentos falsos en ${mesesAtras} meses.`);
     return data;
 };
-
 

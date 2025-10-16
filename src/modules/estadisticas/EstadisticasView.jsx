@@ -47,10 +47,11 @@ const EstadisticasView = () => {
     };
 
     useEffect(() => {
-        const datosGenerados = generarDataFalsa(50, new Date()); // Aumentado para probar el scroll
+        // Llamada a la función, que ahora genera 1000 documentos distribuidos en los últimos 6 meses.
+        const datosGenerados = generarDataFalsa(1000); 
         setData(datosGenerados);
         configCalendar();
-    }, []);
+    }, []); 
 
     useEffect(() => {
         if (!data.length) return;

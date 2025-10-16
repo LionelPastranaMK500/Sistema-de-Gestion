@@ -104,7 +104,7 @@ export function buildVentasData(data, fechaFiltro = new Date()) {
                 ["FACTURA ELECTRÓNICA", "BOLETA DE VENTA ELECTRÓNICA"].includes(d.tDocumento) &&
                 new Date(d.fecha).getDate() === dia
             )
-            .reduce((acc, cur) => acc + cur.monto, 0)
+            .reduce((acc, cur) => acc + (cur.monto?.total || 0), 0) // <--- CORRECCIÓN 1
     );
 
     const proformasPorDia = dias.map(dia =>
@@ -113,7 +113,7 @@ export function buildVentasData(data, fechaFiltro = new Date()) {
                 d.tDocumento === "PROFORMA ELECTRÓNICA" &&
                 new Date(d.fecha).getDate() === dia
             )
-            .reduce((acc, cur) => acc + cur.monto, 0)
+            .reduce((acc, cur) => acc + (cur.monto?.total || 0), 0) // <--- CORRECCIÓN 2
     );
 
     const labels = dias.map(d => d.toString().padStart(2, "0"));
@@ -160,4 +160,3 @@ export const ventasChartOptions = {
         },
     },
 };
-
