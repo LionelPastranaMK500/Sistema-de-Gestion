@@ -4,7 +4,6 @@ export function useProductosAgregados(globalDiscountPercentage = 0) {
     const [productosAgregados, setProductosAgregados] = useState([]);
 
     const agregarProducto = useCallback((producto) => {
-        // FIX: Verificación defensiva para evitar crash si el producto es nulo o no tiene código
         if (!producto || !producto.codigo) return; 
         
         setProductosAgregados((prev) => {
@@ -21,6 +20,7 @@ export function useProductosAgregados(globalDiscountPercentage = 0) {
                 {
                     ...producto,
                     precio: Number(producto.precio) || 0,
+                    isc: Number(producto.isc) || 0, 
                     cantidad: 1
                 }
             ];
@@ -55,28 +55,54 @@ export function useProductosAgregados(globalDiscountPercentage = 0) {
         return totalSinDescuento * discountRate;
     }, [totalSinDescuento, globalDiscountPercentage]);
     
-    // Calculates the total general after applying the global discount
     const totalGeneral = useMemo(
         () => totalSinDescuento - totalDescuentoGlobal,
         [totalSinDescuento, totalDescuentoGlobal]
     );
+
+    // NUEVO: Cálculo del desglose de totales (Gravado, IGV, ISC, etc.)
+    const totalsDesglose = useMemo(() => {
+        const totalBaseConDscto = totalGeneral;
+        
+        // Simplificación: Asumimos que todo es Gravado y usamos IGV del 18%.
+        const gravado = totalBaseConDscto / 1.18;
+        const igv = totalBaseConDscto - gravado;
+        
+        // Sumamos el ISC que pueda venir precalculado en los ítems
+        const totalISC = productosAgregados.reduce((sum, p) => 
+            sum + (Number(p.isc) || 0) * (Number(p.cantidad) || 0), 0
+        );
+
+        return {
+            anticipos: 0,
+            dscto: totalDescuentoGlobal,
+            gravado: gravado,
+            exonerado: 0,
+            inafecto: 0,
+            exportacion: 0,
+            gratuito: 0,
+            isc: totalISC,
+            igv: igv,
+            rc: 0,
+            icbper: 0,
+        };
+    }, [totalGeneral, totalDescuentoGlobal, productosAgregados]);
     
     // Función para calcular el descuento aplicado a un ítem individual
     const getDiscountedItem = useCallback((item) => {
         const subtotalSinDscto = (Number(item.precio) || 0) * (Number(item.cantidad) || 0);
         const discountRate = (Number(globalDiscountPercentage) || 0) / 100;
         
-        // El descuento del ítem es proporcional al descuento global.
         const itemDiscount = subtotalSinDscto * discountRate;
         const totalConDescuento = subtotalSinDscto - itemDiscount;
         const precioUnitarioConDscto = totalConDescuento / (Number(item.cantidad) || 1);
 
         return {
             ...item,
-            subtotal: subtotalSinDscto, // Total antes del descuento
-            descuentoAplicado: itemDiscount, // Descuento aplicado (para mostrar en tabla/PDF)
-            precioUnitarioFinal: precioUnitarioConDscto, // Precio por unidad después del descuento (útil para imprimir)
-            totalFinal: totalConDescuento, // Total por item después del descuento
+            subtotal: subtotalSinDscto,
+            descuentoAplicado: itemDiscount,
+            precioUnitarioFinal: precioUnitarioConDscto,
+            totalFinal: totalConDescuento,
         };
     }, [globalDiscountPercentage]);
 
@@ -87,5 +113,6 @@ export function useProductosAgregados(globalDiscountPercentage = 0) {
         eliminarProducto,
         getDiscountedItem,
         totalGeneral,
+        totalsDesglose, // EXPORTADO EL NUEVO DESGLOSE
     };
 }

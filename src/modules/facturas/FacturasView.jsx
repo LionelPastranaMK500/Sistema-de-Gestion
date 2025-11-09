@@ -4,14 +4,13 @@ import {
   PermIdentityTwoToneIcon,
   AccessTimeTwoToneIcon,
   KeyboardArrowLeftIcon,
-  KeyboardArrowRightIcon
+  KeyboardArrowRightIcon,
 } from "@constants/iconsConstants";
 import { useState, useEffect, useRef } from "react";
 import { configCalendar } from "@utils/configCalendar";
 import { Calendar } from "primereact/calendar";
 import FacturaModal from "./FacturaModal";
 import { menuItemsFactura } from "@constants/menuItemsConstants";
-
 
 const FacturasView = () => {
   const [facturas, setFacturas] = useState([]);
@@ -34,24 +33,26 @@ const FacturasView = () => {
 
   const facturasFiltradas = fechaSeleccionada
     ? facturas.filter((f) => {
-      const fechaFactura = new Date(f.fecha);
-      return (
-        fechaFactura.getDate() === fechaSeleccionada.getDate() &&
-        fechaFactura.getMonth() === fechaSeleccionada.getMonth() &&
-        fechaFactura.getFullYear() === fechaSeleccionada.getFullYear()
-      );
-    })
+        const fechaFactura = new Date(f.fecha);
+        return (
+          fechaFactura.getDate() === fechaSeleccionada.getDate() &&
+          fechaFactura.getMonth() === fechaSeleccionada.getMonth() &&
+          fechaFactura.getFullYear() === fechaSeleccionada.getFullYear()
+        );
+      })
     : [];
 
   const formatoFechaHora = (fechaISO) => {
     if (!fechaISO) return "";
     const fecha = new Date(fechaISO);
     const opcionesFecha = { day: "numeric", month: "long" };
-    const fechaFormateada = fecha.toLocaleDateString("es-ES", opcionesFecha).replace(/\b\w/, c => c.toUpperCase());
+    const fechaFormateada = fecha
+      .toLocaleDateString("es-ES", opcionesFecha)
+      .replace(/\b\w/, (c) => c.toUpperCase());
     const horaFormateada = fecha.toLocaleTimeString("es-ES", {
       hour: "numeric",
       minute: "2-digit",
-      hour12: true
+      hour12: true,
     });
     return `${fechaFormateada}, ${horaFormateada}`;
   };
@@ -80,8 +81,11 @@ const FacturasView = () => {
 
         {/* Acciones */}
         <div className="flex items-center gap-4">
-          <button className="hover:bg-gray-200 p-2 rounded">
-            <KeyboardArrowLeftIcon onClick={() => moverDia(-1)} />
+          <button
+            className="hover:bg-gray-200 p-2 rounded"
+            onClick={() => moverDia(-1)}
+          >
+            <KeyboardArrowLeftIcon />
           </button>
 
           {/* Calendario anclado al ícono (overlay en la misma posición) */}
@@ -91,7 +95,7 @@ const FacturasView = () => {
               value={fechaSeleccionada}
               onChange={(e) => setFechaSeleccionada(e.value)}
               dateFormat="dd/mm/yy"
-              appendTo={document.body}                 // panel en el body
+              appendTo={document.body} // panel en el body
               panelClassName="z-50"
               className="absolute inset-0 opacity-0 pointer-events-none" // ⬅️ NO bloquea el click
             />
@@ -104,8 +108,11 @@ const FacturasView = () => {
             </button>
           </div>
 
-          <button className="hover:bg-gray-200 p-2 rounded">
-            <KeyboardArrowRightIcon onClick={() => moverDia(1)} />
+          <button
+            className="hover:bg-gray-200 p-2 rounded"
+            onClick={() => moverDia(1)}
+          >
+            <KeyboardArrowRightIcon />
           </button>
 
           <MoreVertIcon
@@ -137,16 +144,17 @@ const FacturasView = () => {
                 <div
                   key={f.id}
                   onClick={() => setSelectedFactura(f)}
-                  className={`flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white ${f.tDocumento.toLowerCase().includes("nota de crédito")
-                    ? "border-red-300 bg-red-50"
-                    : "border-gray-250"
-                    }`}
+                  className={`flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white ${
+                    f.tDocumento.toLowerCase().includes("nota de crédito")
+                      ? "border-red-300 bg-red-50"
+                      : "border-gray-250"
+                  }`}
                   style={{ minHeight: "110px" }}
                 >
                   {/* Izquierda */}
                   <div className="flex flex-col gap-1 text-gray-700 text-base">
                     <p className="font-bold text-gray-900 text-lg">
-                      {f.tDocumento} » {f.numero}
+                      {f.tDocumento} » {f.serie}-{f.numero}
                     </p>
                     <p className="flex items-center gap-2 text-gray-700 text-base">
                       <PermIdentityTwoToneIcon fontSize="small" />
@@ -164,11 +172,16 @@ const FacturasView = () => {
 
                   {/* Derecha */}
                   <div className="text-right">
+                    {/* CORRECCIÓN AQUÍ: 
+                      Se debe acceder a f.monto.total, no a f.monto
+                    */}
                     <p
-                      className={`text-xl font-extrabold ${f.monto < 0 ? "text-red-600" : "text-green-600"
-                        }`}
+                      className={`text-xl font-extrabold ${
+                        f.monto?.total < 0 ? "text-red-600" : "text-green-600"
+                      }`}
                     >
-                      {f.monto < 0 ? "- " : ""}S/ {Math.abs(f.monto).toFixed(2)}
+                      {f.monto?.total < 0 ? "- " : ""}S/{" "}
+                      {Math.abs(f.monto?.total || 0).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -204,6 +217,6 @@ const FacturasView = () => {
       )}
     </div>
   );
-}
+};
 
 export default FacturasView;

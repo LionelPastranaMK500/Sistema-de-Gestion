@@ -77,14 +77,15 @@ const VentasView = () => {
   const DEFAULT_COMPROBANTE = "BOLETA DE VENTA ELECTRÓNICA";
   const DEFAULT_SERIE = "B001";
 
-  // MODIFICADO: Se pasa el descuento global al hook
+  // MODIFICADO: Se pasa el descuento global al hook y se obtiene el desglose
   const { 
     productosAgregados, 
     agregarProducto, 
     actualizarCantidad, 
     eliminarProducto, 
     getDiscountedItem, 
-    totalGeneral 
+    totalGeneral,
+    totalsDesglose // OBTENIDO: Desglose de totales para el popup
   } = useProductosAgregados(globalDiscount);
 
   useEffect(() => { configCalendar(); }, []);
@@ -168,6 +169,7 @@ const VentasView = () => {
           <input type="checkbox" className="w-4 h-4" checked={proformaChecked} onChange={handleProformaChange} />
           PROFORMA
         </label>
+        
       </div>
 
       <div className="gap-4 grid grid-cols-4 mb-4">
@@ -292,16 +294,16 @@ const VentasView = () => {
             </thead>
             <tbody>
               {productosAgregados.map((p) => {
-                // MODIFICADO: Obtener el ítem con descuento aplicado
+                // OBTENIENDO EL ÍTEM YA CALCULADO Y DESCONTADO
                 const discountedItem = getDiscountedItem(p);
                 
                 return (
                 <tr key={p.codigo} className="border-b">
                   <td className="px-4 py-2 text-left">{p.descripcion}</td>
                   <td className="px-4 py-2 text-center">S/{p.precio?.toFixed(2)}</td>
-                  {/* MODIFICADO: Mostrar el descuento aplicado al ítem */}
+                  {/* MOSTRANDO EL DESCUENTO APLICADO AL ÍTEM */}
                   <td className="px-4 py-2 text-center">S/{discountedItem.descuentoAplicado.toFixed(2)}</td>
-                  {/* MODIFICADO: Mostrar el total final del ítem */}
+                  {/* MOSTRANDO EL TOTAL FINAL DEL ÍTEM */}
                   <td className="px-4 py-2 text-center">S/{discountedItem.totalFinal.toFixed(2)}</td>
                   <td className="flex justify-center items-center gap-2 px-4 py-2">
                     <button type="button" className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded" onClick={() => actualizarCantidad(p.codigo, p.cantidad - 1)}>-</button>
@@ -326,10 +328,16 @@ const VentasView = () => {
 
         <div className="flex justify-between items-center gap-4">
           <div className="group relative flex-[22] text-center cursor-pointer">
-              {/* MODIFICADO: Muestra el total final después del descuento global */}
+              {/* MOSTRANDO EL TOTAL FINAL DESCONTADO */}
             <p className="font-bold text-gray-700 text-lg"><strong>TOTAL <span className="text-black">S/. {totalGeneral.toFixed(2)}</span></strong></p>
             <div className="hidden group-hover:block bottom-full left-1/2 absolute bg-white shadow-lg mb-2 p-4 border rounded-lg w-52 text-gray-700 text-sm -translate-x-1/2 z-10">
-              {["Anticipios", "DSCTO", "Gravado", "Exonerado", "Inafecto", "Exportación", "Gratuito", "I.S.C", "I.G.V", "R.C", "I.C.B.P.E.R"].map((item) => (<div key={item} className="flex justify-between"><span>{item}</span><span>S/ 0.00</span></div>))}
+              {["Anticipios", "DSCTO", "Gravado", "Exonerado", "Inafecto", "Exportación", "Gratuito", "I.S.C", "I.G.V", "R.C", "I.C.B.P.E.R"].map((item) => (
+                    <div key={item} className="flex justify-between">
+                        <span>{item}</span>
+                        {/* USANDO EL DESGLOSE CALCULADO DEL HOOK */}
+                        <span>S/ {totalsDesglose[item.toLowerCase().replace('.', '').replace(' ', '')]?.toFixed(2) || "0.00"}</span>
+                    </div>
+                ))}
             </div>
           </div>
 
