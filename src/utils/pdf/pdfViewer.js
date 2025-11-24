@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { renderFacturaA4, renderFactura80mm, PAGE_SIZES, LAYOUT } from "@utils/pdfConfig";
+import { renderFacturaA4, renderFactura80mm, PAGE_SIZES, LAYOUT } from "@/utils/pdf/pdfConfig";
 import { getActiveUser, getActiveCompany } from "@services/auth/authServices";
 
 export async function visualizarPDF(factura = {}, tipo = "A4") {
