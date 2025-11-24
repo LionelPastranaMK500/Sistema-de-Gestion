@@ -1,44 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { CloseIcon } from '@constants/iconsConstants';
+import { CloseIcon } from '@constants/icons';
 import { toast } from 'react-toastify';
-
-const emptyAlmacen = {
-    nombre: '',
-    direccion: '',
-};
+import { useFormInput } from '@hooks/forms';
 
 const inputStyle = "w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm";
 
-
 export default function AlmacenModal({ visible, onHide, mode = 'add', data = null }) {
-    const [almacenData, setAlmacenData] = useState(emptyAlmacen);
+    const { formData, handleChange, resetForm, setFormData } = useFormInput({
+        nombre: '',
+        direccion: '',
+    });
+
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (visible && mode === 'edit' && data) {
-            setAlmacenData({
+            setFormData({
                 id: data.id,
                 nombre: data.nombre || '',
                 direccion: data.direccion || '',
             });
         } else if (visible && mode === 'add') {
-            setAlmacenData(emptyAlmacen);
+            resetForm();
         }
     }, [visible, mode, data]);
 
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setAlmacenData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
     const handleGuardar = () => {
-        if (!almacenData.nombre) {
+        if (!formData.nombre) {
             return toast.error("El nombre es obligatorio.");
         }
 
@@ -46,7 +37,7 @@ export default function AlmacenModal({ visible, onHide, mode = 'add', data = nul
 
         const action = mode === 'add' ? 'Guardando' : 'Actualizando';
         const actionLabel = mode === 'add' ? 'agregado' : 'actualizado';
-        console.log(`${action} almacén:`, almacenData);
+        console.log(`${action} almacén:`, formData);
 
         setTimeout(() => {
             setLoading(false);
@@ -57,8 +48,6 @@ export default function AlmacenModal({ visible, onHide, mode = 'add', data = nul
 
     const dialogTitle = mode === 'add' ? 'Almacén' : 'Administrar Almacén';
     const primaryButtonLabel = mode === 'add' ? 'GUARDAR' : 'ACTUALIZAR';
-    const labelNombre = 'Nombre';
-    const labelBotonCierre = 'CANCELAR';
 
     const headerContent = (
         <div className="flex justify-between items-center bg-blue-700 px-5 py-3 text-white">
@@ -76,7 +65,7 @@ export default function AlmacenModal({ visible, onHide, mode = 'add', data = nul
     const footerContent = (
         <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-200 mt-6 px-6">
             <Button
-                label={labelBotonCierre}
+                label="CANCELAR"
                 icon="pi pi-times"
                 onClick={() => onHide(false)}
                 className="p-button-text !text-gray-600 !font-semibold !p-2 hover:!bg-gray-100"
@@ -105,24 +94,21 @@ export default function AlmacenModal({ visible, onHide, mode = 'add', data = nul
             footer={footerContent}
         >
             <div className="p-6 space-y-4">
-
-                {/* Nombre */}
                 <div>
                     <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
-                        {labelNombre} <span className="text-red-500">*</span>
+                        Nombre <span className="text-red-500">*</span>
                     </label>
                     <InputText
                         id="nombre"
                         name="nombre"
-                        value={almacenData.nombre}
-                        onChange={handleChange}
+                        value={formData.nombre}
+                        onChange={handleChange('nombre')}
                         className={inputStyle}
                         required
                         placeholder="Nombre"
                     />
                 </div>
 
-                {/* Dirección */}
                 <div>
                     <label htmlFor="direccion" className="block text-sm font-medium text-gray-700 mb-1">
                         Dirección
@@ -130,8 +116,8 @@ export default function AlmacenModal({ visible, onHide, mode = 'add', data = nul
                     <InputText
                         id="direccion"
                         name="direccion"
-                        value={almacenData.direccion}
-                        onChange={handleChange}
+                        value={formData.direccion}
+                        onChange={handleChange('direccion')}
                         className={inputStyle}
                         placeholder="Dirección"
                     />

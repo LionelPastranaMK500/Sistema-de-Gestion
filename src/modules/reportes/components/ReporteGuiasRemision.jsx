@@ -1,4 +1,3 @@
-// src/modules/reportes/items/ReporteGuiasRemision.jsx
 import { useState, useEffect } from "react";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
@@ -15,6 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getActiveCompany, getActiveUser } from "@services/auth/authServices";
 import { handleReportes } from "@services/reportes/reportesLogic";
 import { buildExcel } from "@services/reportes/excelBuilder";
+import { useFilterState } from "@hooks/data";
 
 const ReporteGuiasRemision = () => {
     const location = useLocation();
@@ -25,7 +25,7 @@ const ReporteGuiasRemision = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [filter, setFilter] = useState({
+    const { filters: filter, updateFilter, setFilters: setFilter } = useFilterState({
         sucursal: "all",
         usuario: "all",
         fechaInicio: null,
@@ -192,7 +192,7 @@ const ReporteGuiasRemision = () => {
                                     inputId="sucursal"
                                     value={filter.sucursal}
                                     options={sucursalOptions}
-                                    onChange={(e) => setFilter({ ...filter, sucursal: e.value })}
+                                    onChange={(e) => updateFilter('sucursal', e.value)}
                                     placeholder="Selecciona sucursal"
                                     className="
                     w-full
@@ -218,7 +218,7 @@ const ReporteGuiasRemision = () => {
                                     inputId="usuario"
                                     value={filter.usuario}
                                     options={usuarioOptions}
-                                    onChange={(e) => setFilter({ ...filter, usuario: e.value })}
+                                    onChange={(e) => updateFilter('usuario', e.value)}
                                     placeholder="Selecciona usuario"
                                     className="
                     w-full
@@ -243,7 +243,7 @@ const ReporteGuiasRemision = () => {
                                 <Calendar
                                     inputId="fechaInicio"
                                     value={filter.fechaInicio}
-                                    onChange={(e) => setFilter({ ...filter, fechaInicio: e.value })}
+                                    onChange={(e) => updateFilter('fechaInicio', e.value)}
                                     placeholder="Fecha inicio"
                                     dateFormat="dd/mm/yy"
                                     maxDate={today}
@@ -269,7 +269,7 @@ const ReporteGuiasRemision = () => {
                                 <Calendar
                                     inputId="fechaFin"
                                     value={filter.fechaFin}
-                                    onChange={(e) => setFilter({ ...filter, fechaFin: e.value })}
+                                    onChange={(e) => updateFilter('fechaFin', e.value)}
                                     placeholder="Fecha fin"
                                     dateFormat="dd/mm/yy"
                                     maxDate={today}

@@ -5,42 +5,27 @@ import {
   AccessTimeTwoToneIcon,
   KeyboardArrowLeftIcon,
   KeyboardArrowRightIcon,
-} from "@constants/iconsConstants";
-import { useState, useEffect, useRef } from "react";
-import { configCalendar } from "@utils/configCalendar";
+} from "@constants/icons";
+import { useState, useEffect } from "react";
+import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
 import FacturaModal from "./FacturaModal";
-import { menuItemsFactura } from "@constants/menuItemsConstants";
+import { menuItemsFactura } from "@constants/menuItems";
+import { useDateFilter } from "@hooks/data";
 
 const FacturasView = () => {
   const [facturas, setFacturas] = useState([]);
   const [showConfig, setShowConfig] = useState(false);
   const [selectedFactura, setSelectedFactura] = useState(null);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
 
-  const calendarRef = useRef(null); // 👉 referencia al Calendar de PrimeReact
-
-  const getTituloFecha = (fechaISO) => {
-    if (!fechaISO) return "Ventas Realizadas";
-    const fecha = new Date(fechaISO);
-    const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
-    const dia = fecha.getDate();
-    const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-    const anio = fecha.getFullYear();
-    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
-  };
-
-  const facturasFiltradas = fechaSeleccionada
-    ? facturas.filter((f) => {
-        const fechaFactura = new Date(f.fecha);
-        return (
-          fechaFactura.getDate() === fechaSeleccionada.getDate() &&
-          fechaFactura.getMonth() === fechaSeleccionada.getMonth() &&
-          fechaFactura.getFullYear() === fechaSeleccionada.getFullYear()
-        );
-      })
-    : [];
+  const {
+    fechaSeleccionada,
+    setFechaSeleccionada,
+    filteredItems: facturasFiltradas,
+    moverDia,
+    getTituloFecha,
+    calendarRef
+  } = useDateFilter(facturas);
 
   const formatoFechaHora = (fechaISO) => {
     if (!fechaISO) return "";
@@ -63,41 +48,31 @@ const FacturasView = () => {
     configCalendar();
   }, []);
 
-  const moverDia = (cantidad) => {
-    setFechaSeleccionada((prev) => {
-      const fechaBase = prev ? new Date(prev) : new Date();
-      fechaBase.setDate(fechaBase.getDate() + cantidad);
-      return fechaBase;
-    });
-  };
-
   return (
     <div className="flex flex-col w-full h-screen">
-      {/* HEADER */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
         <h2 className="font-bold text-gray-800 text-2xl">
-          {getTituloFecha(fechaSeleccionada)}
+          {getTituloFecha("Ventas Realizadas")}
         </h2>
 
-        {/* Acciones */}
         <div className="flex items-center gap-4">
           <button
             className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(-1)}
+            aria-label="Día anterior"
           >
             <KeyboardArrowLeftIcon />
           </button>
 
-          {/* Calendario anclado al ícono (overlay en la misma posición) */}
           <div className="relative">
             <Calendar
               ref={calendarRef}
               value={fechaSeleccionada}
               onChange={(e) => setFechaSeleccionada(e.value)}
               dateFormat="dd/mm/yy"
-              appendTo={document.body} // panel en el body
+              appendTo={document.body}
               panelClassName="z-50"
-              className="absolute inset-0 opacity-0 pointer-events-none" // ⬅️ NO bloquea el click
+              className="absolute inset-0 opacity-0 pointer-events-none"
             />
             <button
               className="hover:bg-gray-200 p-2 rounded"
@@ -111,6 +86,7 @@ const FacturasView = () => {
           <button
             className="hover:bg-gray-200 p-2 rounded"
             onClick={() => moverDia(1)}
+            aria-label="Día siguiente"
           >
             <KeyboardArrowRightIcon />
           </button>
@@ -135,7 +111,6 @@ const FacturasView = () => {
         </div>
       </div>
 
-      {/* CONTENIDO */}
       <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
         {fechaSeleccionada ? (
           facturasFiltradas.length > 0 ? (
@@ -144,24 +119,17 @@ const FacturasView = () => {
                 <div
                   key={f.id}
                   onClick={() => setSelectedFactura(f)}
-                  className={`flex cursor-pointer items-center justify-between rounded-xl border px-6 py-5 shadow-md transition hover:shadow-lg bg-white ${
-                    f.tDocumento.toLowerCase().includes("nota de crédito")
-                      ? "border-red-300 bg-red-50"
-                      : "border-gray-250"
-                  }`}
+                  className="flex justify-between items-center bg-white shadow-md hover:shadow-lg px-6 py-5 border border-gray-250 rounded-xl transition cursor-pointer"
                   style={{ minHeight: "110px" }}
                 >
-                  {/* Izquierda */}
                   <div className="flex flex-col gap-1 text-gray-700 text-base">
                     <p className="font-bold text-gray-900 text-lg">
-                      {f.tDocumento} » {f.serie}-{f.numero}
+                      {f.tDocumento} » {f.numero}
                     </p>
                     <p className="flex items-center gap-2 text-gray-700 text-base">
                       <PermIdentityTwoToneIcon fontSize="small" />
                       <span>
-                        {f.cliente.toUpperCase() === "PÚBLICO EN GENERAL (S/D)"
-                          ? f.cliente
-                          : `${f.cliente} (${f.documento})`}
+                        {f.cliente} ({f.documento})
                       </span>
                     </p>
                     <p className="flex items-center gap-2 text-gray-500 text-sm">
@@ -170,18 +138,9 @@ const FacturasView = () => {
                     </p>
                   </div>
 
-                  {/* Derecha */}
                   <div className="text-right">
-                    {/* CORRECCIÓN AQUÍ: 
-                      Se debe acceder a f.monto.total, no a f.monto
-                    */}
-                    <p
-                      className={`text-xl font-extrabold ${
-                        f.monto?.total < 0 ? "text-red-600" : "text-green-600"
-                      }`}
-                    >
-                      {f.monto?.total < 0 ? "- " : ""}S/{" "}
-                      {Math.abs(f.monto?.total || 0).toFixed(2)}
+                    <p className="font-extrabold text-blue-700 text-xl">
+                      S/ {(f.monto?.total).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -191,11 +150,11 @@ const FacturasView = () => {
             <div className="flex flex-col justify-center items-center h-full">
               <img
                 src="/assets/personaje.png"
-                alt="Sin ventas"
+                alt="Sin Facturas"
                 className="mx-auto mb-4 w-48"
               />
               <p className="text-gray-600">
-                No se encontraron comprobantes realizados en esta fecha
+                No se encontraron ventas realizadas en esta fecha
               </p>
             </div>
           )
@@ -208,7 +167,6 @@ const FacturasView = () => {
         )}
       </div>
 
-      {/* MODAL FACTURA */}
       {selectedFactura && (
         <FacturaModal
           f={selectedFactura}

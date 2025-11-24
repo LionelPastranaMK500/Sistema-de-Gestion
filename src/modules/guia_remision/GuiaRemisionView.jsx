@@ -1,44 +1,29 @@
 import {
-    MoreVertIcon, // (no usado, lo dejo si lo necesitas luego)
     PermIdentityTwoToneIcon,
     AccessTimeTwoToneIcon,
     KeyboardArrowLeftIcon,
     KeyboardArrowRightIcon,
-} from "@constants/iconsConstants";
-import { useState, useEffect, useRef } from "react";
-import { configCalendar } from "@utils/configCalendar";
+} from "@constants/icons";
+import { useState, useEffect } from "react";
+import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
 import GuiaRemisionModal from "./GuiaRemisionModal";
 import GuiaRemisionNuevo from "./GuiaRemisionNuevo";
+import { useDateFilter } from "@hooks/data";
 
 const GuiaRemision = () => {
     const [guia_remision] = useState([]);
     const [selectedGuiaRemision, setSelectedGuiaRemision] = useState(null);
-    const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
     const [mostrarNuevo, setMostrarNuevo] = useState(false);
 
-    const calendarRef = useRef(null);
-
-    const getTituloFecha = (fecha) => {
-        if (!fecha) return "Guias de Remision";
-        const diaSemana = fecha.toLocaleDateString("es-ES", { weekday: "long" });
-        const dia = fecha.getDate();
-        const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-        const anio = fecha.getFullYear();
-        const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-        return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
-    };
-
-    const guiaRemisionFiltradas = fechaSeleccionada
-        ? guia_remision.filter((f) => {
-            const fechaGuiaRemision = new Date(f.fecha);
-            return (
-                fechaGuiaRemision.getDate() === fechaSeleccionada.getDate() &&
-                fechaGuiaRemision.getMonth() === fechaSeleccionada.getMonth() &&
-                fechaGuiaRemision.getFullYear() === fechaSeleccionada.getFullYear()
-            );
-        })
-        : [];
+    const {
+        fechaSeleccionada,
+        setFechaSeleccionada,
+        filteredItems: guiaRemisionFiltradas,
+        moverDia,
+        getTituloFecha,
+        calendarRef
+    } = useDateFilter(guia_remision);
 
     const formatoFechaHora = (fechaISO) => {
         if (!fechaISO) return "";
@@ -59,26 +44,15 @@ const GuiaRemision = () => {
         configCalendar();
     }, []);
 
-    // navegación por días (mismo patrón)
-    const moverDia = (cantidad) => {
-        setFechaSeleccionada((prev) => {
-            const fechaBase = prev ? new Date(prev) : new Date();
-            fechaBase.setDate(fechaBase.getDate() + cantidad);
-            return fechaBase;
-        });
-    };
-
     return (
         <div className="flex flex-col w-full h-screen">
-            {/* HEADER */}
             <div className="flex justify-between items-center px-6 py-4 border-b">
                 <h2 className="font-bold text-gray-800 text-2xl">
-                    {getTituloFecha(fechaSeleccionada)}
+                    {getTituloFecha("Guias de Remision")}
                 </h2>
 
-                {/* Acciones */}
+
                 <div className="flex items-center gap-4">
-                    {/* Flecha izquierda */}
                     <button
                         className="hover:bg-gray-200 p-2 rounded"
                         onClick={() => moverDia(-1)}
@@ -87,7 +61,6 @@ const GuiaRemision = () => {
                         <KeyboardArrowLeftIcon />
                     </button>
 
-                    {/* Calendario anclado al ícono (overlay en body) */}
                     <div className="relative">
                         <Calendar
                             ref={calendarRef}
@@ -107,7 +80,6 @@ const GuiaRemision = () => {
                         </button>
                     </div>
 
-                    {/* Flecha derecha */}
                     <button
                         className="hover:bg-gray-200 p-2 rounded"
                         onClick={() => moverDia(1)}
@@ -116,17 +88,15 @@ const GuiaRemision = () => {
                         <KeyboardArrowRightIcon />
                     </button>
 
-                    {/* Registrar Nuevo */}
                     <button
-                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+                        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-semibold"
                         onClick={() => setMostrarNuevo(true)}
                     >
-                        Registrar Nuevo
+                        + NUEVO
                     </button>
                 </div>
             </div>
 
-            {/* CONTENIDO */}
             <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
                 {fechaSeleccionada ? (
                     guiaRemisionFiltradas.length > 0 ? (
@@ -138,7 +108,6 @@ const GuiaRemision = () => {
                                     className="flex justify-between items-center bg-white shadow-md hover:shadow-lg px-6 py-5 border border-gray-250 rounded-xl transition cursor-pointer"
                                     style={{ minHeight: "110px" }}
                                 >
-                                    {/* Izquierda */}
                                     <div className="flex flex-col gap-1 text-gray-700 text-base">
                                         <p className="font-bold text-gray-900 text-lg">
                                             {f.tDocumento} » {f.numero}
@@ -155,7 +124,6 @@ const GuiaRemision = () => {
                                         </p>
                                     </div>
 
-                                    {/* Derecha */}
                                     <div className="text-right">
                                         <p className="font-extrabold text-blue-700 text-xl">
                                             S/ {Math.abs(f.monto).toFixed(2)}
@@ -168,36 +136,32 @@ const GuiaRemision = () => {
                         <div className="flex flex-col justify-center items-center h-full">
                             <img
                                 src="/assets/personaje.png"
-                                alt="Sin Guia de Remision"
+                                alt="Sin Guias de Remision"
                                 className="mx-auto mb-4 w-48"
                             />
                             <p className="text-gray-600">
-                                No se encontraron Guia de Remision realizadas en esta fecha
+                                No se encontraron guias de remision en esta fecha
                             </p>
                         </div>
                     )
                 ) : (
                     <div className="flex justify-center items-center h-full">
                         <p className="text-gray-600">
-                            Seleccione una fecha para ver las Guias de Remision.
+                            Seleccione una fecha para ver las guias de remision.
                         </p>
                     </div>
                 )}
             </div>
 
-            {/* MODAL DETALLE */}
             {selectedGuiaRemision && (
                 <GuiaRemisionModal
                     f={selectedGuiaRemision}
-                    onClose={() => setSelectedGuiaRemision(false)} // (respetando tu lógica)
+                    onClose={() => setSelectedGuiaRemision(null)}
                 />
             )}
 
-            {/* MODAL NUEVO */}
             {mostrarNuevo && (
-                <div>
-                    <GuiaRemisionNuevo onClose={() => setMostrarNuevo(false)} />
-                </div>
+                <GuiaRemisionNuevo onClose={() => setMostrarNuevo(false)} />
             )}
         </div>
     );

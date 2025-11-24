@@ -1,11 +1,15 @@
 import { getProductos } from "@services/generadorData";
 import { useEffect, useState } from "react";
-import { CloseIcon } from "@constants/iconsConstants";
+import { CloseIcon } from "@constants/icons";
+import { useSearch } from "@hooks/data";
 
 const AgregarProducoModal = ({ onSelect, onClose }) => {
     const [productos, setProductos] = useState([]);
-    const [busqueda, setBusqueda] = useState("");
-    const [filtrados, setFiltrados] = useState([]);
+
+    const { query, setQuery, filteredItems: filtrados } = useSearch(productos, {
+        searchFields: ['descripcion', 'codigo'],
+        emptyQuery: []
+    });
 
     useEffect(() => {
         const cargarProductos = async () => {
@@ -15,35 +19,18 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
         cargarProductos();
     }, []);
 
-    useEffect(() => {
-        const query = busqueda.toLowerCase().trim();
-        if (!query) {
-            setFiltrados([]);
-            return;
-        }
-        const resultado = productos.filter(
-            (prod) =>
-                prod.descripcion.toLowerCase().includes(query) ||
-                (prod.codigo && String(prod.codigo).toLowerCase().includes(query))
-        );
-        setFiltrados(resultado);
-    }, [busqueda, productos]);
-
     return (
         <div
             className="z-50 fixed inset-0 flex justify-center items-center"
             role="dialog"
             aria-modal="true"
         >
-            {/* overlay */}
             <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
-            {/* modal */}
             <div
                 className="z-10 relative bg-white shadow-2xl rounded-xl w-[min(820px,94vw)] max-h-[88vh] overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* header */}
                 <div className="flex justify-between items-center px-5 py-4 border-b">
                     <h3 className="font-semibold text-gray-800 text-base">
                         Buscar producto / servicio
@@ -57,14 +44,13 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
                     </button>
                 </div>
 
-                {/* search bar */}
                 <div className="bg-gray-50/60 px-5 py-4 border-b">
                     <div className="relative">
                         <input
                             type="text"
                             placeholder="Escribe descripción, código, etc."
-                            value={busqueda}
-                            onChange={(e) => setBusqueda(e.target.value)}
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             className="bg-white px-4 py-2.5 pr-10 border border-gray-300 focus:border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 w-full text-gray-800 placeholder:text-gray-400 text-sm"
                             autoFocus
                         />
@@ -74,10 +60,8 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
                     </div>
                 </div>
 
-                {/* body */}
                 <div className="px-5 py-4 max-h-[62vh] overflow-y-auto">
-                    {/* estado vacío */}
-                    {busqueda.trim() === "" && (
+                    {query.trim() === "" && (
                         <div className="flex flex-col justify-center items-center bg-white px-6 py-10 border border-gray-300 border-dashed rounded-lg text-center">
                             <div className="flex justify-center items-center bg-gray-100 mb-3 rounded-full w-16 h-16 text-gray-400">
                                 <i className="text-2xl pi pi-box" />
@@ -88,8 +72,7 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
                         </div>
                     )}
 
-                    {/* resultados */}
-                    {busqueda.trim() !== "" && (
+                    {query.trim() !== "" && (
                         <>
                             {filtrados.length > 0 ? (
                                 <ul className="space-y-2">
@@ -119,14 +102,13 @@ const AgregarProducoModal = ({ onSelect, onClose }) => {
                                 </ul>
                             ) : (
                                 <div className="bg-white px-4 py-8 border border-gray-200 rounded-lg text-gray-600 text-sm text-center">
-                                    No se encontraron resultados para “{busqueda}”.
+                                    No se encontraron resultados para "{query}".
                                 </div>
                             )}
                         </>
                     )}
                 </div>
 
-                {/* footer (opcional) */}
                 <div className="bg-white px-5 py-3 border-t text-right">
                     <button
                         onClick={onClose}

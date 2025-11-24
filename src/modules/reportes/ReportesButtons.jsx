@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { menuItemsReportes } from "@constants/menuItemsConstants";
-import { menuActionsReportes } from "@utils/menuActions";
+import { menuItemsReportes } from "@constants/menuItems";
+import { menuActionsReportes } from "@utils/navigation/menuActions";
 import { useNavigate } from "react-router-dom";
 
 const ReportesButtons = () => {
@@ -16,14 +16,11 @@ const ReportesButtons = () => {
                 it?.description?.toLowerCase().includes(q)
         );
     }, [query]);
-    
     return (
         <div>
-            {/* HEADER */}
             <div className="flex justify-between items-center bg-gray-50/60 px-6 py-5 border-b">
                 <h2 className="font-semibold text-gray-800 text-2xl">Reportes</h2>
 
-                {/* Buscador (top-right) */}
                 <div className="relative w-full max-w-xs">
                     <input
                         type="text"
@@ -39,7 +36,7 @@ const ReportesButtons = () => {
                 </div>
             </div>
 
-            {/* GRID DE TARJETAS */}
+
             <div className="flex-1 px-6 py-6 w-full overflow-y-auto">
                 <div className="gap-5 grid sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((item, idx) => {
@@ -53,7 +50,7 @@ const ReportesButtons = () => {
                                 onClick={handleClick}
                                 className="group flex flex-col justify-center items-center bg-white shadow-sm hover:shadow-lg border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 w-full h-40 text-left transition"
                             >
-                                {/* Ícono grande arriba */}
+
                                 <div className="flex justify-center items-center bg-orange-50 mb-3 rounded-full ring-1 ring-orange-100 group-hover:ring-orange-200 w-14 h-14">
                                     {Icon ? (
                                         <Icon className="!text-[28px] text-orange-500" />
@@ -62,7 +59,7 @@ const ReportesButtons = () => {
                                     )}
                                 </div>
 
-                                {/* Título + descripción */}
+
                                 <div className="text-center">
                                     <div className="font-semibold text-gray-800 text-base">
                                         {item.name}
@@ -76,7 +73,7 @@ const ReportesButtons = () => {
                     })}
                 </div>
 
-                {/* Vacío / no hay resultados del filtro */}
+
                 {items.length === 0 && (
                     <div className="flex flex-col justify-center items-center mt-12 text-gray-500">
                         <i className="mb-3 text-3xl pi pi-inbox" />

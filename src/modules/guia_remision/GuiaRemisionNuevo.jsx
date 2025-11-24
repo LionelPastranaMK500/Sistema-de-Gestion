@@ -1,9 +1,9 @@
 import { Calendar } from "primereact/calendar";
-import { configCalendar } from "@utils/configCalendar";
+import { configCalendar } from "@/utils/calendar/configCalendar";
 import { useEffect, useState } from "react";
-import { guiaTabsGuiaRemision } from "@constants/menuItemsConstants";
-import { CloseIcon, RemoveCircleIcon } from "@constants/iconsConstants";
-import AgregarProductoModal from "./items/AgregarProductoModal";
+import { guiaTabsGuiaRemision } from "@constants/menuItems";
+import { CloseIcon, RemoveCircleIcon } from "@constants/icons";
+import AgregarProductoModal from "./components/AgregarProductoModal";
 
 const GuiaRemisionNuevo = ({ onClose }) => {
     const [fechaEnvio, setFechaEnvio] = useState(null);
@@ -18,7 +18,7 @@ const GuiaRemisionNuevo = ({ onClose }) => {
     return (
         <div className="z-10 fixed inset-0 flex justify-center items-center">
             {/* overlay */}
-            <div className="absolute inset-0 bg-black/50"/>
+            <div className="absolute inset-0 bg-black/50" />
             {/* modal */}
             <div className="relative flex flex-col bg-white shadow-2xl rounded-xl w-[min(980px,95vw)] max-h-[92vh] overflow-hidden">
                 {/* header */}

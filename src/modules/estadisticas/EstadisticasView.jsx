@@ -1,23 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 import { Calendar } from "primereact/calendar";
-import { configCalendar } from "@utils/configCalendar";
+import { configCalendar } from "@/utils/calendar/configCalendar";
 import { generarDataFalsa, keyMap } from "@services/generadorData";
-import { contarComprobantes } from "@utils/comprobantesUtils";
+import { contarComprobantes } from "@/utils/documents/comprobantesUtils";
 import {
     buildEmisionesData,
     emisionesChartOptions,
     buildVentasData,
     ventasChartOptions,
-} from "@utils/chartUtils";
+} from "@/utils/charts/chartUtils";
 import { toast } from "react-toastify";
 
 const EstadisticasView = () => {
     const [data, setData] = useState([]);
     const [fechaEmisiones, setFechaEmisiones] = useState(new Date());
     const [fechaVentas, setFechaVentas] = useState(new Date());
-    
-    // Estados separados para los totales
+
     const [totalVentas, setTotalVentas] = useState(0);
     const [totalProformas, setTotalProformas] = useState(0);
 
@@ -47,11 +46,10 @@ const EstadisticasView = () => {
     };
 
     useEffect(() => {
-        // Llamada a la función, que ahora genera 1000 documentos distribuidos en los últimos 6 meses.
-        const datosGenerados = generarDataFalsa(1000); 
+        const datosGenerados = generarDataFalsa(1000);
         setData(datosGenerados);
         configCalendar();
-    }, []); 
+    }, []);
 
     useEffect(() => {
         if (!data.length) return;
@@ -60,7 +58,6 @@ const EstadisticasView = () => {
         if (fechaEmisiones) toast.success("Emisiones actualizadas", { autoClose: 1000 });
     }, [fechaEmisiones, data]);
 
-    // ✅ CORRECCIÓN: Calcular ambos totales aquí
     useEffect(() => {
         if (!data.length) return;
         const datosDelMes = filtrarPorFecha(fechaVentas, data);
@@ -70,29 +67,26 @@ const EstadisticasView = () => {
 
         const totalVentasCalculado = ventasDelMes.reduce((acc, cur) => acc + (cur.monto?.total || 0), 0);
         const totalProformasCalculado = proformasDelMes.reduce((acc, cur) => acc + (cur.monto?.total || 0), 0);
-        
+
         setTotalVentas(totalVentasCalculado);
         setTotalProformas(totalProformasCalculado);
-        setDataVentasFiltrada(datosDelMes); // Pasamos todos los datos del mes al gráfico
+        setDataVentasFiltrada(datosDelMes);
 
         if (fechaVentas) toast.success("Ventas actualizadas", { autoClose: 1000 });
     }, [fechaVentas, data]);
-    
+
     const emisionesData = buildEmisionesData(emisiones);
     const ventasData = buildVentasData(dataVentasFiltrada, fechaVentas);
 
     return (
         <div className="flex flex-col w-full h-full p-6">
-            {/* 1. HEADER (Fijo) */}
             <div className="flex-shrink-0 flex justify-between items-center pb-4 border-b">
                 <h2 className="font-bold text-gray-800 text-3xl ml-16">
                     Estadísticas
                 </h2>
             </div>
 
-            {/* 2. CONTENIDO (Con scroll interno) */}
             <div className="flex-1 pt-6 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
-                {/* === EMISIONES === */}
                 <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-xl">
                     <div className="flex justify-between items-center px-5 py-4 border-b">
                         <h3 className="font-semibold text-gray-800 text-lg">Emisiones</h3>
@@ -143,7 +137,6 @@ const EstadisticasView = () => {
                     </div>
                 </div>
 
-                {/* === VENTAS === */}
                 <div className="bg-white shadow-sm mb-6 border border-gray-200 rounded-xl">
                     <div className="flex justify-between items-center px-5 py-4 border-b">
                         <h3 className="font-semibold text-gray-800 text-lg">Ventas</h3>
@@ -172,7 +165,6 @@ const EstadisticasView = () => {
                     </div>
                     <div className="relative px-5 py-6">
                         <div className="top-6 right-6 absolute flex flex-col items-end gap-2 pointer-events-none">
-                            {/* ✅ CORRECCIÓN: Usar los estados correctos */}
                             <span className="bg-cyan-500 shadow px-3 py-1 rounded-md font-bold text-white text-sm">
                                 S/ {totalVentas.toFixed(2)}
                             </span>

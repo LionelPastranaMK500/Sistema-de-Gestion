@@ -1,4 +1,4 @@
-import { CloseIcon } from "@constants/iconsConstants";
+import { CloseIcon } from "@constants/icons";
 
 const GuiaRemisionModal = () => {
     return (

@@ -5,16 +5,14 @@ import {
     KeyboardArrowLeftIcon,
     MoreVertIcon,
     PermIdentityTwoToneIcon
-} from "@constants/iconsConstants";
-import UsuarioModal from "../components/UsuarioModal"; // Importamos el nuevo modal
+} from "@constants/icons";
+import UsuarioModal from "../components/UsuarioModal";
 
 export default function UsuariosView() {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
-
-    // Estado para controlar el modal
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalMode, setModalMode] = useState('add'); // 'add' o 'edit'
+    const [modalMode, setModalMode] = useState('add');
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
@@ -25,14 +23,14 @@ export default function UsuariosView() {
         setUsers(usuariosFicticios);
     }, []);
 
-    // Función para abrir el modal en modo "Agregar"
+
     const handleAddUser = () => {
         setModalMode('add');
         setSelectedUser(null);
         setModalVisible(true);
     };
 
-    // Función para abrir el modal en modo "Editar"
+
     const handleEditUser = (user) => {
         setModalMode('edit');
         setSelectedUser(user);
@@ -42,7 +40,7 @@ export default function UsuariosView() {
     return (
         <>
             <div className="flex flex-col w-full h-full bg-gray-50 overflow-y-auto">
-                {/* Header: Título y botones de acción */}
+
                 <div className="flex justify-between items-center p-6 flex-shrink-0">
                     <div className="flex items-center gap-4">
                         <button
@@ -55,14 +53,14 @@ export default function UsuariosView() {
                         <h2 className="text-2xl font-bold text-gray-800">Usuarios</h2>
                     </div>
                     <button
-                        onClick={handleAddUser} 
+                        onClick={handleAddUser}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
                     >
                         AGREGAR
                     </button>
                 </div>
 
-                {/* Contenido: Lista de usuarios */}
+
                 <div className="flex-1 px-6">
                     <div className="flex px-6 py-3">
                         <div className="w-1/2 font-semibold text-gray-500 text-sm">CUENTA</div>
@@ -83,7 +81,7 @@ export default function UsuariosView() {
                                 <div className="w-1/2 flex items-center justify-between">
                                     <p className="font-medium text-gray-700">{user.rol}</p>
                                     <button
-                                        onClick={() => handleEditUser(user)} 
+                                        onClick={() => handleEditUser(user)}
                                         className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                                         aria-label="Más opciones"
                                     >

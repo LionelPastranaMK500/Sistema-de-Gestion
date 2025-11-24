@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { Menu } from "primereact/menu";
-import { componentsVentas } from "@constants/menuItemsConstants";
+import { componentsVentas } from "@constants/menuItems";
 import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
-import { MenuIcon } from "@constants/iconsConstants";
+import { MenuIcon } from "@constants/icons";
 
 const VentasModal = () => {
     const [modals, setModals] = useState({});
@@ -22,19 +22,6 @@ const VentasModal = () => {
 
     const inputItems = componentsVentas.filter((c) => c.isInput);
     const otrosModalItems = componentsVentas
-        .filter((c) => !c.isInput) // Guía incluida aquí
-        .map(({ name, action }) => ({
-            label: name,
-            command: () => setModals((prev) => ({ ...prev, [action]: true })),
-        }));
-
-    // 👉 CLASES UNIFICADAS (misma altura/estilo para TODOS)
-    const BTN_CLASS =
-        "w-full h-12 rounded-md bg-blue-600 px-4 text-sm font-medium text-white " +
-        "flex items-center justify-center gap-2 leading-none transition hover:bg-blue-700";
-    const INPUT_CLASS =
-        "w-full h-12 rounded-md border border-gray-300 px-3 text-sm outline-none " +
-        "ring-2 ring-transparent focus:ring-blue-400";
 
     const renderModal = (action) => {
         switch (action) {
@@ -66,9 +53,7 @@ const VentasModal = () => {
 
     return (
         <div className="col-span-4 w-full">
-            {/* 4 columnas simétricas; estiro hijos para igualar alturas */}
             <div className="items-stretch gap-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-                {/* Botones tipo input (PLACA, O. COMPRA, OBSERVACIONES, D. ADICIONALES) */}
                 {inputItems.map(({ name, action, placeholder }) => (
                     <div key={action} className="h-full">
                         {inlineInputs[action] ? (
@@ -92,7 +77,6 @@ const VentasModal = () => {
                     </div>
                 ))}
 
-                {/* Botón OTROS — EXACTAMENTE MISMAS DIMENSIONES */}
                 <div className="relative h-full">
                     <Menu model={otrosModalItems} popup ref={menuRef} />
                     <button
@@ -100,13 +84,11 @@ const VentasModal = () => {
                         className={BTN_CLASS}
                     >
                         OTROS
-                        {/* Limito el tamaño del ícono para no variar la altura */}
                         <MenuIcon className="w-4 h-4" />
                     </button>
                 </div>
             </div>
 
-            {/* Montaje de modales */}
             {componentsVentas
                 .filter((c) => !c.isInput)
                 .map(({ action }) => (

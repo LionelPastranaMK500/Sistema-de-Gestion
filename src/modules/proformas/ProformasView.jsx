@@ -4,42 +4,27 @@ import {
     AccessTimeTwoToneIcon,
     KeyboardArrowLeftIcon,
     KeyboardArrowRightIcon,
-} from "@constants/iconsConstants";
-import { useState, useEffect, useRef } from "react";
-import { configCalendar } from "@utils/configCalendar";
+} from "@constants/icons";
+import { useState, useEffect } from "react";
+import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
 import ProformasModal from "./ProformasModal";
-import { menuItemsProformas } from "@constants/menuItemsConstants";
+import { menuItemsProformas } from "@constants/menuItems";
+import { useDateFilter } from "@hooks/data";
 
 const ProformasView = () => {
-    const [proformas] = useState([]); // sin cambios de data ni lógica
+    const [proformas] = useState([]);
     const [showConfig, setShowConfig] = useState(false);
     const [selectedProformas, setSelectedProformas] = useState(null);
-    const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
 
-    const calendarRef = useRef(null);
-
-    const getTituloFecha = (fecha) => {
-        if (!fecha) return "Proformas";
-        const d = new Date(fecha);
-        const diaSemana = d.toLocaleDateString("es-ES", { weekday: "long" });
-        const dia = d.getDate(); 
-        const mes = d.toLocaleDateString("es-ES", { month: "long" }); 
-        const anio = d.getFullYear(); 
-        const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-        return `${cap(diaSemana)} » ${dia} ${cap(mes)} ${anio}`;
-    };
-
-    const proformasFiltradas = fechaSeleccionada
-        ? proformas.filter((f) => {
-            const fechaProforma = new Date(f.fecha);
-            return (
-                fechaProforma.getDate() === fechaSeleccionada.getDate() &&
-                fechaProforma.getMonth() === fechaSeleccionada.getMonth() &&
-                fechaProforma.getFullYear() === fechaSeleccionada.getFullYear()
-            );
-        })
-        : [];
+    const {
+        fechaSeleccionada,
+        setFechaSeleccionada,
+        filteredItems: proformasFiltradas,
+        moverDia,
+        getTituloFecha,
+        calendarRef
+    } = useDateFilter(proformas);
 
     const formatoFechaHora = (fechaISO) => {
         if (!fechaISO) return "";
@@ -60,26 +45,14 @@ const ProformasView = () => {
         configCalendar();
     }, []);
 
-    // === Nuevo: mover día (igual que en Facturas) ===
-    const moverDia = (cantidad) => {
-        setFechaSeleccionada((prev) => {
-            const fechaBase = prev ? new Date(prev) : new Date();
-            fechaBase.setDate(fechaBase.getDate() + cantidad);
-            return fechaBase;
-        });
-    };
-
     return (
         <div className="flex flex-col w-full h-screen">
-            {/* HEADER */}
             <div className="flex justify-between items-center px-6 py-4 border-b">
                 <h2 className="font-bold text-gray-800 text-2xl">
-                    {getTituloFecha(fechaSeleccionada)}
+                    {getTituloFecha("Proformas")}
                 </h2>
 
-                {/* Acciones */}
                 <div className="flex items-center gap-4">
-                    {/* Flecha izquierda */}
                     <button
                         className="hover:bg-gray-200 p-2 rounded"
                         onClick={() => moverDia(-1)}
@@ -88,7 +61,6 @@ const ProformasView = () => {
                         <KeyboardArrowLeftIcon />
                     </button>
 
-                    {/* Calendario anclado al ícono (overlay en body) */}
                     <div className="relative">
                         <Calendar
                             ref={calendarRef}
@@ -108,7 +80,6 @@ const ProformasView = () => {
                         </button>
                     </div>
 
-                    {/* Flecha derecha */}
                     <button
                         className="hover:bg-gray-200 p-2 rounded"
                         onClick={() => moverDia(1)}
@@ -137,7 +108,6 @@ const ProformasView = () => {
                 </div>
             </div>
 
-            {/* CONTENIDO */}
             <div className="flex-1 px-6 py-6 w-full min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
                 {fechaSeleccionada ? (
                     proformasFiltradas.length > 0 ? (
@@ -149,7 +119,6 @@ const ProformasView = () => {
                                     className="flex justify-between items-center bg-white shadow-md hover:shadow-lg px-6 py-5 border border-gray-250 rounded-xl transition cursor-pointer"
                                     style={{ minHeight: "110px" }}
                                 >
-                                    {/* Izquierda */}
                                     <div className="flex flex-col gap-1 text-gray-700 text-base">
                                         <p className="font-bold text-gray-900 text-lg">
                                             {f.tDocumento} » {f.numero}
@@ -166,7 +135,6 @@ const ProformasView = () => {
                                         </p>
                                     </div>
 
-                                    {/* Derecha */}
                                     <div className="text-right">
                                         <p className="font-extrabold text-blue-700 text-xl">
                                             S/ {Math.abs(f.monto).toFixed(2)}
@@ -196,7 +164,6 @@ const ProformasView = () => {
                 )}
             </div>
 
-            {/* MODAL PROFORMA */}
             {selectedProformas && (
                 <ProformasModal
                     f={selectedProformas}

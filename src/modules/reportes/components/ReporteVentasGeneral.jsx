@@ -1,4 +1,3 @@
-// src/modules/reportes/items/ReporteVentasGeneral.jsx
 import { useState, useEffect, useMemo } from "react";
 import { Dialog } from "primereact/dialog";
 import { DataTable } from "primereact/datatable";
@@ -16,6 +15,7 @@ import { getActiveCompany, getActiveUser } from "@services/auth/authServices";
 import { handleReportes } from "@services/reportes/reportesLogic";
 import { getClientes } from "@services/generadorData";
 import { buildExcel } from "@services/reportes/excelBuilder";
+import { useFilterState } from "@hooks/data";
 
 const ReporteVentasGeneral = () => {
     const location = useLocation();
@@ -34,7 +34,7 @@ const ReporteVentasGeneral = () => {
         return { start, end };
     };
 
-    const [filter, setFilter] = useState({
+    const { filters: filter, updateFilter, setFilters: setFilter } = useFilterState({
         tipo: "all",
         moneda: "all",
         sucursal: "all",
@@ -217,14 +217,11 @@ const ReporteVentasGeneral = () => {
             return (
                 <div className="p-5">
                     <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-                        {/* Header Filtros */}
                         <div className="px-6 py-4 border-b border-slate-200">
                             <h3 className="text-slate-800 font-semibold text-lg">Filtros</h3>
                         </div>
 
-                        {/* Body Filtros */}
                         <div className="px-6 py-5 grid grid-cols-1 md:grid-cols-2 gap-5">
-                            {/* Tipo */}
                             <div>
                                 <label className="block text-[13px] font-semibold text-slate-700 mb-2">
                                     Tipo de comprobante
@@ -232,7 +229,7 @@ const ReporteVentasGeneral = () => {
                                 <Dropdown
                                     value={filter.tipo}
                                     options={tipoOptions}
-                                    onChange={(e) => setFilter({ ...filter, tipo: e.value })}
+                                    onChange={(e) => updateFilter('tipo', e.value)}
                                     placeholder="Selecciona tipo"
                                     className="
                     w-full
@@ -246,7 +243,6 @@ const ReporteVentasGeneral = () => {
                                 />
                             </div>
 
-                            {/* Moneda */}
                             <div>
                                 <label className="block text-[13px] font-semibold text-slate-700 mb-2">
                                     Moneda
@@ -254,7 +250,7 @@ const ReporteVentasGeneral = () => {
                                 <Dropdown
                                     value={filter.moneda}
                                     options={monedaOptions}
-                                    onChange={(e) => setFilter({ ...filter, moneda: e.value })}
+                                    onChange={(e) => updateFilter('moneda', e.value)}
                                     placeholder="Selecciona moneda"
                                     className="
                     w-full
@@ -268,7 +264,6 @@ const ReporteVentasGeneral = () => {
                                 />
                             </div>
 
-                            {/* Sucursal */}
                             <div>
                                 <label className="block text-[13px] font-semibold text-slate-700 mb-2">
                                     Sucursal
@@ -276,7 +271,7 @@ const ReporteVentasGeneral = () => {
                                 <Dropdown
                                     value={filter.sucursal}
                                     options={sucursalOptions}
-                                    onChange={(e) => setFilter({ ...filter, sucursal: e.value })}
+                                    onChange={(e) => updateFilter('sucursal', e.value)}
                                     placeholder="Selecciona sucursal"
                                     className="
                     w-full
@@ -290,7 +285,6 @@ const ReporteVentasGeneral = () => {
                                 />
                             </div>
 
-                            {/* Usuario */}
                             <div>
                                 <label className="block text-[13px] font-semibold text-slate-700 mb-2">
                                     Usuario
@@ -298,7 +292,7 @@ const ReporteVentasGeneral = () => {
                                 <Dropdown
                                     value={filter.usuario}
                                     options={usuarioOptions}
-                                    onChange={(e) => setFilter({ ...filter, usuario: e.value })}
+                                    onChange={(e) => updateFilter('usuario', e.value)}
                                     placeholder="Selecciona usuario"
                                     className="
                     w-full
@@ -320,7 +314,7 @@ const ReporteVentasGeneral = () => {
                                 <Dropdown
                                     value={filter.cliente}
                                     options={clienteOptions}
-                                    onChange={(e) => setFilter({ ...filter, cliente: e.value })}
+                                    onChange={(e) => updateFilter('cliente', e.value)}
                                     placeholder="Selecciona cliente"
                                     filter
                                     showClear
@@ -343,7 +337,7 @@ const ReporteVentasGeneral = () => {
                                 </label>
                                 <Calendar
                                     value={filter.fechaInicio}
-                                    onChange={(e) => setFilter({ ...filter, fechaInicio: e.value })}
+                                    onChange={(e) => updateFilter('fechaInicio', e.value)}
                                     placeholder="Fecha inicio"
                                     dateFormat="dd/mm/yy"
                                     maxDate={today}
@@ -363,7 +357,7 @@ const ReporteVentasGeneral = () => {
                                 </label>
                                 <Calendar
                                     value={filter.fechaFin}
-                                    onChange={(e) => setFilter({ ...filter, fechaFin: e.value })}
+                                    onChange={(e) => updateFilter('fechaFin', e.value)}
                                     placeholder="Fecha fin"
                                     dateFormat="dd/mm/yy"
                                     maxDate={today}
@@ -378,7 +372,6 @@ const ReporteVentasGeneral = () => {
                                 />
                             </div>
 
-                            {/* Botón */}
                             <div className="md:col-span-2 pt-1">
                                 <Button
                                     label="GENERAR REPORTE"

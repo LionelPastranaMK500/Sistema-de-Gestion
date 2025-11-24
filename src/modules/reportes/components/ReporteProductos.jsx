@@ -17,13 +17,12 @@ const ReporteProductos = () => {
     const navigate = useNavigate();
 
     const [visible, setVisible] = useState(true);
-    const [mode, setMode] = useState(null); // null | "visualize"
+    const [mode, setMode] = useState(null);
     const [sheetsData, setSheetsData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // Si cambian de ruta (entran otra vez a este reporte) limpiamos y reabrimos
     useEffect(() => {
         setVisible(true);
         setSheetsData({});
@@ -31,10 +30,10 @@ const ReporteProductos = () => {
         setMode(null);
     }, [location.pathname]);
 
-    // Carga de datos (solo si está visible y AÚN no tenemos datos)
+
     useEffect(() => {
         if (!visible) return;
-        if (Object.keys(sheetsData).length > 0) return; // evita recargas innecesarias
+        if (Object.keys(sheetsData).length > 0) return;
 
         const loadData = async () => {
             setIsLoading(true);
@@ -79,7 +78,7 @@ const ReporteProductos = () => {
     };
 
     const onHide = () => {
-        // Al cerrar el diálogo sí limpiamos todo y volvemos a /reportes
+
         setVisible(false);
         setMode(null);
         setSheetsData({});
@@ -105,11 +104,11 @@ const ReporteProductos = () => {
             );
         }
 
-        // Pantalla inicial (tarjetas)
+
         if (!mode) {
             return (
                 <div className="flex justify-center items-center gap-10 min-h-[calc(100vh-180px)]">
-                    {/* VISTA PREVIA */}
+
                     <button
                         type="button"
                         onClick={() => setMode("visualize")}
@@ -119,7 +118,6 @@ const ReporteProductos = () => {
                         <span className="font-semibold tracking-wide">VISTA PREVIA</span>
                     </button>
 
-                    {/* DESCARGAR */}
                     <button
                         type="button"
                         onClick={handleExportExcel}
@@ -133,7 +131,6 @@ const ReporteProductos = () => {
             );
         }
 
-        // Modo visualización
         if (mode === "visualize") {
             return (
                 <div className="pt-2">

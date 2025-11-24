@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu"; 
-import { MoreVertIcon, KeyboardArrowLeftIcon } from "@constants/iconsConstants";
+import { MoreVertIcon, KeyboardArrowLeftIcon } from "@constants/icons";
 import { getAlmacenes } from "@services/generadorData";
 import { toast } from "react-toastify";
 import AlmacenModal from "../components/AlmacenModal"; 

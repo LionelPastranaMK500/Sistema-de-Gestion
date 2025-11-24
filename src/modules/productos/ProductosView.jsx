@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DataView } from 'primereact/dataview';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
@@ -8,27 +8,22 @@ import {
   SearchIcon,
   KeyboardArrowLeftIcon,
   KeyboardArrowRightIcon,
-} from '@constants/iconsConstants';
+} from '@constants/icons';
+import { useSearch, usePagination } from '@hooks/data';
 
 const ProductosView = () => {
-  const [filteredProductos, setFilteredProductos] = useState([]);
-  const [search, setSearch] = useState('');
+  const { searchQuery, filteredItems, handleSearch } = useSearch(
+    productos,
+    ['descripcion', 'codigo']
+  );
+
+  const { paginatedItems, currentPage, totalPages, nextPage, prevPage, hasNext, hasPrev } = usePagination(
+    filteredItems,
+    20
+  );
 
   const defaultImage =
-    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...'; // tu base64 intacto
-
-  useEffect(() => {
-    setFilteredProductos(productos);
-  }, []);
-
-  const onSearchChange = (e) => {
-    const query = e.value || '';
-    setSearch(query);
-    const filtered = productos.filter((p) =>
-      (p.descripcion || '').toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredProductos(filtered);
-  };
+    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...';
 
   const itemTemplate = (p, i) => {
     if (!p) return null;
@@ -37,16 +32,13 @@ const ProductosView = () => {
         key={`${p.codigo}-${i}`}
         className="bg-white shadow-sm hover:shadow-md px-4 py-2.5 border border-gray-200 rounded-xl transition"
       >
-        {/* fila principal (altura contenida) */}
         <div className="flex items-center gap-4 min-h-[65px]">
-          {/* imagen (un poco más grande) */}
           <img
             src={defaultImage}
             alt={p.descripcion}
             className="rounded-md ring-1 ring-gray-200 w-14 h-14 object-cover"
           />
 
-          {/* info centro */}
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-[13px] text-gray-800 truncate">
               {p.descripcion}
@@ -72,7 +64,6 @@ const ProductosView = () => {
             </div>
           </div>
 
-          {/* acciones derecha: precio + stock (columna) y more aparte */}
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-end gap-1">
               <span className="bg-green-50 px-2 py-0.5 rounded-md font-extrabold text-[11px] text-emerald-600">
@@ -109,7 +100,6 @@ const ProductosView = () => {
 
   return (
     <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-screen overflow-hidden">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="ml-5 font-bold text-gray-800 text-xl">Productos / Servicios</h2>
         <div className="flex items-center gap-2">
@@ -125,46 +115,49 @@ const ProductosView = () => {
         </div>
       </div>
 
-      {/* Contenido scrollable */}
       <div className="flex flex-col flex-1 min-h-0">
-        {/* Buscador + chevrons (MISMO ESTILO) */}
         <div className="flex justify-between items-center gap-3 mb-4">
           <div className="relative w-full max-w-xl">
-             <SearchIcon className="top-1/2 left-3 z-10 absolute !w-5 !h-5 text-gray-400 -translate-y-1/2 pointer-events-none" />
+            <SearchIcon className="top-1/2 left-3 z-10 absolute !w-5 !h-5 text-gray-400 -translate-y-1/2 pointer-events-none" />
             <AutoComplete
-              value={search}
-              onChange={onSearchChange}
+              value={searchQuery}
+              onChange={handleSearch}
               suggestions={[]}
               dropdown={false}
               placeholder="Buscar..."
               emptyMessage="No se encontraron productos"
               className="w-full"
-              // altura aumentada + espacio para la lupa
               inputClassName="w-full rounded-md border border-gray-300 px-3 py-4 pl-10 text-sm focus:ring-2 focus:ring-blue-400"
             />
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
+              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Anterior"
               title="Anterior"
+              onClick={prevPage}
+              disabled={!hasPrev}
             >
               <KeyboardArrowLeftIcon />
             </button>
+            <span className="text-sm text-gray-600 min-w-[80px] text-center">
+              Página {currentPage} de {totalPages}
+            </span>
             <button
-              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600"
+              className="bg-white hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Siguiente"
               title="Siguiente"
+              onClick={nextPage}
+              disabled={!hasNext}
             >
               <KeyboardArrowRightIcon />
             </button>
           </div>
         </div>
 
-        {/* Lista con scroll */}
         <div className="flex-1 bg-gray-50 p-4 border border-gray-300 rounded-md min-h-0 overflow-y-auto">
-          <DataView value={filteredProductos} listTemplate={listTemplate} layout="list" />
+          <DataView value={paginatedItems} listTemplate={listTemplate} layout="list" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { menuItemsConfig } from "@constants/menuItemsConstants";
-import { menuActionsConfig } from "@utils/menuActions";
+import { menuItemsConfig } from "@constants/menuItems";
+import { menuActionsConfig } from "@utils/navigation/menuActions";
 import { useNavigate } from "react-router-dom";
 
 const ConfiguracionButtons = ({ query }) => {
@@ -14,7 +14,7 @@ const ConfiguracionButtons = ({ query }) => {
                 it?.name?.toLowerCase().includes(q) ||
                 it?.description?.toLowerCase().includes(q)
         );
-    }, [query]);
+    }, [query, menuItemsConfig]);
 
     return (
         <div className="flex-1 px-6 py-6 w-full overflow-y-auto">
