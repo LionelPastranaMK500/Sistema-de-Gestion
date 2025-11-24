@@ -1,4 +1,3 @@
-// src/components/Sidebar/Sidebar.jsx
 import { useEffect, useState } from "react";
 import {
   MoreVertIcon,
@@ -7,14 +6,14 @@ import {
   PeopleIcon,
   LockIcon,
   ExitToAppIcon,
-} from "@constants/iconsConstants";
-import { menuItems } from "@constants/menuItemsConstants";
-import { buttonColors } from "@constants/colorsConstants";
+} from "@constants/icons";
+import { menuItems } from "@constants/menuItems";
+import { buttonColors } from "@constants/colors";
 import { syncActiveCompany } from "@services/auth/authServices";
 import { handleLogout } from "@services/auth/authLogic";
 import { useNavigate } from "react-router-dom";
-import { menuActions } from "@utils/menuActions";
-import { useSidebar } from "@utils/sidebarState";
+import { menuActions } from "@utils/navigation/menuActions";
+import { useSidebar } from "@utils/navigation/sidebarState";
 
 export default function Sidebar() {
   const [showConfig, setShowConfig] = useState(false);
@@ -25,9 +24,8 @@ export default function Sidebar() {
   const [sucursales, setSucursales] = useState([]);
   const [empresa, setEmpresa] = useState("");
   const [sucursal, setSucursal] = useState("");
-  const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${
-    user.apellidoPaterno?.[0] || ""
-  }`;
+  const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${user.apellidoPaterno?.[0] || ""
+    }`;
 
   const handleMenuAction = (action) => {
     if (menuActions[action]) menuActions[action]({ navigate });
@@ -56,7 +54,13 @@ export default function Sidebar() {
     <aside className="grid grid-rows-[auto,auto,1fr] w-full h-full overflow-hidden bg-blue-800 text-white">
       {/* Logo + config */}
       <div className="relative flex items-center p-6">
-        <img src="/images/Logo_WolfFur.avif" alt="Logo" />
+        <img
+          src="/images/Logo_WolfFur.webp"
+          alt="Logo"
+          onClick={() => navigate("/dashboard")}
+          className="cursor-pointer"
+          title="Ir a Dashboard"
+        />
         <MoreVertIcon
           onClick={() => setShowConfig(!showConfig)}
           className="absolute right-6 top-6 cursor-pointer text-white"
@@ -209,17 +213,15 @@ export default function Sidebar() {
                 flex items-center justify-center rounded-lg p-4 shadow hover:opacity-90 transition`}
             >
               <div
-                className={`${
-                  isWide
-                    ? "flex items-center gap-3"
-                    : "flex flex-col items-center"
-                }`}
+                className={`${isWide
+                  ? "flex items-center gap-3"
+                  : "flex flex-col items-center"
+                  }`}
               >
                 <Icon style={{ fontSize: isWide ? "1.6rem" : "2rem" }} />
                 <span
-                  className={`${
-                    isWide ? "text-base md:text-lg" : "mt-2 text-sm"
-                  } font-semibold text-white text-center`}
+                  className={`${isWide ? "text-base md:text-lg" : "mt-2 text-sm"
+                    } font-semibold text-white text-center`}
                 >
                   {item.name}
                 </span>

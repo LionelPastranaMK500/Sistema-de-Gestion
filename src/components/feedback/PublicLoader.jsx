@@ -1,4 +1,3 @@
-// src/components/Loaders/PublicLoader.jsx
 import React, { forwardRef } from "react";
 import "@styles/PublicLoader.css";
 
