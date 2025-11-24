@@ -1,4 +1,4 @@
-import * as I from "./iconsConstants";
+import * as I from "./icons";
 
 export const menuItems = [
     { name: "Estadisticas", action: "estadistica", icon: I.PollIcon },
@@ -31,7 +31,7 @@ export const menuItemsEmpresaSidebar = [
 
 export const menuItemsUsuarioSidebar = [
     { name: "Registrar nueva empresa", action: "registrar_empresa", icon: I.AddIcon },
-    { name: " Cambiar contraseña", action: "cambiar_contraseña", icon: I.LockIcon },   
+    { name: "Cambiar contraseña", action: "cambiar_contraseña", icon: I.LockIcon },
 ];
 
 export const componentsVentas = [
@@ -52,7 +52,7 @@ export const menuItemsReportes = [
 
 export const menuItemsConfig = [
     { name: "Empresa", action: "configurar_empresa", icon: I.BusinessIcon },
-    { name: "Usuarios", action: "configurar_usuario", icon: I.PeopleAltIcon },
+    { name: "Usuarios", action: "configurar usuario", icon: I.PeopleAltIcon },
     { name: "Almacenes", action: "configurar_almacen", icon: I.InventoryIcon },
     { name: "Sucursales", action: "configurar_sucursal", icon: I.StoreIcon },
     { name: "Impresión", action: "configurar_impresion", icon: I.LocalPrintshopIcon },

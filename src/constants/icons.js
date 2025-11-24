@@ -37,7 +37,7 @@ export {
    PermIdentityTwoToneIcon,
    AccessTimeTwoToneIcon,
    KeyboardArrowLeftIcon,
-   KeyboardArrowRightIcon, 
+   KeyboardArrowRightIcon,
    PollIcon,
    PeopleIcon,
    InventoryIcon,
