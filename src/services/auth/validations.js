@@ -1,4 +1,4 @@
-import { patternEmail, patternClave } from "@constants/patternConstants";
+import { patternEmail, patternClave } from "@constants/patterns";
 
 export const validarLogin = (datos) => {
     const err = {};

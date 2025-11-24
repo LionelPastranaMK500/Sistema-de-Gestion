@@ -11,19 +11,19 @@ export async function buildExcel(sheetsData, fileName, onFinish) {
   const workbook = new ExcelJS.Workbook();
 
   // Paleta
-  const COLOR_BRAND   = "1857C3"; // Azul banda / título
-  const COLOR_HEADER  = "60A5FA"; // Azul claro/celeste encabezados
-  const COLOR_WHITE   = "FFFFFF";
-  const COLOR_GRID    = "E5E7EB"; // Bordes gris claro
+  const COLOR_BRAND = "1857C3"; // Azul banda / título
+  const COLOR_HEADER = "60A5FA"; // Azul claro/celeste encabezados
+  const COLOR_WHITE = "FFFFFF";
+  const COLOR_GRID = "E5E7EB"; // Bordes gris claro
   const COLOR_ROW_ALT = "F7F9FC"; // Zebra
-  const COLOR_TEXT    = "111827"; // Texto
+  const COLOR_TEXT = "111827"; // Texto
   const COLOR_ANULADO = "FEE2E2"; // Fila anulada (fondo)
-  const BORDER_THIN   = { style: "thin", color: { argb: COLOR_GRID } };
+  const BORDER_THIN = { style: "thin", color: { argb: COLOR_GRID } };
 
   for (const tipo of Object.keys(sheetsData)) {
     const sheetData = sheetsData[tipo] || [];
-    const headers   = sheetData[2] || [];
-    const lastCol   = Math.max(headers.length, 1);
+    const headers = sheetData[2] || [];
+    const lastCol = Math.max(headers.length, 1);
 
     const worksheet = workbook.addWorksheet(tipo.slice(0, 31), {
       properties: { defaultRowHeight: 18 },
@@ -43,7 +43,7 @@ export async function buildExcel(sheetsData, fileName, onFinish) {
     try {
       const res = await fetch(logo);
       const blob = await res.blob();
-      const buf  = await blob.arrayBuffer();
+      const buf = await blob.arrayBuffer();
       const imgId = workbook.addImage({ buffer: buf, extension: "png" });
       // Aproximado para encajar con 85px de alto de fila
       worksheet.addImage(imgId, {
@@ -83,9 +83,9 @@ export async function buildExcel(sheetsData, fileName, onFinish) {
         const header = headers[colIndex - 1] || "";
         const H = header.toUpperCase();
 
-        const isMoney      = /TOTAL|PRECIO|IMPORTE|SUBTOTAL|MONTO/.test(H);
-        const isDate       = /FECHA/.test(H);
-        const isNumberish  = isMoney || /CANTIDAD|NRO|N°|NUMERO|NÚMERO|CODIGO|CÓDIGO/.test(H);
+        const isMoney = /TOTAL|PRECIO|IMPORTE|SUBTOTAL|MONTO/.test(H);
+        const isDate = /FECHA/.test(H);
+        const isNumberish = isMoney || /CANTIDAD|NRO|N°|NUMERO|NÚMERO|CODIGO|CÓDIGO/.test(H);
 
         cell.font = { name: "Inter", size: 11, color: { argb: COLOR_TEXT } };
         cell.alignment = {

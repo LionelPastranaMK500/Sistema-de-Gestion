@@ -1,6 +1,6 @@
 import { loginUser, registerUser, loginSunatUser, logoutUser, requestResetPassword, verifyResetCode, resetPassword } from "@services/auth/authServices";
-import { notifySuccess, notifyError } from "@utils/notify";
-import { redirectWithDelay } from "@utils/redirectWithDelay";
+import { notifySuccess, notifyError } from "@utils/notifications/notify";
+import { redirectWithDelay } from "@utils/navigation/redirectWithDelay";
 // import axios from "axios";
 
 export const handleRegister = async (form, navigate) => {
@@ -42,7 +42,7 @@ export const handleLogin = async (form, navigate) => {
         }
 
         notifySuccess(res.message);
-        redirectWithDelay(navigate, "/welcome");
+        redirectWithDelay(navigate, "/dashboard");
 
         return { success: true, user: res.user };
     } catch {

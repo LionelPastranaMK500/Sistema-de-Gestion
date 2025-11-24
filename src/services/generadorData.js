@@ -157,7 +157,6 @@ export const productos = [
     { codigo: '040', unidad: 'UND', descripcion: 'Sistema de lubricación automática', precio: 500, isc: 0 },
 ];
 
-// Añadimos una lista de usuarios ficticios
 export const usuarios = [
     {
         nombres: "Juan",
@@ -228,12 +227,12 @@ export const almacenesData = [
     {
         id: "ALM001",
         nombre: "LUBRICANTES CLAUDIA",
-        direccion: "-", // Coincide con la imagen de referencia
+        direccion: "-",
     },
     {
         id: "ALM002",
         nombre: "SUCURSAL",
-        direccion: "-", // Coincide con la imagen de referencia
+        direccion: "-",
 
     },
 ];
@@ -257,8 +256,6 @@ export const impresionConfigData = {
     }
 };
 
-// --- FIN NUEVO ---
-
 export const getTiposComprobante = () => tiposComprobante;
 export const getSeries = (tipo) => {
     const company = getActiveCompany();
@@ -281,21 +278,18 @@ export const generarDataFalsa = (cantidad = 1000, mesesAtras = 6) => {
 
     const today = new Date();
     today.setHours(23, 59, 59, 999);
-    
-    // Determinar la fecha de inicio (X meses atrás)
+
     const startDate = new Date();
     startDate.setMonth(today.getMonth() - mesesAtras);
-    startDate.setDate(1); // Empezar siempre el día 1 de ese mes
+    startDate.setDate(1);
     startDate.setHours(0, 0, 0, 0);
 
     const totalDays = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    // Calculamos una base promedio por día para asegurar que la cantidad se cumpla.
     const baseDocsPerDay = Math.ceil(cantidad / totalDays);
 
     let currentDate = new Date(startDate);
 
     while (currentDate <= today) {
-        // Variar la cantidad de documentos por día (promedio +/- 3)
         const numDocsToday = Math.max(1, Math.floor(baseDocsPerDay + (Math.random() * 6 - 3)));
 
         for (let i = 0; i < numDocsToday; i++) {
@@ -323,9 +317,8 @@ export const generarDataFalsa = (cantidad = 1000, mesesAtras = 6) => {
             state = resolverEstado(state);
 
             const tipoOperacion = i % 2 === 0 ? "venta" : "compra";
-            
-            // Variar la hora del día (ej. entre 8 am y 8 pm)
-            const horaAleatoria = Math.floor(Math.random() * 12) + 8; 
+
+            const horaAleatoria = Math.floor(Math.random() * 12) + 8;
             const fechaConHora = new Date(currentDate.getTime());
             fechaConHora.setHours(horaAleatoria, Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
 
@@ -350,11 +343,10 @@ export const generarDataFalsa = (cantidad = 1000, mesesAtras = 6) => {
                 usuario: usuarioActivo.correo
             });
         }
-        
-        // Avanzar al siguiente día
+
         currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     console.log(`Generados ${data.length} documentos falsos en ${mesesAtras} meses.`);
     return data;
 };
