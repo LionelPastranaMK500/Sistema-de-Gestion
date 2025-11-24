@@ -4,21 +4,31 @@ import { persist } from 'zustand/middleware';
 const useVentaStore = create(
     persist(
         (set) => ({
-            // Estado inicial de los campos que quieres guardar
             placa: '',
             ordenCompra: '',
             observaciones: '',
+            condicionPago: { condicion: '', metodo: '', referencia: '' },
+            datosAdicionales: [],
+            guiasRemision: [],
 
-            // Funciones para actualizar cada campo
             setPlaca: (nuevaPlaca) => set({ placa: nuevaPlaca }),
             setOrdenCompra: (nuevaOrden) => set({ ordenCompra: nuevaOrden }),
             setObservaciones: (nuevasObservaciones) => set({ observaciones: nuevasObservaciones }),
+            setCondicionPago: (nuevosDatos) => set({ condicionPago: nuevosDatos }),
+            setDatosAdicionales: (nuevosDatos) => set({ datosAdicionales: nuevosDatos }),
+            setGuiasRemision: (nuevosDatos) => set({ guiasRemision: nuevosDatos }),
 
-            // Función extra para limpiar los campos si es necesario
-            limpiarFormularioVenta: () => set({ placa: '', ordenCompra: '', observaciones: '' }),
+            limpiarFormularioVenta: () => set({
+                placa: '',
+                ordenCompra: '',
+                observaciones: '',
+                condicionPago: { condicion: '', metodo: '', referencia: '' },
+                datosAdicionales: [],
+                guiasRemision: []
+            }),
         }),
         {
-            name: 'venta-form-storage', // Nombre único para el guardado en localStorage
+            name: 'venta-form-storage',
         }
     )
 );
