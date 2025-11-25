@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Alias (Importante para tus imports con @) */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@constants/*": ["src/constants/*"],
+      "@components/*": ["src/components/*"],
+      "@modules/*": ["src/modules/*"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@cliente/*": ["src/modules/clientes/*"],
+      "@configuracion/*": ["src/modules/configuracion/*"],
+      "@dashboard/*": ["src/modules/dashboard/*"],
+      "@estadistica/*": ["src/modules/estadisticas/*"],
+      "@facturas/*": ["src/modules/facturas/*"],
+      "@productos/*": ["src/modules/productos/*"],
+      "@guias/*": ["src/modules/guia_remision/*"],
+      "@proformas/*": ["src/modules/proformas/*"],
+      "@ventas/*": ["src/modules/ventas/*"],
+      "@reportes/*": ["src/modules/reportes/*"],
+      "@routes/*": ["src/routes/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/styles/*"],
+      "@stores/*": ["src/stores/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
