@@ -1,38 +1,47 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-/**
- * Hook para manejar arrays dinámicos (agregar, eliminar, actualizar items)
- * @param {Array} initialItems - Items iniciales
- * @param {Function} generateId - Función para generar IDs únicos (default: Date.now)
- * @returns {Object} - items, addItem, removeItem, updateItem, setItems, resetItems
- */
-export const useDynamicList = (initialItems = [], generateId = () => Date.now()) => {
-    const [items, setItems] = useState(initialItems);
+export interface DynamicItem {
+  id?: string | number;
+  tempId?: number;
+  [key: string]: any;
+}
 
-    const addItem = useCallback((newItem = {}) => {
-        setItems(prev => [...prev, { ...newItem, tempId: generateId() }]);
-    }, [generateId]);
+export const useDynamicList = <T extends DynamicItem>(
+  initialItems: T[] = [],
+  generateId: () => number = () => Date.now()
+) => {
+  const [items, setItems] = useState<T[]>(initialItems);
 
-    const removeItem = useCallback((id) => {
-        setItems(prev => prev.filter(item => item.tempId !== id));
-    }, []);
+  const addItem = useCallback(
+    (newItem: Partial<T> = {}) => {
+      const itemToAdd = { ...newItem, tempId: generateId() } as T;
+      setItems((prev) => [...prev, itemToAdd]);
+    },
+    [generateId]
+  );
 
-    const updateItem = useCallback((id, field, value) => {
-        setItems(prev => prev.map(item =>
-            item.tempId === id ? { ...item, [field]: value } : item
-        ));
-    }, []);
+  const removeItem = useCallback((id: number) => {
+    setItems((prev) => prev.filter((item) => item.tempId !== id));
+  }, []);
 
-    const resetItems = useCallback(() => {
-        setItems(initialItems);
-    }, [initialItems]);
+  const updateItem = useCallback((id: number, field: keyof T, value: any) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.tempId === id ? { ...item, [field]: value } : item
+      )
+    );
+  }, []);
 
-    return {
-        items,
-        setItems,
-        addItem,
-        removeItem,
-        updateItem,
-        resetItems
-    };
+  const resetItems = useCallback(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
+  return {
+    items,
+    setItems,
+    addItem,
+    removeItem,
+    updateItem,
+    resetItems,
+  };
 };

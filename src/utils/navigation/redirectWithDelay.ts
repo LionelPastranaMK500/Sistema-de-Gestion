@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 
-export function redirectWithDelay(navigate, path, delay = 2500) {
+export function redirectWithDelay(
+  navigate: NavigateFunction,
+  path: string,
+  delay = 2500
+) {
   setTimeout(() => {
     navigate(path);
   }, delay);
 }
-export function delaySkeleton(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+
+export function delaySkeleton(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default function useDelay(ms = 5000) {

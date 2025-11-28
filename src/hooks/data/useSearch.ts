@@ -1,39 +1,41 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo } from "react";
 
-/**
- * Hook para búsqueda y filtrado de datos
- * @param {Array} items - Items a buscar
- * @param {Array|Function} searchFields - Campos o función de búsqueda
- * @returns {Object} - searchQuery, filteredItems, handleSearch, setSearchQuery
- */
-export const useSearch = (items, searchFields) => {
-    const [searchQuery, setSearchQuery] = useState('');
+type SearchFunction<T> = (item: T, query: string) => boolean;
+type SearchFields<T> = (keyof T)[] | SearchFunction<T>;
 
-    const filteredItems = useMemo(() => {
-        if (!searchQuery) return items;
+export const useSearch = <T extends Record<string, any>>(
+  items: T[],
+  searchFields: SearchFields<T>
+) => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-        const query = searchQuery.toLowerCase().trim();
+  const filteredItems = useMemo(() => {
+    if (!searchQuery) return items;
 
-        return items.filter(item => {
-            if (typeof searchFields === 'function') {
-                return searchFields(item, query);
-            }
+    const query = searchQuery.toLowerCase().trim();
 
-            return searchFields.some(field =>
-                (item[field] || '').toString().toLowerCase().includes(query)
-            );
-        });
-    }, [items, searchQuery, searchFields]);
+    return items.filter((item) => {
+      if (typeof searchFields === "function") {
+        return searchFields(item, query);
+      }
 
-    const handleSearch = (e) => {
-        const value = e.target?.value ?? e.value ?? e;
-        setSearchQuery(value);
-    };
+      return (searchFields as (keyof T)[]).some((field) =>
+        String(item[field] || "")
+          .toLowerCase()
+          .includes(query)
+      );
+    });
+  }, [items, searchQuery, searchFields]);
 
-    return {
-        searchQuery,
-        setSearchQuery,
-        filteredItems,
-        handleSearch
-    };
+  const handleSearch = (e: any) => {
+    const value = e.target?.value ?? e.value ?? e;
+    setSearchQuery(String(value));
+  };
+
+  return {
+    searchQuery,
+    setSearchQuery,
+    filteredItems,
+    handleSearch,
+  };
 };

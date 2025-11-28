@@ -1,18 +1,22 @@
-import api from './api';
+import api from "../api";
+import { Cliente } from "@/services/generadorData";
 
 export const clientesService = {
-    getAll: (params = {}) => {
-        const query = new URLSearchParams(params).toString();
-        return api.get(`/api/v1/clientes${query ? `?${query}` : ''}`);
-    },
+  getAll: (params: Record<string, string> = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api.get<Cliente[]>(`/api/v1/clientes${query ? `?${query}` : ""}`);
+  },
 
-    create: (clienteData) => api.post('/api/v1/clientes', clienteData),
+  create: (clienteData: Cliente) =>
+    api.post<Cliente>("/api/v1/clientes", clienteData),
 
-    getById: (id) => api.get(`/api/v1/clientes/${id}`),
+  getById: (id: string | number) => api.get<Cliente>(`/api/v1/clientes/${id}`),
 
-    update: (id, clienteData) => api.put(`/api/v1/clientes/${id}`, clienteData),
+  update: (id: string | number, clienteData: Partial<Cliente>) =>
+    api.put<Cliente>(`/api/v1/clientes/${id}`, clienteData),
 
-    delete: (id) => api.delete(`/api/v1/clientes/${id}`),
+  delete: (id: string | number) => api.delete<void>(`/api/v1/clientes/${id}`),
 
-    consultarDocumento: (numero) => api.get(`/api/v1/clientes/consulta?numero=${numero}`),
+  consultarDocumento: (numero: string) =>
+    api.get<Cliente>(`/api/v1/clientes/consulta?numero=${numero}`),
 };

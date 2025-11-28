@@ -1,38 +1,47 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useFormHandler } from "@hooks/useFormHandler";
+import { useFormHandler } from "@/hooks/useFormHandler";
 import {
   handleRequestReset,
   handleVerifyResetCode,
   handleResetPassword,
 } from "@/services/auth/authLogic";
-import { validateResetPassword } from "@/services/auth/validations";
-import { InputOtp } from "primereact/inputotp";
+import {
+  validateResetPassword,
+  ResetPassData,
+} from "@/services/auth/validations";
+import { InputOtp, InputOtpChangeEvent } from "primereact/inputotp";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
 
-  const { values, setValues, err, handleChange, resetForm } = useFormHandler(
-    { correo: "", codigo: "", nuevaClave: "" },
-    (form) => validateResetPassword(form, step)
-  );
+  const initialValues: ResetPassData = {
+    correo: "",
+    codigo: "",
+    nuevaClave: "",
+  };
 
-  const handleSubmitEmail = async (e) => {
+  const { values, setValues, err, handleChange } =
+    useFormHandler<ResetPassData>(initialValues, (form) =>
+      validateResetPassword(form, step)
+    );
+
+  const handleSubmitEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (err?.correo) return;
+    if (err?.correo || !values.correo) return;
 
     const res = await handleRequestReset(values.correo.trim().toLowerCase());
-    if (res.success) {
+    if (res.success && values.correo) {
       setEmail(values.correo.trim().toLowerCase());
       setStep(2);
     }
   };
 
-  const handleSubmitCode = async (e) => {
+  const handleSubmitCode = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (err?.codigo) return;
+    if (err?.codigo || !values.codigo) return;
 
     const res = await handleVerifyResetCode(email, values.codigo.trim());
     if (res.success) {
@@ -40,9 +49,9 @@ const ResetPassword = () => {
     }
   };
 
-  const handleSubmitNewPassword = async (e) => {
+  const handleSubmitNewPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (err?.nuevaClave) return;
+    if (err?.nuevaClave || !values.nuevaClave || !values.codigo) return;
 
     await handleResetPassword(
       email,
@@ -138,21 +147,20 @@ const ResetPassword = () => {
                   value={values.codigo || ""}
                   length={6}
                   autoFocus
-                  inputTemplate={({ events, props }) => (
+                  inputTemplate={(context: any) => (
                     <input
-                      {...events}
-                      {...props}
+                      {...context.events}
+                      {...context.props}
                       type="tel"
                       inputMode="numeric"
                       autoComplete="one-time-code"
                       className="mx-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-10 h-12 text-lg text-center"
                     />
                   )}
-                  onChange={(code) =>
-                    setValues((prev) => ({
+                  onChange={(e: InputOtpChangeEvent) =>
+                    setValues((prev: ResetPassData) => ({
                       ...prev,
-                      codigo:
-                        typeof code === "string" ? code : code?.value || "",
+                      codigo: String(e.value || ""),
                     }))
                   }
                 />

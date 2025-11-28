@@ -1,24 +1,29 @@
-import { validarRegister } from "@/services/auth/validations";
+import { validarRegister, RegisterData } from "@/services/auth/validations";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "@/components/common/ErrorText";
 import { handleRegister } from "@/services/auth/authLogic";
-import { useFormHandler } from "@hooks/useFormHandler";
+import { useFormHandler } from "@/hooks/useFormHandler";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
 
-  const { values, err, handleChange, handleSubmit } = useFormHandler(
-    {
-      nombres: "",
-      apellidoPaterno: "",
-      apellidoMaterno: "",
-      correo: "",
-      clave: "",
-      aceptaTerminos: false,
-    },
-    validarRegister,
-    (form) => handleRegister(form, navigate)
-  );
+  const initialValues: RegisterData = {
+    nombres: "",
+    apellidoPaterno: "",
+    apellidoMaterno: "",
+    correo: "",
+    clave: "",
+    aceptaTerminos: false,
+  };
+
+  const { values, err, handleChange, handleSubmit } =
+    useFormHandler<RegisterData>(
+      initialValues,
+      validarRegister,
+      async (form) => {
+        await handleRegister(form, navigate);
+      }
+    );
 
   return (
     <main className="relative flex min-h-screen overflow-hidden">

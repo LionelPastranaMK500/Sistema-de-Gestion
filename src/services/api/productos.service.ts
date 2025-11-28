@@ -1,17 +1,22 @@
-import api from './api';
+import api from "../api";
+import { Producto } from "@/services/generadorData";
 
 export const productosService = {
-    getAll: () => api.get('/api/v1/producto'),
+  getAll: () => api.get<Producto[]>("/api/v1/producto"),
 
-    create: (productoData) => api.post('/api/v1/producto', productoData),
+  create: (productoData: Producto) =>
+    api.post<Producto>("/api/v1/producto", productoData),
 
-    getById: (id) => api.get(`/api/v1/producto/${id}`),
+  getById: (id: string | number) => api.get<Producto>(`/api/v1/producto/${id}`),
 
-    getDetail: (id) => api.get(`/api/v1/producto/${id}/detail`),
+  getDetail: (id: string | number) =>
+    api.get<Producto>(`/api/v1/producto/${id}/detail`),
 
-    update: (productoData) => api.put('/api/v1/producto', productoData),
+  update: (productoData: Producto) =>
+    api.put<Producto>("/api/v1/producto", productoData),
 
-    delete: (id) => api.delete(`/api/v1/producto/${id}`),
+  delete: (id: string | number) => api.delete<void>(`/api/v1/producto/${id}`),
 
-    getSummary: () => api.get('/api/v1/producto/summary'),
+  // Asumimos que summary retorna algo específico, si no, any
+  getSummary: () => api.get<any>("/api/v1/producto/summary"),
 };

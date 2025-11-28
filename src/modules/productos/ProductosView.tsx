@@ -1,31 +1,36 @@
-import { useState } from 'react';
-import { DataView } from 'primereact/dataview';
-import { AutoComplete } from 'primereact/autocomplete';
-import { Button } from 'primereact/button';
-import { productos } from '@services/generadorData';
+import { DataView } from "primereact/dataview";
+import { AutoComplete, AutoCompleteChangeEvent } from "primereact/autocomplete";
+import { Button } from "primereact/button";
+import { productos, Producto } from "@/services/generadorData";
 import {
   MoreVertIcon,
   SearchIcon,
   KeyboardArrowLeftIcon,
   KeyboardArrowRightIcon,
-} from '@constants/icons';
-import { useSearch, usePagination } from '@hooks/data';
+} from "@/constants/icons";
+import { useSearch, usePagination } from "@/hooks/data";
 
 const ProductosView = () => {
-  const { searchQuery, filteredItems, handleSearch } = useSearch(
+  // Usamos genéricos para tipar correctamente los hooks
+  const { searchQuery, filteredItems, handleSearch } = useSearch<Producto>(
     productos,
-    ['descripcion', 'codigo']
+    ["descripcion", "codigo"]
   );
 
-  const { paginatedItems, currentPage, totalPages, nextPage, prevPage, hasNext, hasPrev } = usePagination(
-    filteredItems,
-    20
-  );
+  const {
+    paginatedItems,
+    currentPage,
+    totalPages,
+    nextPage,
+    prevPage,
+    hasNext,
+    hasPrev,
+  } = usePagination<Producto>(filteredItems, 20);
 
-  const defaultImage =
-    'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...';
+  const defaultImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...";
 
-  const itemTemplate = (p, i) => {
+  // Tipamos los parámetros del template
+  const itemTemplate = (p: Producto, i: number) => {
     if (!p) return null;
     return (
       <div
@@ -47,11 +52,11 @@ const ProductosView = () => {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mt-1 text-[10.5px] text-gray-500">
               <span className="flex items-center gap-1.5">
                 <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
-                {(p.codigo ?? '').toString().padStart(3, '0')}
+                {(p.codigo ?? "").toString().padStart(3, "0")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
-                {p.categoria ? p.categoria : 'SIN CATEGORÍA'}
+                {p.categoria ? p.categoria : "SIN CATEGORÍA"}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block bg-gray-400 rounded-full w-1.5 h-1.5" />
@@ -87,7 +92,8 @@ const ProductosView = () => {
     );
   };
 
-  const listTemplate = (items) => {
+  // Tipamos el array de items
+  const listTemplate = (items: Producto[]) => {
     if (!items || items.length === 0) {
       return (
         <div className="flex justify-center items-center bg-white border border-gray-300 border-dashed rounded-xl h-40 text-gray-500">
@@ -101,7 +107,9 @@ const ProductosView = () => {
   return (
     <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-screen overflow-hidden">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="ml-5 font-bold text-gray-800 text-xl">Productos / Servicios</h2>
+        <h2 className="ml-5 font-bold text-gray-800 text-xl">
+          Productos / Servicios
+        </h2>
         <div className="flex items-center gap-2">
           <Button
             label="REGISTRAR NUEVO"
@@ -121,7 +129,8 @@ const ProductosView = () => {
             <SearchIcon className="top-1/2 left-3 z-10 absolute !w-5 !h-5 text-gray-400 -translate-y-1/2 pointer-events-none" />
             <AutoComplete
               value={searchQuery}
-              onChange={handleSearch}
+              // Forzamos el tipado del evento change de PrimeReact
+              onChange={(e: AutoCompleteChangeEvent) => handleSearch(e)}
               suggestions={[]}
               dropdown={false}
               placeholder="Buscar..."
@@ -157,11 +166,15 @@ const ProductosView = () => {
         </div>
 
         <div className="flex-1 bg-gray-50 p-4 border border-gray-300 rounded-md min-h-0 overflow-y-auto">
-          <DataView value={paginatedItems} listTemplate={listTemplate} layout="list" />
+          <DataView
+            value={paginatedItems}
+            listTemplate={listTemplate}
+            layout="list"
+          />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ProductosView;

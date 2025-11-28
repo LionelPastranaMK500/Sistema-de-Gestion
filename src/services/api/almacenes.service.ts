@@ -1,15 +1,21 @@
-import api from './api';
+import api from "../api";
+import { Almacen, Producto } from "@/services/generadorData";
 
 export const almacenesService = {
-    getAll: () => api.get('/api/v1/almacen'),
+  getAll: () => api.get<Almacen[]>("/api/v1/almacen"),
 
-    create: (almacenData) => api.post('/api/v1/almacen', almacenData),
+  create: (almacenData: Omit<Almacen, "id"> | Almacen) =>
+    api.post<Almacen>("/api/v1/almacen", almacenData),
 
-    search: (query) => api.get(`/api/v1/almacen/search?q=${query}`),
+  search: (query: string) =>
+    api.get<Almacen[]>(`/api/v1/almacen/search?q=${query}`),
 
-    getProductos: (id) => api.get(`/api/v1/almacen/${id}/productos`),
+  getProductos: (id: string | number) =>
+    api.get<Producto[]>(`/api/v1/almacen/${id}/productos`),
 
-    getProductosByNombre: (nombre) => api.get(`/api/v1/almacen/nombre/${nombre}/productos`),
+  getProductosByNombre: (nombre: string) =>
+    api.get<Producto[]>(`/api/v1/almacen/nombre/${nombre}/productos`),
 
-    buscarProductos: (query) => api.get(`/api/v1/almacen/productos/buscar?q=${query}`),
+  buscarProductos: (query: string) =>
+    api.get<Producto[]>(`/api/v1/almacen/productos/buscar?q=${query}`),
 };

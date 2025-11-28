@@ -1,10 +1,10 @@
-import { toast } from "react-toastify";
+import { toast, ToastOptions } from "react-toastify";
 
-export const notifySuccess = (msg, config = {}) =>
+export const notifySuccess = (msg: string, config: ToastOptions = {}) =>
   toast.success(msg, { autoClose: 1500, ...config });
 
-export const notifyError = (msg, config = {}) =>
+export const notifyError = (msg: string, config: ToastOptions = {}) =>
   toast.error(msg, { autoClose: 1500, ...config });
 
-export const notifyInfo = (msg, config = {}) =>
+export const notifyInfo = (msg: string, config: ToastOptions = {}) =>
   toast.info(msg, { autoClose: false, ...config });

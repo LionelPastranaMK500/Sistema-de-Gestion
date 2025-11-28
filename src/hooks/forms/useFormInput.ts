@@ -1,26 +1,29 @@
 import { useState } from "react";
 
-export const useFormInput = (initialValues = {}) => {
-    const [formData, setFormData] = useState(initialValues);
+export const useFormInput = <T extends Record<string, any>>(
+  initialValues: T
+) => {
+  const [formData, setFormData] = useState<T>(initialValues);
 
-    const handleChange = (e, fieldName) => {
-        const field = fieldName || e.target.name;
-        const value = e.target?.value ?? e.value;
+  const handleChange = (e: any, fieldName?: string) => {
+    const field = fieldName || e.target?.name;
 
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
+    const value = e.target?.value ?? e.value;
 
-    const resetForm = () => {
-        setFormData(initialValues);
-    };
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    return {
-        formData,
-        setFormData,
-        handleChange,
-        resetForm
-    };
+  const resetForm = () => {
+    setFormData(initialValues);
+  };
+
+  return {
+    formData,
+    setFormData,
+    handleChange,
+    resetForm,
+  };
 };

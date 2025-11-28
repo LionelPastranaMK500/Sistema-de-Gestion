@@ -1,16 +1,20 @@
-import { validarLogin } from "@/services/auth/validations";
+import { validarLogin, LoginData } from "@/services/auth/validations";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorText from "@/components/common/ErrorText";
-import { useFormHandler } from "@hooks/useFormHandler";
+import { useFormHandler } from "@/hooks/useFormHandler";
 import { handleLogin } from "@/services/auth/authLogic";
 
 const LoginForm = () => {
   const navigate = useNavigate();
 
-  const { values, err, handleChange, handleSubmit } = useFormHandler(
-    { correo: "", clave: "" },
+  const initialValues: LoginData = { correo: "", clave: "" };
+
+  const { values, err, handleChange, handleSubmit } = useFormHandler<LoginData>(
+    initialValues,
     validarLogin,
-    (form) => handleLogin(form, navigate)
+    async (form) => {
+      await handleLogin(form, navigate);
+    }
   );
 
   return (

@@ -6,14 +6,25 @@ import {
   requestResetPassword,
   verifyResetCode,
   resetPassword,
-} from "@services/auth/authServices";
+  AuthUser,
+} from "@/services/auth/authServices";
 import { notifySuccess, notifyError } from "@/utils/notifications/notify";
-import { redirectWithDelay } from "@utils/navigation/redirectWithDelay";
-// import axios from "axios";
+import { redirectWithDelay } from "@/utils/navigation/redirectWithDelay";
+import { NavigateFunction } from "react-router-dom";
 
-export const handleRegister = async (form, navigate) => {
+interface LogicResponse {
+  success: boolean;
+  message?: string;
+  user?: AuthUser;
+  data?: any;
+}
+
+export const handleRegister = async (
+  form: any,
+  navigate: NavigateFunction
+): Promise<LogicResponse> => {
   try {
-    const payload = {
+    const payload: AuthUser = {
       nombres: String(form.nombres || "").trim(),
       apellidoPaterno: String(form.apellidoPaterno || "").trim(),
       apellidoMaterno: String(form.apellidoMaterno || "").trim(),
@@ -23,7 +34,7 @@ export const handleRegister = async (form, navigate) => {
       clave: String(form.clave || "").trim(),
     };
 
-    const res = await registerUser(payload);
+    const res = registerUser(payload);
 
     if (!res.success) {
       notifyError(res.message);
@@ -39,14 +50,17 @@ export const handleRegister = async (form, navigate) => {
   }
 };
 
-export const handleLogin = async (form, navigate) => {
+export const handleLogin = async (
+  form: any,
+  navigate: NavigateFunction
+): Promise<LogicResponse> => {
   const correo = String(form.correo || "")
     .trim()
     .toLowerCase();
   const clave = String(form.clave || "").trim();
 
   try {
-    const res = await loginUser(correo, clave);
+    const res = loginUser(correo, clave);
 
     if (!res.success) {
       notifyError(res.message);
@@ -63,13 +77,16 @@ export const handleLogin = async (form, navigate) => {
   }
 };
 
-export const handleSunatAuth = async (form, navigate) => {
+export const handleSunatAuth = async (
+  form: any,
+  navigate: NavigateFunction
+): Promise<LogicResponse> => {
   try {
     const ruc = String(form.ruc || "").trim();
     const usuarioSol = String(form.usuarioSol || "").trim();
     const claveSol = String(form.claveSol || "").trim();
 
-    const res = await loginSunatUser({ ruc, usuarioSol, claveSol });
+    const res = loginSunatUser({ ruc, usuarioSol, claveSol });
 
     if (!res.success) {
       notifyError(res.message);
@@ -85,7 +102,7 @@ export const handleSunatAuth = async (form, navigate) => {
   }
 };
 
-export const handleLogout = (navigate) => {
+export const handleLogout = (navigate: NavigateFunction) => {
   const res = logoutUser();
   if (res.success) {
     notifySuccess(res.message);
@@ -96,9 +113,11 @@ export const handleLogout = (navigate) => {
   return res;
 };
 
-export const handleRequestReset = async (correo) => {
+export const handleRequestReset = async (
+  correo: string
+): Promise<LogicResponse> => {
   try {
-    const res = await requestResetPassword(correo);
+    const res = requestResetPassword(correo);
     if (!res.success) {
       notifyError(res.message);
       return { success: false };
@@ -111,9 +130,12 @@ export const handleRequestReset = async (correo) => {
   }
 };
 
-export const handleVerifyResetCode = async (correo, code) => {
+export const handleVerifyResetCode = async (
+  correo: string,
+  code: string
+): Promise<LogicResponse> => {
   try {
-    const res = await verifyResetCode(correo, code);
+    const res = verifyResetCode(correo, code);
     if (!res.success) {
       notifyError(res.message);
       return { success: false };
@@ -127,13 +149,13 @@ export const handleVerifyResetCode = async (correo, code) => {
 };
 
 export const handleResetPassword = async (
-  correo,
-  code,
-  nuevaClave,
-  navigate
-) => {
+  correo: string,
+  code: string,
+  nuevaClave: string,
+  navigate: NavigateFunction
+): Promise<LogicResponse> => {
   try {
-    const res = await resetPassword(correo, code, nuevaClave);
+    const res = resetPassword(correo, code, nuevaClave);
     if (!res.success) {
       notifyError(res.message);
       return { success: false };

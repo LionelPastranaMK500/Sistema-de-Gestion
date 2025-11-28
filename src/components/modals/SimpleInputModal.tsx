@@ -2,7 +2,18 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
-import { useModalInput } from "@/hooks/modals";
+import { useModalInput } from "@/hooks/modals/useModalInput";
+
+interface SimpleInputModalProps {
+  visible: boolean;
+  onHide: () => void;
+  title: string;
+  placeholder?: string;
+  value: string;
+  onSave: (value: string) => void;
+  type?: "text" | "textarea";
+  rows?: number;
+}
 
 const SimpleInputModal = ({
   visible,
@@ -13,11 +24,11 @@ const SimpleInputModal = ({
   onSave,
   type = "text",
   rows = 5,
-}) => {
+}: SimpleInputModalProps) => {
   const { inputValue, setInputValue, handleSave } = useModalInput(
     visible,
     value,
-    (newValue) => {
+    (newValue: string) => {
       onSave(newValue);
       onHide();
     }
@@ -26,7 +37,7 @@ const SimpleInputModal = ({
   const headerContent = <h2 className="text-xl font-bold">{title}</h2>;
 
   const footer = (
-    <div className="flex justify-end items-center gap-3 w-full">
+    <div className="flex justify-end items-center gap-3 w-full p-5 bg-white border-t-2 border-gray-200">
       <Button
         label="Cancelar"
         icon="pi pi-times"
@@ -54,7 +65,6 @@ const SimpleInputModal = ({
       footer={footer}
       headerClassName="!p-4 bg-blue-700 text-white rounded-t-lg"
       contentClassName="p-5 bg-white"
-      footerClassName="p-5 bg-white border-t-2 border-gray-200"
     >
       {type === "textarea" ? (
         <InputTextarea

@@ -1,28 +1,25 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-/**
- * Hook para manejar estado de filtros
- * @param {Object} initialFilters - Filtros iniciales
- * @returns {Object} - filters, updateFilter, resetFilters, setFilters
- */
-export const useFilterState = (initialFilters = {}) => {
-    const [filters, setFilters] = useState(initialFilters);
+export const useFilterState = <T extends Record<string, any>>(
+  initialFilters: T
+) => {
+  const [filters, setFilters] = useState<T>(initialFilters);
 
-    const updateFilter = (field, value) => {
-        setFilters(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
+  const updateFilter = (field: keyof T, value: any) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-    const resetFilters = () => {
-        setFilters(initialFilters);
-    };
+  const resetFilters = () => {
+    setFilters(initialFilters);
+  };
 
-    return {
-        filters,
-        setFilters,
-        updateFilter,
-        resetFilters
-    };
+  return {
+    filters,
+    setFilters,
+    updateFilter,
+    resetFilters,
+  };
 };

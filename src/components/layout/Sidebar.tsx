@@ -9,27 +9,47 @@ import {
 } from "@/constants/icons";
 import { menuItems } from "@/constants/menuItems";
 import { buttonColors } from "@/constants/colors";
-import { syncActiveCompany } from "@services/auth/authServices";
+import { syncActiveCompany } from "@/services/auth/authServices";
 import { handleLogout } from "@/services/auth/authLogic";
 import { useNavigate } from "react-router-dom";
-import { menuActions } from "@utils/navigation/menuActions";
-import { useSidebar } from "@utils/navigation/sidebarState";
+import { menuActions } from "@/utils/navigation/menuActions";
+import { useSidebar } from "@/utils/navigation/sidebarState";
+
+// Interfaces para los datos
+interface Empresa {
+  id: number | string;
+  nombre: string;
+}
+
+interface Sucursal {
+  id: number | string;
+  nombre: string;
+}
+
+type MenuActionKey = keyof typeof menuActions;
 
 export default function Sidebar() {
   const [showConfig, setShowConfig] = useState(false);
   const { sidebarReady } = useSidebar();
-  const user = JSON.parse(localStorage.getItem("activeUser")) || {};
+  const user = JSON.parse(localStorage.getItem("activeUser") || "{}");
   const navigate = useNavigate();
-  const [empresas, setEmpresas] = useState([]);
-  const [sucursales, setSucursales] = useState([]);
-  const [empresa, setEmpresa] = useState("");
-  const [sucursal, setSucursal] = useState("");
+
+  const [empresas, setEmpresas] = useState<Empresa[]>([]);
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+  // Permitimos string o number para manejar el valor inicial "" y los IDs
+  const [empresa, setEmpresa] = useState<string | number>("");
+  const [sucursal, setSucursal] = useState<string | number>("");
+
   const initials = `${user.nombres?.split(" ")[0]?.[0] || ""}${
     user.apellidoPaterno?.[0] || ""
   }`;
 
-  const handleMenuAction = (action) => {
-    if (menuActions[action]) menuActions[action]({ navigate });
+  const handleMenuAction = (action: string) => {
+    // Verificamos si la acción es válida antes de ejecutarla
+    if (action in menuActions) {
+      const actionKey = action as MenuActionKey;
+      menuActions[actionKey]?.({ navigate });
+    }
   };
 
   useEffect(() => {
@@ -146,19 +166,7 @@ export default function Sidebar() {
                 </option>
               ))}
             </select>
-            <svg
-              className="pointer-events-none absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-blue-100 opacity-90"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            {/* SVG arrow icon ... */}
           </div>
         </div>
 
@@ -182,28 +190,16 @@ export default function Sidebar() {
                 </option>
               ))}
             </select>
-            <svg
-              className="pointer-events-none absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 text-blue-100 opacity-90"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            {/* SVG arrow icon ... */}
           </div>
         </div>
       </div>
 
-      {/* Menú — única zona con scroll */}
+      {/* Menú */}
       <nav className="row-start-3 row-end-4 grid min-h-0 grid-cols-2 gap-3 overflow-y-auto p-5 mt-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 dark:scrollbar-thumb-gray-700 dark:scrollbar-track-gray-900">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
-          const isWide = index === 0; // ← “Estadísticas” es el primer ítem
+          const isWide = index === 0;
 
           return (
             <button

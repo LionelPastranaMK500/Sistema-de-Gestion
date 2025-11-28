@@ -1,35 +1,50 @@
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
-export function useFormHandler(initialValues, validate, onSubmit) {
-    const [values, setValues] = useState(initialValues);
-    const [err, setErr] = useState({});
+type FormErrors = Record<string, string | undefined>;
 
-    const handleChange = (e) => {
-        const { name, type, value, checked } = e.target;
-        setValues((prev) => ({
-            ...prev, [name]: type === "checkbox" ? checked : value,
-        }));
-        setErr((prev) => ({ ...prev, [name]: undefined }));
-    };
+export function useFormHandler<T extends Record<string, any>>(
+  initialValues: T,
+  validate?: (values: T) => FormErrors | null | undefined,
+  onSubmit?: (values: T) => Promise<void> | void
+) {
+  const [values, setValues] = useState<T>(initialValues);
+  const [err, setErr] = useState<FormErrors>({});
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validate ? validate(values) || {} : {};
-        setErr(validationErrors);
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, type, value } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
 
-        if (Object.keys(validationErrors).length === 0) {
-            try {
-                await onSubmit(values);
-            } catch (err) {
-                console.error(err);
-            }
+    setValues((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    setErr((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const validationErrors = validate ? validate(values) || {} : {};
+    setErr(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        if (onSubmit) {
+          await onSubmit(values);
         }
-    };
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
-    const resetForm = () => {
-        setValues(initialValues);
-        setErr({});
-    };
+  const resetForm = () => {
+    setValues(initialValues);
+    setErr({});
+  };
 
-    return { values, setValues, err, handleChange, handleSubmit, resetForm };
+  return { values, setValues, err, handleChange, handleSubmit, resetForm };
 }

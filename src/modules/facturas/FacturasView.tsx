@@ -1,22 +1,24 @@
-import { generarDataFalsa } from "@services/generadorData";
+import { generarDataFalsa, VentaGenerada } from "@/services/generadorData";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,
   AccessTimeTwoToneIcon,
   KeyboardArrowLeftIcon,
   KeyboardArrowRightIcon,
-} from "@constants/icons";
+} from "@/constants/icons";
 import { useState, useEffect } from "react";
 import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
 import FacturaModal from "./FacturaModal";
-import { menuItemsFactura } from "@constants/menuItems";
-import { useDateFilter } from "@hooks/data";
+import { menuItemsFactura } from "@/constants/menuItems";
+import { useDateFilter } from "@/hooks/data";
 
 const FacturasView = () => {
-  const [facturas, setFacturas] = useState([]);
+  const [facturas, setFacturas] = useState<VentaGenerada[]>([]);
   const [showConfig, setShowConfig] = useState(false);
-  const [selectedFactura, setSelectedFactura] = useState(null);
+  const [selectedFactura, setSelectedFactura] = useState<VentaGenerada | null>(
+    null
+  );
 
   const {
     fechaSeleccionada,
@@ -24,16 +26,19 @@ const FacturasView = () => {
     filteredItems: facturasFiltradas,
     moverDia,
     getTituloFecha,
-    calendarRef
-  } = useDateFilter(facturas);
+    calendarRef,
+  } = useDateFilter<VentaGenerada>(facturas);
 
-  const formatoFechaHora = (fechaISO) => {
+  const formatoFechaHora = (fechaISO: string | Date | null | undefined) => {
     if (!fechaISO) return "";
     const fecha = new Date(fechaISO);
-    const opcionesFecha = { day: "numeric", month: "long" };
+
+    const opcionesFecha = { day: "numeric", month: "long" } as const;
+
     const fechaFormateada = fecha
       .toLocaleDateString("es-ES", opcionesFecha)
       .replace(/\b\w/, (c) => c.toUpperCase());
+
     const horaFormateada = fecha.toLocaleTimeString("es-ES", {
       hour: "numeric",
       minute: "2-digit",
@@ -68,7 +73,7 @@ const FacturasView = () => {
             <Calendar
               ref={calendarRef}
               value={fechaSeleccionada}
-              onChange={(e) => setFechaSeleccionada(e.value)}
+              onChange={(e) => setFechaSeleccionada(e.value as Date | null)}
               dateFormat="dd/mm/yy"
               appendTo={document.body}
               panelClassName="z-50"
@@ -76,7 +81,7 @@ const FacturasView = () => {
             />
             <button
               className="hover:bg-gray-200 p-2 rounded"
-              onClick={() => calendarRef.current?.show?.()}
+              onClick={() => calendarRef.current?.show()}
               aria-label="Abrir calendario"
             >
               <i className="text-gray-700 pi pi-calendar"></i>
@@ -140,7 +145,7 @@ const FacturasView = () => {
 
                   <div className="text-right">
                     <p className="font-extrabold text-blue-700 text-xl">
-                      S/ {(f.monto?.total).toFixed(2)}
+                      S/ {(f.monto?.total || 0).toFixed(2)}
                     </p>
                   </div>
                 </div>

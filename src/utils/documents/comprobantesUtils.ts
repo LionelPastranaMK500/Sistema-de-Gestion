@@ -1,33 +1,51 @@
-export function contarComprobantes(data, fechaInicio = null, fechaFin = null) {
-    const conteo = {
-        total: 0,
-        facturas: 0,
-        boletas: 0,
-        notasCredito: 0,
-        notasDebito: 0,
-        proformas: 0,
-        guiasRemision: 0,
-    };
+import { VentaGenerada } from "@/services/generadorData";
 
-    const hoy = new Date();
+export interface ConteoComprobantes {
+  total: number;
+  facturas: number;
+  boletas: number;
+  notasCredito: number;
+  notasDebito: number;
+  proformas: number;
+  guiasRemision: number;
+}
 
-    data.forEach(doc => {
-        if (fechaInicio && fechaFin) {
-            const fechaDoc = new Date(doc.fecha);
-            const fechaLimite = fechaFin > hoy ? hoy : fechaFin;
-            if (fechaDoc < fechaInicio || fechaDoc > fechaLimite) return;
-        }
+export function contarComprobantes(
+  data: VentaGenerada[],
+  fechaInicio: Date | null = null,
+  fechaFin: Date | null = null
+): ConteoComprobantes {
+  const conteo: ConteoComprobantes = {
+    total: 0,
+    facturas: 0,
+    boletas: 0,
+    notasCredito: 0,
+    notasDebito: 0,
+    proformas: 0,
+    guiasRemision: 0,
+  };
 
-        conteo.total++;
-        const tipo = doc.tDocumento.toLowerCase();
+  const hoy = new Date();
 
-        if (tipo.includes("factura")) conteo.facturas++;
-        else if (tipo.includes("boleta")) conteo.boletas++;
-        else if (tipo.includes("nota de crédito")) conteo.notasCredito++;
-        else if (tipo.includes("nota de débito")) conteo.notasDebito++;
-        else if (tipo.includes("proforma")) conteo.proformas++;
-        else if (tipo.includes("guía de remisión")) conteo.guiasRemision++;
-    });
+  data.forEach((doc) => {
+    if (fechaInicio && fechaFin) {
+      const fechaDoc = new Date(doc.fecha);
+      // Aseguramos que fechaFin no sea null
+      const fechaLimite = fechaFin > hoy ? hoy : fechaFin;
 
-    return conteo;
+      if (fechaDoc < fechaInicio || fechaDoc > fechaLimite) return;
+    }
+
+    conteo.total++;
+    const tipo = doc.tDocumento.toLowerCase();
+
+    if (tipo.includes("factura")) conteo.facturas++;
+    else if (tipo.includes("boleta")) conteo.boletas++;
+    else if (tipo.includes("nota de crédito")) conteo.notasCredito++;
+    else if (tipo.includes("nota de débito")) conteo.notasDebito++;
+    else if (tipo.includes("proforma")) conteo.proformas++;
+    else if (tipo.includes("guía de remisión")) conteo.guiasRemision++;
+  });
+
+  return conteo;
 }

@@ -1,58 +1,59 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-/**
- * Hook para manejar selección y gestión de items en listas
- * Útil para casos como: agregar vendedores, asignar permisos, seleccionar categorías, etc.
- * 
- * @param {Array} initialItems - Items iniciales en la lista
- * @param {Object} options - Opciones de configuración
- * @param {Function} options.onDuplicate - Callback cuando se intenta agregar un duplicado
- * @param {Function} options.onEmptySelection - Callback cuando se intenta agregar sin selección
- * @returns {Object} - selectedItems, selectedItem, addItem, removeItem, setSelectedItem, setSelectedItems
- */
-export const useListSelection = (initialItems = [], options = {}) => {
-    const [selectedItems, setSelectedItems] = useState(initialItems);
-    const [selectedItem, setSelectedItem] = useState(null);
+interface SelectionOptions<T> {
+  onDuplicate?: (item: T) => void;
+  onEmptySelection?: () => void;
+}
 
-    const { onDuplicate, onEmptySelection } = options;
+export const useListSelection = <T>(
+  initialItems: T[] = [],
+  options: SelectionOptions<T> = {}
+) => {
+  const [selectedItems, setSelectedItems] = useState<T[]>(initialItems);
+  const [selectedItem, setSelectedItem] = useState<T | null>(null);
 
-    const addItem = useCallback((item = selectedItem) => {
-        if (!item) {
-            onEmptySelection?.();
-            return false;
-        }
+  const { onDuplicate, onEmptySelection } = options;
 
-        if (selectedItems.includes(item)) {
-            onDuplicate?.(item);
-            return false;
-        }
+  const addItem = useCallback(
+    (item: T | null = selectedItem) => {
+      if (!item) {
+        onEmptySelection?.();
+        return false;
+      }
 
-        setSelectedItems(prev => [...prev, item]);
-        setSelectedItem(null);
-        return true;
-    }, [selectedItem, selectedItems, onDuplicate, onEmptySelection]);
+      if (selectedItems.includes(item)) {
+        onDuplicate?.(item);
+        return false;
+      }
 
-    const removeItem = useCallback((item) => {
-        setSelectedItems(prev => prev.filter(i => i !== item));
-    }, []);
+      setSelectedItems((prev) => [...prev, item]);
+      setSelectedItem(null);
+      return true;
+    },
+    [selectedItem, selectedItems, onDuplicate, onEmptySelection]
+  );
 
-    const clearSelection = useCallback(() => {
-        setSelectedItem(null);
-    }, []);
+  const removeItem = useCallback((item: T) => {
+    setSelectedItems((prev) => prev.filter((i) => i !== item));
+  }, []);
 
-    const resetItems = useCallback(() => {
-        setSelectedItems(initialItems);
-        setSelectedItem(null);
-    }, [initialItems]);
+  const clearSelection = useCallback(() => {
+    setSelectedItem(null);
+  }, []);
 
-    return {
-        selectedItems,
-        selectedItem,
-        addItem,
-        removeItem,
-        setSelectedItem,
-        setSelectedItems,
-        clearSelection,
-        resetItems
-    };
+  const resetItems = useCallback(() => {
+    setSelectedItems(initialItems);
+    setSelectedItem(null);
+  }, [initialItems]);
+
+  return {
+    selectedItems,
+    selectedItem,
+    addItem,
+    removeItem,
+    setSelectedItem,
+    setSelectedItems,
+    clearSelection,
+    resetItems,
+  };
 };

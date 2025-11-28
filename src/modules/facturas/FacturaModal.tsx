@@ -1,12 +1,18 @@
 import { useState, useRef } from "react";
 import { generarPDF } from "@/utils/pdf/pdfConfig";
-import { CloseIcon } from "@constants/icons";
-import { getActiveUser } from "@services/auth/authServices";
+import { CloseIcon } from "@/constants/icons";
+import { getActiveUser } from "@/services/auth/authServices";
 import { formatearFechaComprobante } from "@/utils/documents/fechaComprobante";
+import { VentaGenerada } from "@/services/generadorData";
 
-const FacturaModal = ({ f, onClose }) => {
+interface FacturaModalProps {
+  f: VentaGenerada;
+  onClose: () => void;
+}
+
+const FacturaModal = ({ f, onClose }: FacturaModalProps) => {
   const [mostrarFormatos, setMostrarFormatos] = useState(false);
-  const btnRef = useRef(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   if (!f) return null;
   const usuario = getActiveUser();
@@ -16,7 +22,7 @@ const FacturaModal = ({ f, onClose }) => {
     { id: "A4", label: "A4" },
   ];
 
-  const handleSeleccionFormato = (formato) => {
+  const handleSeleccionFormato = (formato: string) => {
     generarPDF(f, formato);
     setMostrarFormatos(false);
   };
@@ -45,7 +51,9 @@ const FacturaModal = ({ f, onClose }) => {
           <h3 className="font-bold text-white text-lg">
             Comprobante electrónico
           </h3>
-          <CloseIcon className="text-white cursor-pointer" onClick={onClose} />
+          <div onClick={onClose} className="cursor-pointer">
+            <CloseIcon className="text-white" />
+          </div>
         </div>
 
         <div className="space-y-4 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
@@ -55,7 +63,7 @@ const FacturaModal = ({ f, onClose }) => {
               {f.serie}-{f.numero}
             </p>
             <p className="mt-2 font-extrabold text-blue-600 text-xl">
-              S/ {(f.monto?.total).toFixed(2)}
+              S/ {(f.monto?.total || 0).toFixed(2)}
             </p>
           </div>
 
@@ -82,10 +90,11 @@ const FacturaModal = ({ f, onClose }) => {
           <div className="bg-white shadow px-4 py-3 rounded-md">
             <strong className="block text-gray-800">ESTADO SUNAT</strong>
             <p
-              className={`font-medium ${f.state?.toLowerCase() === "anulado"
-                ? "text-red-600"
-                : "text-green-600"
-                }`}
+              className={`font-medium ${
+                f.state?.toLowerCase() === "anulado"
+                  ? "text-red-600"
+                  : "text-green-600"
+              }`}
             >
               {f.state}
             </p>
@@ -151,8 +160,8 @@ const FacturaModal = ({ f, onClose }) => {
             DAR DE BAJA (ANULAR)
           </button>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 

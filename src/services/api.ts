@@ -1,126 +1,160 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-const defaultConfig = {
-    headers: {
-        'Content-Type': 'application/json',
-    },
+/// <reference types="vite/client" />
+
+interface RequestOptions extends RequestInit {
+  headers?: Record<string, string>;
+}
+
+interface ApiError {
+  status: number;
+  statusText: string;
+  data: any;
+}
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
+const defaultConfig: RequestOptions = {
+  headers: {
+    "Content-Type": "application/json",
+  },
 };
 
-const addAuthToken = (config = {}) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-        config.headers = {
-            ...config.headers,
-            'Authorization': `Bearer ${token}`,
-        };
-    }
-    return config;
+const addAuthToken = (config: RequestOptions = {}): RequestOptions => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return config;
 };
 
-const handleResponse = async (response) => {
-    if (!response.ok) {
-        const error = {
-            status: response.status,
-            statusText: response.statusText,
-            data: null,
-        };
+// Usamos un genérico T para el tipo de respuesta esperada
+const handleResponse = async <T>(response: Response): Promise<T | null> => {
+  if (!response.ok) {
+    const error: ApiError = {
+      status: response.status,
+      statusText: response.statusText,
+      data: null,
+    };
 
-        try {
-            error.data = await response.json();
-        } catch {
-            error.data = { message: response.statusText };
-        }
-
-        throw error;
+    try {
+      error.data = await response.json();
+    } catch {
+      error.data = { message: response.statusText };
     }
 
-    if (response.status === 204) {
-        return null;
-    }
+    throw error;
+  }
 
-    return response.json();
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
 };
 
 export const api = {
-    get: async (endpoint, config = {}) => {
-        const mergedConfig = {
-            ...defaultConfig,
-            ...config,
-            method: 'GET',
-        };
+  get: async <T>(endpoint: string, config: RequestOptions = {}): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...defaultConfig,
+      ...config,
+      method: "GET",
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    // Hacemos cast a Promise<T> porque handleResponse retorna Promise<T | null>
+    return handleResponse<T>(response) as Promise<T>;
+  },
 
-    post: async (endpoint, data, config = {}) => {
-        const mergedConfig = {
-            ...defaultConfig,
-            ...config,
-            method: 'POST',
-            body: JSON.stringify(data),
-        };
+  post: async <T>(
+    endpoint: string,
+    data: any,
+    config: RequestOptions = {}
+  ): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...defaultConfig,
+      ...config,
+      method: "POST",
+      body: JSON.stringify(data),
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    return handleResponse<T>(response) as Promise<T>;
+  },
 
-    put: async (endpoint, data, config = {}) => {
-        const mergedConfig = {
-            ...defaultConfig,
-            ...config,
-            method: 'PUT',
-            body: JSON.stringify(data),
-        };
+  put: async <T>(
+    endpoint: string,
+    data: any,
+    config: RequestOptions = {}
+  ): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...defaultConfig,
+      ...config,
+      method: "PUT",
+      body: JSON.stringify(data),
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    return handleResponse<T>(response) as Promise<T>;
+  },
 
-    patch: async (endpoint, data, config = {}) => {
-        const mergedConfig = {
-            ...defaultConfig,
-            ...config,
-            method: 'PATCH',
-            body: JSON.stringify(data),
-        };
+  patch: async <T>(
+    endpoint: string,
+    data: any,
+    config: RequestOptions = {}
+  ): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...defaultConfig,
+      ...config,
+      method: "PATCH",
+      body: JSON.stringify(data),
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    return handleResponse<T>(response) as Promise<T>;
+  },
 
-    delete: async (endpoint, config = {}) => {
-        const mergedConfig = {
-            ...defaultConfig,
-            ...config,
-            method: 'DELETE',
-        };
+  delete: async <T>(
+    endpoint: string,
+    config: RequestOptions = {}
+  ): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...defaultConfig,
+      ...config,
+      method: "DELETE",
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    return handleResponse<T>(response) as Promise<T>;
+  },
 
-    upload: async (endpoint, formData, config = {}) => {
-        const mergedConfig = {
-            ...config,
-            method: 'POST',
-            body: formData,
-        };
+  upload: async <T>(
+    endpoint: string,
+    formData: FormData,
+    config: RequestOptions = {}
+  ): Promise<T> => {
+    const mergedConfig: RequestOptions = {
+      ...config,
+      method: "POST",
+      body: formData,
+    };
 
-        const finalConfig = addAuthToken(mergedConfig);
+    const finalConfig = addAuthToken(mergedConfig);
 
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
-        return handleResponse(response);
-    },
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, finalConfig);
+    return handleResponse<T>(response) as Promise<T>;
+  },
 };
 
 export default api;

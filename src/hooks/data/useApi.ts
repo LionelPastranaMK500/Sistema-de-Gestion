@@ -1,35 +1,47 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-export const useApi = (apiFunction, options = {}) => {
-    const { immediate = false, onSuccess, onError } = options;
+interface UseApiOptions<T> {
+  immediate?: boolean;
+  onSuccess?: (data: T) => void;
+  onError?: (error: unknown) => void;
+}
 
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(immediate);
-    const [error, setError] = useState(null);
+export const useApi = <T, P extends unknown[] = unknown[]>(
+  apiFunction: (...args: P) => Promise<T>,
+  options: UseApiOptions<T> = {}
+) => {
+  const { immediate = false, onSuccess, onError } = options;
 
-    const execute = useCallback(async (...args) => {
-        setLoading(true);
-        setError(null);
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(immediate);
+  const [error, setError] = useState<unknown | null>(null);
 
-        try {
-            const result = await apiFunction(...args);
-            setData(result);
-            onSuccess?.(result);
-            return result;
-        } catch (err) {
-            setError(err);
-            onError?.(err);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    }, [apiFunction, onSuccess, onError]);
+  const execute = useCallback(
+    async (...args: P) => {
+      setLoading(true);
+      setError(null);
 
-    const reset = useCallback(() => {
-        setData(null);
-        setError(null);
+      try {
+        const result = await apiFunction(...args);
+        setData(result);
+        onSuccess?.(result);
+        return result;
+      } catch (err) {
+        setError(err);
+        onError?.(err);
+        throw err;
+      } finally {
         setLoading(false);
-    }, []);
+      }
+    },
+    [apiFunction, onSuccess, onError]
+  );
 
-    return { data, loading, error, execute, reset };
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+  }, []);
+
+  return { data, loading, error, execute, reset };
 };
