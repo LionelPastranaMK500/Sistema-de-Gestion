@@ -1,8 +1,4 @@
-import { NavigateFunction } from "react-router-dom";
-
-interface MenuActionParams {
-  navigate: NavigateFunction;
-}
+import { MenuActionParams } from "@/types/utils/navigation";
 
 export const menuActions = {
   estadistica: ({ navigate }: MenuActionParams) => {

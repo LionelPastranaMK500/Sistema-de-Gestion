@@ -4,11 +4,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useState, useEffect } from "react";
 import useVentaStore from "@/stores/ventasStore";
-
-interface CondicionPagoModalProps {
-  visible: boolean;
-  onHide: () => void;
-}
+import { CondicionPagoModalProps } from "@/types/modules/ventas";
 
 const CondicionPagoModal = ({ visible, onHide }: CondicionPagoModalProps) => {
   const { condicionPago, setCondicionPago } = useVentaStore();
@@ -73,7 +69,6 @@ const CondicionPagoModal = ({ visible, onHide }: CondicionPagoModalProps) => {
       footer={footer}
       headerClassName="!p-4 bg-blue-700 text-white rounded-t-lg"
       contentClassName="p-5 bg-white"
-      // footerClassName eliminado porque no existe en DialogProps
     >
       <div className="space-y-4">
         <div>

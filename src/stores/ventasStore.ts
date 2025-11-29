@@ -1,41 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface CondicionPago {
-  condicion: string;
-  metodo: string;
-  referencia: string;
-}
-
-interface DatoAdicional {
-  titulo: string;
-  descripcion: string;
-  [key: string]: any;
-}
-
-interface GuiaRemision {
-  tipo: string;
-  serie: string;
-  numero: string;
-  [key: string]: any;
-}
-
-interface VentaState {
-  placa: string;
-  ordenCompra: string;
-  observaciones: string;
-  condicionPago: CondicionPago;
-  datosAdicionales: DatoAdicional[];
-  guiasRemision: GuiaRemision[];
-
-  setPlaca: (nuevaPlaca: string) => void;
-  setOrdenCompra: (nuevaOrden: string) => void;
-  setObservaciones: (nuevasObservaciones: string) => void;
-  setCondicionPago: (nuevosDatos: CondicionPago) => void;
-  setDatosAdicionales: (nuevosDatos: DatoAdicional[]) => void;
-  setGuiasRemision: (nuevosDatos: GuiaRemision[]) => void;
-  limpiarFormularioVenta: () => void;
-}
+import {
+  VentaState,
+  CondicionPago,
+  DatoAdicional,
+  StoreGuiaRemision,
+} from "@/types/stores";
 
 const useVentaStore = create<VentaState>()(
   persist(
@@ -55,7 +25,7 @@ const useVentaStore = create<VentaState>()(
         set({ condicionPago: nuevosDatos }),
       setDatosAdicionales: (nuevosDatos: DatoAdicional[]) =>
         set({ datosAdicionales: nuevosDatos }),
-      setGuiasRemision: (nuevosDatos: GuiaRemision[]) =>
+      setGuiasRemision: (nuevosDatos: StoreGuiaRemision[]) =>
         set({ guiasRemision: nuevosDatos }),
 
       limpiarFormularioVenta: () =>

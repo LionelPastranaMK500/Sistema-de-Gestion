@@ -1,16 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-
-export interface Producto {
-  codigo: string | number;
-  descripcion?: string;
-  precio?: number;
-  isc?: number;
-  [key: string]: any;
-}
-
-export interface ProductoAgregado extends Producto {
-  cantidad: number;
-}
+import { Producto, ProductoAgregado } from "@/types/hooks";
 
 export function useProductosAgregados(globalDiscountPercentage: number = 0) {
   const [productosAgregados, setProductosAgregados] = useState<

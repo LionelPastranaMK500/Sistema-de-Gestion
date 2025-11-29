@@ -1,20 +1,5 @@
 import api from "../api";
-
-export interface Chofer {
-  id?: string | number;
-  dni: string;
-  nombre: string;
-  licencia: string;
-  [key: string]: any;
-}
-
-export interface Vehiculo {
-  id?: string | number;
-  placa: string;
-  marca?: string;
-  modelo?: string;
-  [key: string]: any;
-}
+import { Chofer, Vehiculo } from "@/types/services";
 
 export const choferesService = {
   getAll: () => api.get<Chofer[]>("/api/v1/chofer"),

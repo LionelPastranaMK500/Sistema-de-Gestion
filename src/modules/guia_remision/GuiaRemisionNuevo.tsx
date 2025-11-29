@@ -4,25 +4,17 @@ import { useEffect, useState } from "react";
 import { guiaTabsGuiaRemision } from "@/constants/menuItems";
 import { CloseIcon, RemoveCircleIcon } from "@/constants/icons";
 import AgregarProductoModal from "./components/AgregarProductoModal";
-import { Producto } from "@/services/generadorData";
-
-// Extendemos Producto para incluir los campos locales de este formulario
-interface ProductoGuia extends Producto {
-  cantidad: number | string; // string temporal mientras se edita
-  detalle?: string;
-}
-
-interface GuiaRemisionNuevoProps {
-  onClose: () => void;
-}
+import { Producto } from "@/types/services";
+import {
+  ProductoGuia,
+  GuiaRemisionNuevoProps,
+} from "@/types/modules/guia_remision";
 
 const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
-  // Tipamos la fecha
   const [fechaEnvio, setFechaEnvio] = useState<Date | null>(null);
   const [activeTab, setActiveTab] = useState("infoBasica");
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
 
-  // Tipamos el array de productos seleccionados
   const [productoSeleccionado, setProductoSeleccionado] = useState<
     ProductoGuia[]
   >([]);
@@ -33,11 +25,8 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
 
   return (
     <div className="z-10 fixed inset-0 flex justify-center items-center">
-      {/* overlay */}
       <div className="absolute inset-0 bg-black/50" />
-      {/* modal */}
       <div className="relative flex flex-col bg-white shadow-2xl rounded-xl w-[min(980px,95vw)] max-h-[92vh] overflow-hidden">
-        {/* header */}
         <div className="flex justify-between items-center bg-blue-700 px-5 py-4 text-white">
           <h3 className="font-semibold text-lg">
             Guía de Remisión - Remitente
@@ -51,7 +40,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
           </button>
         </div>
 
-        {/* tabs */}
         <div className="bg-blue-700 px-3">
           <div className="flex gap-2 overflow-x-auto">
             {guiaTabsGuiaRemision.map((tab) => {
@@ -77,12 +65,10 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
           </div>
         </div>
 
-        {/* body (scrollable) */}
         <div className="flex-1 bg-white px-5 py-5 overflow-y-auto">
           {/* INFO BÁSICA */}
           {activeTab === "infoBasica" && (
             <div className="gap-4 grid grid-cols-12">
-              {/* Serie */}
               <div className="col-span-12 md:col-span-6">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Serie *
@@ -91,7 +77,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                   <option value="T004">T004</option>
                 </select>
               </div>
-              {/* Fecha emisión */}
               <div className="col-span-12 md:col-span-6">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Fecha de emisión
@@ -106,7 +91,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 />
               </div>
 
-              {/* Destinatario */}
               <div className="col-span-12">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Destinatario *
@@ -119,7 +103,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 />
               </div>
 
-              {/* Observaciones */}
               <div className="col-span-12">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Observaciones
@@ -132,7 +115,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 />
               </div>
 
-              {/* Origen / Destino títulos */}
               <div className="col-span-12 md:col-span-6">
                 <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">
                   ORIGEN
@@ -174,9 +156,9 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
             </div>
           )}
 
+          {/* DATOS ENVÍO */}
           {activeTab === "datosEnvio" && (
             <div className="gap-4 grid grid-cols-12">
-              {/* Tipo del envío */}
               <div className="col-span-12 md:col-span-6">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Tipo del envío *
@@ -191,7 +173,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 </select>
               </div>
 
-              {/* Fecha del envío */}
               <div className="col-span-12 md:col-span-6">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Fecha del envío
@@ -206,7 +187,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 />
               </div>
 
-              {/* Bultos / Peso / Unidad */}
               <div className="col-span-12 md:col-span-4">
                 <label className="block mb-1 font-medium text-gray-500 text-xs">
                   Cantidad de bultos *
@@ -237,13 +217,11 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 </select>
               </div>
 
-              {/* ---------- TRASLADO ---------- */}
               <div className="col-span-12">
                 <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">
                   TRASLADO
                 </p>
                 <div className="gap-4 grid grid-cols-12">
-                  {/* Modalidad */}
                   <div className="col-span-12">
                     <label className="block mb-1 font-medium text-gray-500 text-xs">
                       Modalidad *
@@ -254,7 +232,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                     </select>
                   </div>
 
-                  {/* Switch M1 o L */}
                   <div className="col-span-12">
                     <label className="flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md w-full text-gray-700 text-sm">
                       <span>
@@ -262,7 +239,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                         transporte)
                       </span>
                       <input type="checkbox" className="sr-only peer" />
-                      {/* simple switch */}
                       <span className="inline-flex items-center bg-gray-300 peer-checked:bg-blue-600 ml-3 rounded-full w-10 h-6 transition">
                         <span className="inline-block bg-white shadow ml-1 rounded-full w-5 h-5 transition peer-checked:translate-x-4"></span>
                       </span>
@@ -271,7 +247,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 </div>
               </div>
 
-              {/* ---------- TRANSPORTISTA ---------- */}
               <div className="col-span-12">
                 <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">
                   TRANSPORTISTA
@@ -291,7 +266,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                     </div>
                   </div>
 
-                  {/* Registrar vehículos/conductores */}
                   <div className="col-span-12">
                     <label className="flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md w-full text-gray-700 text-sm">
                       <span>
@@ -306,7 +280,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 </div>
               </div>
 
-              {/* ---------- DOCUMENTOS RELACIONADOS ---------- */}
               <div className="col-span-12">
                 <p className="mb-2 font-semibold text-gray-500 text-xs tracking-wide">
                   DOCUMENTOS RELACIONADOS
@@ -324,21 +297,18 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
           {/* PRODUCTOS */}
           {activeTab === "productos" && (
             <div className="space-y-4">
-              {/* Lista de productos */}
               {productoSeleccionado.map((producto, index) => (
                 <div
                   key={producto.codigo || index}
                   className="bg-white shadow-sm rounded-xl ring-1 ring-gray-200"
                 >
                   <div className="items-center gap-3 grid grid-cols-12 p-3">
-                    {/* Placeholder imagen */}
                     <div className="col-span-12 sm:col-span-2">
                       <div className="flex justify-center items-center bg-gray-100 rounded-md w-16 h-16 text-gray-400">
                         <i className="pi pi-image" />
                       </div>
                     </div>
 
-                    {/* Campos (Nombre, Cantidad, Detalle) */}
                     <div className="col-span-12 sm:col-span-9">
                       <div className="space-y-3">
                         <div>
@@ -399,7 +369,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                       </div>
                     </div>
 
-                    {/* Quitar producto */}
                     <div className="flex justify-end col-span-12 sm:col-span-1">
                       <button
                         className="hover:bg-red-50 p-2 rounded-md text-red-600"
@@ -418,7 +387,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                 </div>
               ))}
 
-              {/* CTA: Agregar producto */}
               <button
                 onClick={() => setMostrarModalProducto(true)}
                 className="bg-blue-50 hover:bg-blue-100 px-4 py-2 border border-blue-300 rounded-md w-full font-semibold text-blue-600 text-sm text-center uppercase tracking-wide"
@@ -436,7 +404,7 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
                     const productosConCampos: ProductoGuia[] = lista.map(
                       (p) => ({
                         ...p,
-                        cantidad: 1, // valor por defecto
+                        cantidad: 1,
                         detalle: "",
                       })
                     );
@@ -452,7 +420,6 @@ const GuiaRemisionNuevo = ({ onClose }: GuiaRemisionNuevoProps) => {
           )}
         </div>
 
-        {/* footer pegado */}
         <div className="bottom-0 sticky flex justify-end items-center gap-3 bg-white px-5 py-3 border-t">
           <button
             onClick={onClose}

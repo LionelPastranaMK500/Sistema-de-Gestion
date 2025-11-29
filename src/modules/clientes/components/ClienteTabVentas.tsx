@@ -2,15 +2,7 @@ import {
   TabHeader,
   EmptyTabContent,
 } from "@/components/data-display/TabHelpers";
-
-interface VentaCliente {
-  id: number | string;
-  comprobante: string;
-  sucursal: string;
-  vendedor: string;
-  total: string | number;
-  fecha: string;
-}
+import { VentaCliente } from "@/types/modules/clientes";
 
 const columns = [
   { label: "Comprobante", className: "col-span-3" },
@@ -21,7 +13,7 @@ const columns = [
 ];
 
 const ClienteTabVentas = () => {
-  // Tipamos el array aunque esté vacío para evitar errores de 'any' implícito
+  // Tipamos el array aunque esté vacío
   const data: VentaCliente[] = [];
 
   return (

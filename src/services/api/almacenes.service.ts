@@ -1,5 +1,5 @@
 import api from "../api";
-import { Almacen, Producto } from "@/services/generadorData";
+import { Almacen, Producto } from "@/types/services";
 
 export const almacenesService = {
   getAll: () => api.get<Almacen[]>("/api/v1/almacen"),

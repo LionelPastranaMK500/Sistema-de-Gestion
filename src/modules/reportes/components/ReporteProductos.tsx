@@ -9,16 +9,16 @@ import { Button } from "primereact/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { handleReportes } from "@/services/reportes/reportesLogic";
-import { buildExcel, SheetsData } from "@/services/reportes/excelBuilder";
-
-type ViewMode = "visualize" | null;
+import { buildExcel } from "@/services/reportes/excelBuilder";
+import { SheetsData } from "@/types/services/reportes";
+import { ReportViewMode } from "@/types/modules/reportes";
 
 const ReporteProductos = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [visible, setVisible] = useState(true);
-  const [mode, setMode] = useState<ViewMode>(null);
+  const [mode, setMode] = useState<ReportViewMode>(null);
   const [sheetsData, setSheetsData] = useState<SheetsData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

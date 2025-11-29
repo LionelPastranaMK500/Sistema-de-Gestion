@@ -7,10 +7,9 @@ import {
   keyMap,
   VentaGenerada,
 } from "@/services/generadorData";
-import {
-  contarComprobantes,
-  ConteoComprobantes,
-} from "@/utils/documents/comprobantesUtils";
+import { contarComprobantes } from "@/utils/documents/comprobantesUtils";
+// CORRECCIÓN: Importamos la interfaz desde la nueva ubicación
+import { ConteoComprobantes } from "@/types/utils/documents";
 import {
   buildEmisionesData,
   emisionesChartOptions,
@@ -42,8 +41,8 @@ const EstadisticasView = () => {
     []
   );
 
-  const refCalEmi = useRef<any>(null);
-  const refCalVen = useRef<any>(null);
+  const refCalEmi = useRef<Calendar>(null);
+  const refCalVen = useRef<Calendar>(null);
 
   const filtrarPorFecha = (
     fechaFiltro: Date | null,
@@ -104,10 +103,6 @@ const EstadisticasView = () => {
     setTotalVentas(totalVentasCalculado);
     setTotalProformas(totalProformasCalculado);
     setDataVentasFiltrada(datosDelMes);
-
-    if (fechaVentas && data.length > 0) {
-      // toast.success("Ventas actualizadas", { autoClose: 1000 });
-    }
   }, [fechaVentas, data]);
 
   const emisionesData = buildEmisionesData(emisiones);
@@ -136,7 +131,7 @@ const EstadisticasView = () => {
                 className="absolute inset-0 opacity-0 pointer-events-none"
               />
               <button
-                onClick={() => refCalEmi.current?.show?.()}
+                onClick={() => refCalEmi.current?.show()}
                 className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
               >
                 {fmtMesAnio(fechaEmisiones)}
@@ -213,7 +208,7 @@ const EstadisticasView = () => {
                   className="absolute inset-0 opacity-0 pointer-events-none"
                 />
                 <button
-                  onClick={() => refCalVen.current?.show?.()}
+                  onClick={() => refCalVen.current?.show()}
                   className="flex items-center gap-2 hover:bg-gray-50 px-3 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 text-sm"
                 >
                   {fmtMesAnio(fechaVentas)}

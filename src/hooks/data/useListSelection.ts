@@ -1,9 +1,5 @@
 import { useState, useCallback } from "react";
-
-interface SelectionOptions<T> {
-  onDuplicate?: (item: T) => void;
-  onEmptySelection?: () => void;
-}
+import { SelectionOptions } from "@/types/hooks/data";
 
 export const useListSelection = <T>(
   initialItems: T[] = [],

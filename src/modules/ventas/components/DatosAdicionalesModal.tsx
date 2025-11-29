@@ -1,20 +1,10 @@
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useDynamicList, DynamicItem } from "@/hooks/data/useDynamicList";
+import { useDynamicList } from "@/hooks/data/useDynamicList";
 import { useState, useEffect } from "react";
 import AddListModal from "@/components/modals/AddListModal";
 import useVentaStore from "@/stores/ventasStore";
-
-interface DatosAdicionalesModalProps {
-  visible: boolean;
-  onHide: () => void;
-}
-
-// Definimos la interfaz local extendiendo DynamicItem para el uso del hook
-interface DatoItem extends DynamicItem {
-  titulo: string;
-  descripcion: string;
-}
+import { DatosAdicionalesModalProps, DatoItem } from "@/types/modules/ventas";
 
 const DatosAdicionalesModal = ({
   visible,
@@ -22,8 +12,6 @@ const DatosAdicionalesModal = ({
 }: DatosAdicionalesModalProps) => {
   const { datosAdicionales, setDatosAdicionales } = useVentaStore();
 
-  // Inicializamos con los datos del store, asegurando que tengan tempId
-  // Usamos 'as any' para mapear porque datosAdicionales viene del store como DatoAdicional[]
   const initialItems = (datosAdicionales || []).map((d, i) => ({
     ...d,
     tempId: Date.now() + i,
@@ -49,8 +37,6 @@ const DatosAdicionalesModal = ({
   }, [visible, datosAdicionales, setItems]);
 
   const handleSave = (newItems: DatoItem[]) => {
-    // Al guardar, hacemos cast a 'any' o al tipo del store porque el store espera DatoAdicional[]
-    // y DatoItem tiene propiedades extra como tempId que no molestan.
     setDatosAdicionales(newItems as any);
     onHide();
   };
@@ -63,8 +49,6 @@ const DatosAdicionalesModal = ({
     }
   };
 
-  // Wrapper para solucionar la incompatibilidad de tipos en onRemoveItem
-  // AddListModal envía (id: string | number), pero removeItem espera number
   const handleRemove = (id: string | number) => {
     removeItem(Number(id));
   };

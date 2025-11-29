@@ -5,23 +5,14 @@ import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
 import { MenuIcon } from "@/constants/icons";
+import { VentaComponent } from "@/types/modules/ventas";
 
-// Estilos CSS en constantes para limpiar el JSX
 const INPUT_CLASS =
   "w-full h-full px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold text-gray-700 placeholder-gray-400 shadow-sm transition-all";
 const BTN_CLASS =
   "w-full h-full flex items-center justify-center gap-2 px-3 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md text-xs font-bold text-gray-600 uppercase tracking-wide shadow-sm transition-all active:scale-95";
 
-// Definimos la interfaz para los items de venta
-interface VentaComponent {
-  name: string;
-  action: string;
-  isInput: boolean;
-  placeholder?: string;
-}
-
 const VentasModal = () => {
-  // Tipamos los estados para evitar 'any'
   const [modals, setModals] = useState<Record<string, boolean>>({});
   const [inlineInputs, setInlineInputs] = useState<Record<string, boolean>>({});
   const menuRef = useRef<Menu>(null);
@@ -35,13 +26,9 @@ const VentasModal = () => {
   const blurInlineInput = (action: string) =>
     setInlineInputs((prev) => ({ ...prev, [action]: false }));
 
-  // Casting seguro de componentsVentas
   const allComponents = componentsVentas as VentaComponent[];
   const inputItems = allComponents.filter((c) => c.isInput);
 
-  // Filtramos los items que van al menú "OTROS" (los que no son inputs y no se muestran directos)
-  // Aquí asumimos que quieres mostrar algunos en el menú desplegable.
-  // Adaptamos para el componente Menu de PrimeReact que espera { label, command }
   const otrosModalItems = allComponents
     .filter((c) => !c.isInput)
     .map((c) => ({

@@ -1,15 +1,5 @@
 import { Dialog } from "primereact/dialog";
-
-// Usamos un genérico T para que las opciones sean flexibles
-interface SelectionModalProps<T> {
-  visible: boolean;
-  onHide: () => void;
-  title: string;
-  options?: T[];
-  optionLabel?: keyof T; // Debe ser una clave del objeto T
-  optionValue?: keyof T; // Debe ser una clave del objeto T
-  onSelect: (option: T) => void;
-}
+import { SelectionModalProps } from "@/types/components";
 
 const SelectionModal = <T extends Record<string, any>>({
   visible,
@@ -17,7 +7,6 @@ const SelectionModal = <T extends Record<string, any>>({
   title,
   options = [],
   optionLabel = "name",
-  // optionValue = "value", // No se usa realmente en el render actual
   onSelect,
 }: SelectionModalProps<T>) => {
   const handleSelect = (option: T) => {

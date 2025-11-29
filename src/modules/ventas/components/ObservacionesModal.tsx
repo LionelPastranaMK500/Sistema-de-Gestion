@@ -1,10 +1,6 @@
 import SimpleInputModal from "@/components/modals/SimpleInputModal";
 import useVentaStore from "@/stores/ventasStore";
-
-interface ObservacionesModalProps {
-  visible: boolean;
-  onHide: () => void;
-}
+import { ObservacionesModalProps } from "@/types/modules/ventas";
 
 const ObservacionesModal = ({ visible, onHide }: ObservacionesModalProps) => {
   const { observaciones, setObservaciones } = useVentaStore();

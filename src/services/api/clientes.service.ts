@@ -1,5 +1,5 @@
 import api from "../api";
-import { Cliente } from "@/services/generadorData";
+import { Cliente } from "@/types/services";
 
 export const clientesService = {
   getAll: (params: Record<string, string> = {}) => {

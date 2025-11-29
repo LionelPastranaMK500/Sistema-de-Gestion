@@ -11,7 +11,6 @@ import { MenuItem } from "primereact/menuitem";
 
 export default function ConfigurarAlmacen() {
   const navigate = useNavigate();
-  // Tipamos el array para evitar el error de 'never[]'
   const [almacenes, setAlmacenes] = useState<Almacen[]>([]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -19,7 +18,6 @@ export default function ConfigurarAlmacen() {
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
 
   const menuRef = useRef<Menu>(null);
-  // Tipamos el seleccionado
   const [selectedAlmacen, setSelectedAlmacen] = useState<Almacen | null>(null);
 
   useEffect(() => {

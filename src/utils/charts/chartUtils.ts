@@ -11,9 +11,7 @@ import {
   Title,
   TooltipItem,
 } from "chart.js";
-
-// Importamos las interfaces correctas
-import { ConteoComprobantes } from "@/utils/documents/comprobantesUtils";
+import { ConteoComprobantes } from "@/types/utils/documents";
 import { VentaGenerada } from "@/services/generadorData";
 
 ChartJS.register(

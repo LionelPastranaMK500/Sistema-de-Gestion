@@ -6,18 +6,11 @@ import {
   requestResetPassword,
   verifyResetCode,
   resetPassword,
-  AuthUser,
 } from "@/services/auth/authServices";
+import { AuthUser, LogicResponse } from "@/types/services/auth";
 import { notifySuccess, notifyError } from "@/utils/notifications/notify";
 import { redirectWithDelay } from "@/utils/navigation/redirectWithDelay";
 import { NavigateFunction } from "react-router-dom";
-
-interface LogicResponse {
-  success: boolean;
-  message?: string;
-  user?: AuthUser;
-  data?: any;
-}
 
 export const handleRegister = async (
   form: any,

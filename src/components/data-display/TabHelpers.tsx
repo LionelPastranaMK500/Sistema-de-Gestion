@@ -1,17 +1,10 @@
+import { TabHeaderProps } from "@/types/components";
+
 export const EmptyTabContent = () => (
   <div className="py-10 text-gray-500 text-center">
     No se encontraron resultados
   </div>
 );
-
-interface Column {
-  label: string;
-  className?: string;
-}
-
-interface TabHeaderProps {
-  columns: Column[];
-}
 
 export const TabHeader = ({ columns }: TabHeaderProps) => (
   <div className="top-0 sticky bg-gray-50 border-gray-200 border-b">

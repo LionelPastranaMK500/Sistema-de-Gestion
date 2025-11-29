@@ -3,12 +3,7 @@ import { generarPDF } from "@/utils/pdf/pdfConfig";
 import { CloseIcon } from "@/constants/icons";
 import { getActiveUser } from "@/services/auth/authServices";
 import { formatearFechaComprobante } from "@/utils/documents/fechaComprobante";
-import { VentaGenerada } from "@/services/generadorData";
-
-interface FacturaModalProps {
-  f: VentaGenerada;
-  onClose: () => void;
-}
+import { FacturaModalProps } from "@/types/modules/facturas";
 
 const FacturaModal = ({ f, onClose }: FacturaModalProps) => {
   const [mostrarFormatos, setMostrarFormatos] = useState(false);

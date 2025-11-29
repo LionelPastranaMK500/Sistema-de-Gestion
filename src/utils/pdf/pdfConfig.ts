@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import n2words from "n2words";
 import { getActiveUser, getActiveCompany } from "@/services/auth/authServices";
 import { VentaGenerada } from "@/services/generadorData";
+import { PdfFormat, PageSize, LayoutConfig } from "@/types/utils/pdf";
 
 const BANKS: string[] = [
   "Cta. BCP: 192-330 26997-0-01",
@@ -10,13 +11,6 @@ const BANKS: string[] = [
   "Cta. INTERBANK: 378-330 8394360",
   "CCI. INTERBANK: 003-378 013308394360 74",
 ];
-
-export type PdfFormat = "A4" | "t80mm";
-
-interface PageSize {
-  width: number;
-  height: number;
-}
 
 export const PAGE_SIZES: Record<PdfFormat, PageSize> = {
   A4: { width: 210, height: 297 },
@@ -27,14 +21,6 @@ const FORMAT_LABELS: Record<PdfFormat, string> = {
   A4: "A4",
   t80mm: "80mm",
 };
-
-interface LayoutConfig {
-  margin: number;
-  fs: { xs: number; sm: number; md: number; lg: number; xl: number };
-  line: number;
-  bottomSafe: number;
-  cols: (w: number, m: number) => Record<string, number>;
-}
 
 export const LAYOUT: Record<PdfFormat, LayoutConfig> = {
   A4: {
@@ -47,10 +33,10 @@ export const LAYOUT: Record<PdfFormat, LayoutConfig> = {
       uni: m + 15,
       cod: m + 35,
       desc: m + 60,
-      cant: w - 95, // Reducido espacio
-      dscto: w - 75, // Nueva columna DSCTO
-      punit: w - 50, // Movido P. UNIT.
-      total: w - m - 2, // Mantenido TOTAL
+      cant: w - 95,
+      dscto: w - 75,
+      punit: w - 50,
+      total: w - m - 2,
     }),
   },
   t80mm: {
@@ -58,8 +44,8 @@ export const LAYOUT: Record<PdfFormat, LayoutConfig> = {
     fs: { xs: 6, sm: 8, md: 9, lg: 11, xl: 14 },
     cols: (w, m) => ({
       desc: m,
-      dscto: w - 36, // Nueva columna DSCTO
-      punit: w - 21, // Movido P. UNIT.
+      dscto: w - 36,
+      punit: w - 21,
       total: w - m,
     }),
     line: 5,
@@ -73,7 +59,7 @@ const amountToWords = (amount: number | undefined | null) => {
   const abs = Math.abs(Number(amount || 0));
   const entero = Math.floor(abs);
   const cent = Math.round((abs - entero) * 100);
-  // @ts-ignore: n2words type might be incorrect depending on version, or suppress if lang issue
+  // @ts-ignore: n2words types might differ
   const letras = n2words(entero, { lang: "es" }).toUpperCase();
   const centTexto = cent.toString().padStart(2, "0");
   return `${letras} CON ${centTexto}/100 SOLES`;
@@ -96,7 +82,6 @@ const fmtDateTime = (d: string | Date = new Date()) =>
     hour12: true,
   });
 
-// Tipamos correctamente los parámetros
 export function renderFacturaA4(
   doc: jsPDF,
   factura: VentaGenerada,
@@ -105,6 +90,11 @@ export function renderFacturaA4(
   H: number,
   nombreCompleto: string
 ) {
+  // ... (El código interno es idéntico, solo cambiaron los imports y las firmas ya usan los tipos importados)
+  // Como el código es muy largo, puedes mantener el cuerpo de la función igual,
+  // ya que la lógica interna no cambia, solo las definiciones de tipos que ahora vienen de @/types/utils/pdf
+  // Pega aquí el contenido de la función renderFacturaA4 original
+
   const M = cfg.margin;
   const fs = cfg.fs;
   const lineH = cfg.line;
@@ -118,7 +108,6 @@ export function renderFacturaA4(
     }
   };
 
-  // Acceso seguro a la empresa para evitar errores si es null (aunque generadorData suele asegurar valores)
   const empresa = getActiveCompany();
   const rucEmisor = empresa?.ruc || "RUC NO DISPONIBLE";
 
@@ -189,7 +178,7 @@ export function renderFacturaA4(
   y += lineH;
 
   factura.items.forEach((it, idx) => {
-    const totalConDescuento = it.totalFinal || it.total || 0; // Fallback si no tiene totalFinal
+    const totalConDescuento = it.totalFinal || it.total || 0;
     const itemDiscount = it.descuentoAplicado || 0;
 
     totalItemsFinal += totalConDescuento;
@@ -281,8 +270,6 @@ export function renderFacturaA4(
   doc.setFont("helvetica", "bold");
   doc.text("CONDICIÓN DE PAGO", leftLabelX, y);
   doc.setFont("helvetica", "normal");
-  // Ajuste si condicionPago no existe en factura (VentaGenerada)
-  // Puedes extender VentaGenerada o acceder con ['condicionPago']
   let condText = "CONTADO";
   const condPago = (factura as any).condicionPago;
   if (condPago?.condicion) {
@@ -324,7 +311,6 @@ export function renderFacturaA4(
     y += cfg.line;
   }
 
-  // Casting a any para propiedades opcionales extras que no estén en la interfaz base
   const guias = (factura as any).guiasRemision;
   if (guias && guias.length > 0) {
     doc.setFont("helvetica", "bold");
@@ -388,10 +374,11 @@ export function renderFactura80mm(
   H: number,
   nombreCompleto: string
 ) {
+  // ... (Igual aquí, el cuerpo es el mismo, solo cambiaron las firmas)
+  // Pega aquí el contenido de la función renderFactura80mm original
   const M = cfg.margin;
   const fs = cfg.fs;
   const lineH = cfg.line;
-  // Para 80mm usamos una estructura diferente de columnas, aquí simplificado
   const cols = cfg.cols(W, M);
 
   const punitX = (cols as any).punit;
@@ -430,7 +417,6 @@ export function renderFactura80mm(
     y += lineH;
   };
 
-  // Acceso seguro a la empresa
   const empresa = getActiveCompany();
   const rucEmisor = empresa?.ruc || "RUC NO DISPONIBLE";
 
@@ -508,7 +494,7 @@ export function renderFactura80mm(
     }
   };
 
-  let valorRuc = factura.documento; // Usamos documento en lugar de ruc
+  let valorRuc = factura.documento;
   if (typeof valorRuc === "boolean" || !valorRuc) {
     valorRuc = "-";
   }
@@ -656,14 +642,13 @@ export function renderFactura80mm(
   return { y, total: totalFinal };
 }
 
-// Función auxiliar para llamar al render correcto
-// Agregamos Partial<VentaGenerada> porque al iniciar la app puede venir vacía
+// Visualizar PDF
 export async function visualizarPDF(
   factura: Partial<VentaGenerada> = {},
   tipo: string = "A4"
 ) {
-  // Validamos que el tipo sea válido, sino fallback a A4
-  const validTipo = tipo === "A4" || tipo === "t80mm" ? tipo : "A4";
+  const validTipo =
+    tipo === "A4" || tipo === "t80mm" ? (tipo as PdfFormat) : "A4";
   const { width: W, height: H } = PAGE_SIZES[validTipo];
   const cfg = LAYOUT[validTipo];
 
@@ -674,8 +659,6 @@ export async function visualizarPDF(
     (activeUser as any)?.nombreCompleto ||
     `${activeUser?.nombres || ""} ${activeUser?.apellidoPaterno || ""}`.trim();
 
-  // Aseguramos que factura tenga lo mínimo necesario o lanzamos error/retornamos
-  // Aquí forzamos el tipo para que renderFactura lo acepte
   if (validTipo === "A4") {
     renderFacturaA4(doc, factura as VentaGenerada, cfg, W, H, nombreCompleto);
   } else {
@@ -687,7 +670,8 @@ export async function visualizarPDF(
 
 export async function generarPDF(factura: VentaGenerada, tipo: string = "A4") {
   try {
-    const validTipo = tipo === "A4" || tipo === "t80mm" ? tipo : "A4";
+    const validTipo =
+      tipo === "A4" || tipo === "t80mm" ? (tipo as PdfFormat) : "A4";
     const { width: W, height: H } = PAGE_SIZES[validTipo];
     const cfg = LAYOUT[validTipo];
     const doc = new jsPDF({ unit: "mm", format: [W, H] });

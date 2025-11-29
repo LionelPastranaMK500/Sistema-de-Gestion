@@ -4,28 +4,10 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useFormInput } from "@/hooks/forms";
-import { Usuario } from "@/services/generadorData";
+import { UsuarioModalProps, UsuarioForm } from "@/types/modules/configuracion";
 
 const inputStyle =
   "w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors";
-
-interface UsuarioDisplay extends Usuario {
-  nombreCompleto?: string;
-  alias?: string;
-}
-
-interface UsuarioModalProps {
-  visible: boolean;
-  onHide: () => void;
-  mode: "add" | "edit";
-  userData?: UsuarioDisplay | null;
-}
-
-interface UsuarioForm {
-  email: string;
-  rol: string | null;
-  alias: string;
-}
 
 const UsuarioModal = ({
   visible,

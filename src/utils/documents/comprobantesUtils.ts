@@ -1,14 +1,5 @@
 import { VentaGenerada } from "@/services/generadorData";
-
-export interface ConteoComprobantes {
-  total: number;
-  facturas: number;
-  boletas: number;
-  notasCredito: number;
-  notasDebito: number;
-  proformas: number;
-  guiasRemision: number;
-}
+import { ConteoComprobantes } from "@/types/utils/documents";
 
 export function contarComprobantes(
   data: VentaGenerada[],
@@ -30,7 +21,6 @@ export function contarComprobantes(
   data.forEach((doc) => {
     if (fechaInicio && fechaFin) {
       const fechaDoc = new Date(doc.fecha);
-      // Aseguramos que fechaFin no sea null
       const fechaLimite = fechaFin > hoy ? hoy : fechaFin;
 
       if (fechaDoc < fechaInicio || fechaDoc > fechaLimite) return;

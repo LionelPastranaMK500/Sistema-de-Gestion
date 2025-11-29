@@ -1,10 +1,5 @@
 import { useState, useCallback } from "react";
-
-interface UseApiOptions<T> {
-  immediate?: boolean;
-  onSuccess?: (data: T) => void;
-  onError?: (error: unknown) => void;
-}
+import { UseApiOptions } from "@/types/hooks/data";
 
 export const useApi = <T, P extends unknown[] = unknown[]>(
   apiFunction: (...args: P) => Promise<T>,

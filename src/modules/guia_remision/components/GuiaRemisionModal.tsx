@@ -1,12 +1,7 @@
 import { CloseIcon } from "@/constants/icons";
-import { VentaGenerada } from "@/services/generadorData";
 import { getActiveUser } from "@/services/auth/authServices";
 import { formatearFechaComprobante } from "@/utils/documents/fechaComprobante";
-
-interface GuiaRemisionModalProps {
-  f: VentaGenerada;
-  onClose: () => void;
-}
+import { GuiaRemisionModalProps } from "@/types/modules/guia_remision";
 
 const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
   if (!f) return null;
@@ -43,7 +38,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
         </div>
 
         <div className="space-y-4 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-          {/* Cabecera del Documento */}
           <div className="bg-white shadow px-4 py-3 rounded-md text-center">
             <p className="font-bold text-gray-800 uppercase">
               GUÍA DE REMISIÓN REMITENTE
@@ -53,7 +47,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
             </p>
           </div>
 
-          {/* Destinatario */}
           <div className="bg-white shadow px-4 py-3 rounded-md">
             <strong className="block text-gray-800 text-sm mb-1">
               DESTINATARIO
@@ -64,7 +57,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
             </p>
           </div>
 
-          {/* Detalles de Envío (Simulados o reales si existen en f) */}
           <div className="bg-white shadow px-4 py-3 rounded-md">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -86,7 +78,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
             </div>
           </div>
 
-          {/* Usuario */}
           <div className="bg-white shadow px-4 py-3 rounded-md">
             <strong className="block text-gray-800 text-sm mb-1">
               USUARIO
@@ -98,7 +89,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
             </p>
           </div>
 
-          {/* Estado SUNAT */}
           <div className="bg-white shadow px-4 py-3 rounded-md flex justify-between items-center">
             <strong className="text-gray-800 text-sm">ESTADO SUNAT</strong>
             <span
@@ -114,7 +104,6 @@ const GuiaRemisionModal = ({ f, onClose }: GuiaRemisionModalProps) => {
             </span>
           </div>
 
-          {/* Botones de Acción */}
           <div className="grid grid-cols-2 gap-3 mt-4">
             <button className="bg-blue-600 hover:bg-blue-700 py-2.5 rounded font-semibold text-white text-sm transition-colors">
               ENVIAR POR EMAIL

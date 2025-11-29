@@ -1,24 +1,7 @@
 import { useState, useRef } from "react";
 import { getClientes } from "@/services/generadorData";
 import { AutoComplete } from "primereact/autocomplete";
-
-interface Cliente {
-  razonSocial?: string;
-  nombre?: string;
-  direccion?: string;
-  documento?: string;
-  documentoTipo?: string;
-  email?: string;
-  [key: string]: any;
-}
-
-interface SpecialItem {
-  __type: "header" | "tips";
-  razonSocial?: never;
-  documento?: never;
-}
-
-type SuggestionItem = Cliente | SpecialItem;
+import { Cliente, SuggestionItem, SpecialItem } from "@/types/hooks";
 
 export const useClienteSeleccionado = () => {
   const clientes = getClientes();
@@ -38,13 +21,13 @@ export const useClienteSeleccionado = () => {
     if (!q) return [HEADER, TIPS];
 
     const matches = clientes.filter(
-      (c: Cliente) =>
+      (c: any) =>
         (c.razonSocial || "").toLowerCase().includes(q) ||
         (c.direccion || "").toLowerCase().includes(q) ||
         (c.documento || "").toString().toLowerCase().includes(q)
     );
 
-    return [HEADER, ...(matches ?? []), TIPS];
+    return [HEADER, ...(matches as Cliente[]), TIPS];
   };
 
   const buscarClientes = (event: { query: string }) => {

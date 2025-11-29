@@ -7,7 +7,9 @@ import {
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { DataView } from "primereact/dataview";
-import { clientes, Cliente } from "@/services/generadorData";
+import { clientes } from "@/services/generadorData";
+import { Cliente } from "@/types/services";
+import { ClienteCardProps } from "@/types/modules/clientes";
 import {
   MoreVertIcon,
   SearchIcon,
@@ -16,11 +18,6 @@ import {
 } from "@/constants/icons";
 import { useSearch, usePagination } from "@/hooks/data";
 import ClienteNuevo from "./ClienteNuevo";
-
-interface ClienteCardProps {
-  cliente: Cliente;
-  index: number;
-}
 
 const ClienteCard = ({ cliente, index }: ClienteCardProps) => (
   <div
@@ -117,7 +114,6 @@ const ClientesView = () => {
 
             <AutoComplete
               value={searchQuery}
-              // Ajuste para eventos de PrimeReact
               completeMethod={(e: AutoCompleteCompleteEvent) =>
                 handleSearch(e.query)
               }

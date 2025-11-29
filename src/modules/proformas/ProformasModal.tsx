@@ -1,14 +1,9 @@
-import { VentaGenerada } from "@/services/generadorData";
+import { useRef, useState } from "react";
+import { generarPDF } from "@/utils/pdf/pdfConfig";
 import { CloseIcon } from "@/constants/icons";
 import { getActiveUser } from "@/services/auth/authServices";
 import { formatearFechaComprobante } from "@/utils/documents/fechaComprobante";
-import { useRef, useState } from "react";
-import { generarPDF } from "@/utils/pdf/pdfConfig";
-
-interface ProformasModalProps {
-  f: VentaGenerada;
-  onClose: () => void;
-}
+import { ProformasModalProps } from "@/types/modules/proformas";
 
 const ProformasModal = ({ f, onClose }: ProformasModalProps) => {
   const [mostrarFormatos, setMostrarFormatos] = useState(false);

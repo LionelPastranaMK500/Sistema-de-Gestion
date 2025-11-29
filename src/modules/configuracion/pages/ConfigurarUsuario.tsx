@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsuarios, Usuario } from "@/services/generadorData";
+import { getUsuarios } from "@/services/generadorData";
 import {
   KeyboardArrowLeftIcon,
   MoreVertIcon,
   PermIdentityTwoToneIcon,
 } from "@/constants/icons";
 import UsuarioModal from "../components/UsuarioModal";
-
-interface UsuarioDisplay extends Usuario {
-  nombreCompleto?: string;
-  alias?: string;
-}
+import { UsuarioDisplay } from "@/types/modules/configuracion";
 
 export default function UsuariosView() {
   const navigate = useNavigate();

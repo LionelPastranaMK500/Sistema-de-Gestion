@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
-
-type SearchFunction<T> = (item: T, query: string) => boolean;
-type SearchFields<T> = (keyof T)[] | SearchFunction<T>;
+import { SearchFields } from "@/types/hooks/data";
 
 export const useSearch = <T extends Record<string, any>>(
   items: T[],

@@ -12,24 +12,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { getActiveCompany, getActiveUser } from "@/services/auth/authServices";
 import { handleReportes } from "@/services/reportes/reportesLogic";
-import { buildExcel, SheetsData } from "@/services/reportes/excelBuilder";
+import { buildExcel } from "@/services/reportes/excelBuilder";
+import { SheetsData } from "@/types/services/reportes";
 import { useFilterState } from "@/hooks/data";
-
-type ViewMode = "filter" | "generated" | "visualize";
-
-interface FilterState {
-  sucursal: string | null;
-  usuario: string | null;
-  fechaInicio: Date | null;
-  fechaFin: Date | null;
-  [key: string]: any;
-}
+import { ReportViewMode, GuiasFilterState } from "@/types/modules/reportes";
 
 const ReporteGuiasRemision = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
-  const [mode, setMode] = useState<ViewMode>("filter");
+  const [mode, setMode] = useState<ReportViewMode>("filter");
   const [sheetsData, setSheetsData] = useState<SheetsData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +31,7 @@ const ReporteGuiasRemision = () => {
     filters: filter,
     updateFilter,
     setFilters: setFilter,
-  } = useFilterState<FilterState>({
+  } = useFilterState<GuiasFilterState>({
     sucursal: "all",
     usuario: "all",
     fechaInicio: null,
@@ -52,7 +44,6 @@ const ReporteGuiasRemision = () => {
   const activeCompany = getActiveCompany();
   const activeUser = getActiveUser();
 
-  // Acceso seguro a propiedades que podrían no estar en la interfaz base
   const companySucursales = (activeCompany as any)?.sucursales || [];
 
   const sucursalOptions = [

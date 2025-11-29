@@ -1,4 +1,5 @@
-// Helper genérico para elegir un elemento aleatorio de un array
+import { CatalogoItem, ItemCompra } from "@/types/services/generador";
+
 export const elegirAleatorio = <T>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
@@ -24,12 +25,6 @@ export const generarDni = (): string => {
   return Math.floor(10000000 + Math.random() * 90000000).toString();
 };
 
-// Definimos qué necesita tener un item para ser usado en la generación
-interface CatalogoItem {
-  precio?: number;
-  [key: string]: any; // Permite otras propiedades
-}
-
 export const generarItemsAleatorios = <T extends CatalogoItem>(
   catalogo: T[],
   maxItems: number = 2
@@ -48,14 +43,6 @@ export const generarItemsAleatorios = <T extends CatalogoItem>(
     return { ...item, cantidad: 1, unidad: "UND", precio };
   });
 };
-
-// Interfaz para los items que se usan en el cálculo de monto
-interface ItemCompra {
-  precio: number;
-  cantidad: number;
-  afectoISC?: boolean;
-  [key: string]: any;
-}
 
 export const calcularMonto = (tipoDocumento: string, items: ItemCompra[]) => {
   const subtotal = items.reduce((acc, i) => acc + i.precio * i.cantidad, 0);

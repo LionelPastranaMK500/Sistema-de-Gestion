@@ -13,117 +13,27 @@ import {
   syncActiveCompany,
 } from "@/services/auth/authServices";
 
-export interface Cliente {
-  nombre?: string;
-  razonSocial?: string;
-  direccion: string;
-  tipo: string;
-  documentoTipo: string;
-  documento: string;
-  email: string;
-  telefono?: string;
-  observaciones?: string;
-  [key: string]: any;
-}
+import {
+  Cliente,
+  Producto,
+  Usuario,
+  Sucursal,
+  Almacen,
+  ImpresionConfig,
+  MontoVenta,
+  VentaGenerada,
+} from "@/types/services";
 
-export interface Producto {
-  codigo: string;
-  unidad: string;
-  descripcion: string;
-  precio: number;
-  isc: number;
-  moneda?: string;
-  unidadMedida?: string;
-  categoria?: string;
-  [key: string]: any;
-}
-
-export interface Usuario {
-  nombres: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-  correo: string;
-  rol: string;
-  [key: string]: any;
-}
-
-export interface Numeracion {
-  tipo: string;
-  serie: string;
-  inicial: number;
-}
-
-export interface Sucursal {
-  id: string;
-  nombre: string;
-  direccion: string;
-  vendedores: string[];
-  almacenes: string[];
-  isPrincipal: boolean;
-  numeracion: Numeracion[];
-}
-
-export interface Almacen {
-  id: string;
-  nombre: string;
-  direccion: string;
-}
-
-export interface ImpresionConfig {
-  basica: {
-    formatoDefecto: string;
-    decimales: number;
-    infoCabecera: string;
-    cuentasBancarias: string;
-    infoPiePagina: string;
-  };
-  formatos: {
-    [key: string]: {
-      disponibles: string[];
-      visibles: string[];
-    };
-  };
-}
-
-// Definición precisa de Monto para evitar conflictos
-export interface MontoVenta {
-  total: number;
-  gravado?: number;
-  igv?: number;
-  isc?: number;
-  rc?: number;
-  descuento?: number;
-  exonerado?: number;
-  inafecto?: number;
-  moneda?: string;
-  [key: string]: any;
-}
-
-export interface VentaGenerada {
-  id: number;
-  serie: string;
-  numero: string;
-  cliente: string;
-  documentoTipo: string;
-  documento: string;
-  direccion: string;
-  email: string;
-  fecha: string | Date;
-  monto: MontoVenta;
-  tDocumento: string;
-  state: string;
-  items: any[];
-  tipoOperacion: string;
-  sucursal: string;
-  usuario: string;
-  placaVehiculo?: string;
-  documentoAfectado?: string;
-  motivo?: string;
-  observaciones?: string;
-  [key: string]: any;
-}
-
-// --- FIN INTERFACES ---
+export type {
+  Cliente,
+  Producto,
+  Usuario,
+  Sucursal,
+  Almacen,
+  ImpresionConfig,
+  MontoVenta,
+  VentaGenerada,
+};
 
 const DEFAULT_SERIE = "XX01";
 const DEFAULT_FALLBACK = ["BB004"];

@@ -7,7 +7,6 @@ import {
 import { useState, useEffect } from "react";
 import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
-// CORRECCIÓN: Importación correcta desde la carpeta components
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
 import GuiaRemisionNuevo from "./GuiaRemisionNuevo";
 import { useDateFilter } from "@/hooks/data";

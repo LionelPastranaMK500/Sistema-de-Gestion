@@ -1,25 +1,6 @@
 import api from "../api";
+import { Serie, Direccion, TipoDocNota } from "@/types/services";
 
-// Definimos interfaces básicas para las maestras
-export interface Serie {
-  id: number | string;
-  nombre: string;
-  [key: string]: any;
-}
-
-export interface Direccion {
-  id: number | string;
-  descripcion: string;
-  [key: string]: any;
-}
-
-export interface TipoDocNota {
-  id: number | string;
-  codigo: string;
-  descripcion: string;
-}
-
-// Función helper genérica para crear servicios CRUD básicos
 const createCrudService = <T>(basePath: string) => ({
   getAll: () => api.get<T[]>(basePath),
   create: (data: Partial<T>) => api.post<T>(basePath, data),

@@ -3,17 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
 import { useModalInput } from "@/hooks/modals/useModalInput";
-
-interface SimpleInputModalProps {
-  visible: boolean;
-  onHide: () => void;
-  title: string;
-  placeholder?: string;
-  value: string;
-  onSave: (value: string) => void;
-  type?: "text" | "textarea";
-  rows?: number;
-}
+import { SimpleInputModalProps } from "@/types/components";
 
 const SimpleInputModal = ({
   visible,

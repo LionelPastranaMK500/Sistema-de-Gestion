@@ -1,16 +1,6 @@
 import api from "../api";
-import { VentaGenerada } from "@/services/generadorData";
-
-interface CdrResponse {
-  cdrBase64: string;
-  numero: string;
-  estado: string;
-}
-
-interface EstadoResponse {
-  estado: string;
-  motivo?: string;
-}
+import { VentaGenerada } from "@/types/services";
+import { CdrResponse, EstadoResponse } from "@/types/services/ventas";
 
 export const ventasService = {
   emitir: (ventaData: Partial<VentaGenerada>) =>

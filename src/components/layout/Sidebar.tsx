@@ -14,17 +14,7 @@ import { handleLogout } from "@/services/auth/authLogic";
 import { useNavigate } from "react-router-dom";
 import { menuActions } from "@/utils/navigation/menuActions";
 import { useSidebar } from "@/utils/navigation/sidebarState";
-
-// Interfaces para los datos
-interface Empresa {
-  id: number | string;
-  nombre: string;
-}
-
-interface Sucursal {
-  id: number | string;
-  nombre: string;
-}
+import { SidebarOption } from "@/types/components";
 
 type MenuActionKey = keyof typeof menuActions;
 
@@ -33,10 +23,9 @@ export default function Sidebar() {
   const { sidebarReady } = useSidebar();
   const user = JSON.parse(localStorage.getItem("activeUser") || "{}");
   const navigate = useNavigate();
+  const [empresas, setEmpresas] = useState<SidebarOption[]>([]);
+  const [sucursales, setSucursales] = useState<SidebarOption[]>([]);
 
-  const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  // Permitimos string o number para manejar el valor inicial "" y los IDs
   const [empresa, setEmpresa] = useState<string | number>("");
   const [sucursal, setSucursal] = useState<string | number>("");
 
@@ -45,7 +34,6 @@ export default function Sidebar() {
   }`;
 
   const handleMenuAction = (action: string) => {
-    // Verificamos si la acción es válida antes de ejecutarla
     if (action in menuActions) {
       const actionKey = action as MenuActionKey;
       menuActions[actionKey]?.({ navigate });
@@ -146,7 +134,6 @@ export default function Sidebar() {
 
       {/* Empresa / Sucursal */}
       <div className="px-5 space-y-6 mb-6">
-        {/* EMPRESA */}
         <div className="flex flex-col">
           <span className="mb-2 inline-flex w-fit self-start rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold uppercase tracking-wide text-blue-100">
             Empresa
@@ -166,11 +153,9 @@ export default function Sidebar() {
                 </option>
               ))}
             </select>
-            {/* SVG arrow icon ... */}
           </div>
         </div>
 
-        {/* SUCURSAL */}
         <div className="flex flex-col">
           <span className="mb-2 inline-flex w-fit self-start rounded-md bg-blue-700 px-2 py-[2px] text-[11px] font-bold uppercase tracking-wide text-blue-100">
             Sucursal
@@ -190,7 +175,6 @@ export default function Sidebar() {
                 </option>
               ))}
             </select>
-            {/* SVG arrow icon ... */}
           </div>
         </div>
       </div>

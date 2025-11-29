@@ -2,15 +2,12 @@ import { configCalendar } from "@/utils/calendar/configCalendar";
 import { useEffect, useState } from "react";
 import { guiaTabsClienteProveedor } from "@/constants/menuItems";
 import { CloseIcon } from "@/constants/icons";
+import { ClienteNuevoProps } from "@/types/modules/clientes";
 
 import ClienteTabInfoBasica from "./components/ClienteTabInfoBasica";
 import ClienteTabVentas from "./components/ClienteTabVentas";
 import ClienteTabProformas from "./components/ClienteTabProformas";
 import ClienteTabGuias from "./components/ClienteTabGuias";
-
-interface ClienteNuevoProps {
-  onClose: () => void;
-}
 
 const ClienteNuevo = ({ onClose }: ClienteNuevoProps) => {
   const [activeTab, setActiveTab] = useState("infoBasica");

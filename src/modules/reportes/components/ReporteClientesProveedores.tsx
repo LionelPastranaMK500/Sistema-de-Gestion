@@ -11,15 +11,15 @@ import * as FileSaver from "file-saver";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { handleReportes } from "@/services/reportes/reportesLogic";
-import { buildExcel, SheetsData } from "@/services/reportes/excelBuilder";
-
-type ViewMode = "filter" | "generated" | "visualize";
+import { buildExcel } from "@/services/reportes/excelBuilder";
+import { SheetsData } from "@/types/services/reportes";
+import { ReportViewMode } from "@/types/modules/reportes";
 
 const ReporteClientesProveedores = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
-  const [mode, setMode] = useState<ViewMode>("filter");
+  const [mode, setMode] = useState<ReportViewMode>("filter");
   const [sheetsData, setSheetsData] = useState<SheetsData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,8 +89,7 @@ const ReporteClientesProveedores = () => {
         const blob = (await buildExcel(
           sheetsData,
           "reporte_clientes.xlsx"
-        )) as any; // cast as any if buildExcel returns Promise<void> but triggers download internally, or if using FileSaver manually
-        // En nuestra implementación de excelBuilder ya hace el saveAs, pero si retorna blob:
+        )) as any;
         FileSaver.saveAs(blob);
       } catch (err) {
         console.error("Error al exportar Excel:", err);

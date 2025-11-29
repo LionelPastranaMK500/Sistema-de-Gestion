@@ -1,5 +1,5 @@
 import api from "../api";
-import { Producto } from "@/services/generadorData";
+import { Producto } from "@/types/services";
 
 export const productosService = {
   getAll: () => api.get<Producto[]>("/api/v1/producto"),
@@ -17,6 +17,5 @@ export const productosService = {
 
   delete: (id: string | number) => api.delete<void>(`/api/v1/producto/${id}`),
 
-  // Asumimos que summary retorna algo específico, si no, any
   getSummary: () => api.get<any>("/api/v1/producto/summary"),
 };

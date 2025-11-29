@@ -1,13 +1,6 @@
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { Almacen } from "@/services/generadorData";
-
-interface AlmacenEliminarModalProps {
-  visible: boolean;
-  onHide: (reload?: boolean) => void;
-  onConfirm: () => void;
-  almacenData: Almacen | null;
-}
+import { AlmacenEliminarModalProps } from "@/types/modules/configuracion";
 
 export default function AlmacenEliminarModal({
   visible,
@@ -48,7 +41,6 @@ export default function AlmacenEliminarModal({
       className="w-[min(450px,95vw)]"
       headerClassName="!p-4 bg-blue-700 text-white rounded-t-lg"
       contentClassName="p-0 pt-4"
-      // footerClassName eliminado para evitar error de TS
     >
       <div className="flex items-start gap-3 px-5 pb-5">
         <i

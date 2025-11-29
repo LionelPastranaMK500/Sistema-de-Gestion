@@ -1,12 +1,9 @@
-import { getProductos, Producto } from "@/services/generadorData";
+import { getProductos } from "@/services/generadorData";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@/constants/icons";
 import { useSearch } from "@/hooks/data";
-
-interface AgregarProductoModalProps {
-  onSelect?: (productos: Producto | Producto[]) => void;
-  onClose?: () => void;
-}
+import { Producto } from "@/types/services";
+import { AgregarProductoModalProps } from "@/types/modules/guia_remision";
 
 const AgregarProductoModal = ({
   onSelect,
@@ -14,7 +11,6 @@ const AgregarProductoModal = ({
 }: AgregarProductoModalProps) => {
   const [productos, setProductos] = useState<Producto[]>([]);
 
-  // Usamos el hook useSearch con el tipo Producto
   const {
     searchQuery: query,
     setSearchQuery: setQuery,
@@ -23,7 +19,6 @@ const AgregarProductoModal = ({
 
   useEffect(() => {
     const cargarProductos = () => {
-      // getProductos es síncrono en el generadorData actual, pero si fuera async:
       const data = getProductos();
       setProductos(data);
     };
@@ -93,9 +88,6 @@ const AgregarProductoModal = ({
                         type="button"
                         onClick={() => {
                           onSelect?.(prod);
-                          // No cerramos automáticamente para permitir selección múltiple si se desea,
-                          // pero según tu lógica original, se cerraba en el padre.
-                          // Aquí solo llamamos onSelect.
                         }}
                         className="group flex justify-between items-start bg-white shadow-sm hover:shadow-md px-4 py-3 border border-gray-200 hover:border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 w-full text-left transition"
                       >

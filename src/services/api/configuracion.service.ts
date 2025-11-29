@@ -1,12 +1,6 @@
 import api from "../api";
-import { Usuario, Sucursal, ImpresionConfig } from "@/services/generadorData";
-
-interface EmpresaConfig {
-  ruc: string;
-  razonSocial: string;
-  direccion: string;
-  [key: string]: any;
-}
+import { Usuario, Sucursal, ImpresionConfig } from "@/types/services";
+import { EmpresaConfig } from "@/types/services/configuracion";
 
 export const usuariosService = {
   getAll: () => api.get<Usuario[]>("/api/v1/usuarios"),

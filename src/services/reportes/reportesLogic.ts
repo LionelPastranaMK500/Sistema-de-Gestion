@@ -3,30 +3,12 @@ import {
   tiposComprobante,
   getClientes,
   getProductos,
-  Producto,
-  VentaGenerada,
-  Cliente,
   mapTipo,
 } from "@/services/generadorData";
-import {
-  getActiveUser,
-  getActiveCompany,
-  AuthUser,
-} from "@/services/auth/authServices";
-
-interface ReporteParams {
-  type?: string;
-  moneda?: string;
-  sucursal?: string;
-  usuario?: string;
-  cliente?: string;
-  fechaInicio?: string;
-  fechaFin?: string;
-  [key: string]: any;
-}
-
-// Tipo de retorno esperado por excelBuilder
-type SheetsData = Record<string, (string | number | null | undefined)[][]>;
+import { getActiveUser, getActiveCompany } from "@/services/auth/authServices";
+import { Producto, VentaGenerada, Cliente } from "@/types/services";
+import { AuthUser } from "@/types/services/auth";
+import { ReporteParams, SheetsData } from "@/types/services/reportes";
 
 export const handleReportes = async (
   action: string,
@@ -61,7 +43,7 @@ export const handleReportes = async (
     }
 
     case "guia_remision": {
-      const guiaData: any[] = [];
+      const guiaData: any[] = []; // Se puede tipar mejor si existiera getGuias()
 
       const encabezadoRemitente = [
         "SERIE",
@@ -199,8 +181,6 @@ export const handleReportes = async (
       const data: VentaGenerada[] = generarDataFalsa(200);
       const empresa = getActiveCompany() || { sucursal: "-" };
 
-      // CORRECCIÓN AQUÍ: Usamos 'nombres' y 'apellidoPaterno' para coincidir con AuthUser
-      // y forzamos el tipo para evitar conflictos en la unión de tipos
       const usuarioActivo =
         getActiveUser() ||
         ({ correo: "-", nombres: "-", apellidoPaterno: "-" } as AuthUser);
@@ -246,8 +226,6 @@ export const handleReportes = async (
       });
 
       const groupedData: Record<string, VentaGenerada[]> = {};
-
-      // Importante: asegúrate que 'tiposComprobante' esté importado o definido
       const tipos = tiposComprobante || [];
 
       tipos.forEach((tipo) => {
@@ -345,11 +323,7 @@ export const handleReportes = async (
         groupedData[tipo].forEach((item) => {
           const monto = item.monto || {};
           const dEmision = new Date(item.fecha);
-
-          // Corrección: usuarioActivo ya tiene 'nombres' garantizado
           const nombreUsuario = usuarioActivo.nombres || "-";
-
-          // Helper para mapTipo
           const tipoCorto = mapTipo ? mapTipo[tipo] : tipo;
 
           const row = isNota
@@ -427,7 +401,6 @@ export const handleReportes = async (
           rows.push(row);
         });
 
-        // Fila de totales
         const sum = (campo: string) =>
           groupedData[tipo].reduce(
             (acc, i) => acc + (Number(i.monto?.[campo]) || 0),

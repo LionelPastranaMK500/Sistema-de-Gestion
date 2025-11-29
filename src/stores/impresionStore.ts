@@ -1,36 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { ImpresionState } from "@/types/stores";
 import { ImpresionConfig } from "@/services/generadorData";
-
-interface ImpresionState {
-  formatoDefecto: string;
-  decimales: number;
-  infoCabecera: string;
-  cuentasBancarias: string;
-  infoPiePagina: string;
-  formatos: {
-    [key: string]: {
-      disponibles: string[];
-      visibles: string[];
-    };
-  };
-
-  loadInitialConfig: (configFromApi: ImpresionConfig) => void;
-
-  updateBasica: (
-    newBasica: Partial<
-      Omit<
-        ImpresionState,
-        "formatos" | "loadInitialConfig" | "updateBasica" | "updateFormato"
-      >
-    >
-  ) => void;
-
-  updateFormato: (
-    formatoKey: string,
-    newColumns: { disponibles: string[]; visibles: string[] }
-  ) => void;
-}
 
 const initialState = {
   formatoDefecto: "A4",

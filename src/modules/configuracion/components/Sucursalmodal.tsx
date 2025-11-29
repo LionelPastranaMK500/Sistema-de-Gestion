@@ -4,34 +4,21 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { CloseIcon, AddIcon, RemoveCircleIcon } from "@/constants/icons";
-import { getUsuarios, getSucursales, Sucursal } from "@/services/generadorData";
+import { getUsuarios, getSucursales } from "@/services/generadorData";
 import { getActiveCompany } from "@/services/auth/authServices";
 import { toast } from "react-toastify";
 import { useFormInput } from "@/hooks/forms";
 import { useDynamicList, useListSelection } from "@/hooks/data";
-import { DynamicItem } from "@/hooks/data/useDynamicList";
+import {
+  SucursalForm,
+  SucursalModalProps,
+  AlmacenItem,
+} from "@/types/modules/configuracion";
 
 const inputStyle =
   "w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm";
 const dropdownStyle =
   "w-full p-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm [&_.p-dropdown-label]:py-2.5 [&_.p-dropdown-label]:px-3";
-
-interface SucursalForm {
-  nombre: string;
-  direccion: string;
-  [key: string]: any;
-}
-
-interface SucursalModalProps {
-  visible: boolean;
-  onHide: () => void;
-  mode?: "add" | "edit";
-  sucursalData?: Sucursal | null;
-}
-
-interface AlmacenItem extends DynamicItem {
-  nombre?: string;
-}
 
 const SucursalModal = ({
   visible,
@@ -261,7 +248,6 @@ const SucursalModal = ({
                 options={almacenesDisponibles}
                 placeholder="Almacen"
                 value={almacen.nombre}
-                // CORRECCIÓN: Usamos updateAlmacen en lugar de updateItem
                 onChange={(e) =>
                   updateAlmacen(almacen.tempId!, "nombre", e.value)
                 }

@@ -1,31 +1,8 @@
-export interface AuthCompany {
-  ruc: string;
-  usuarioSol: string;
-  razonSocial: string;
-  sucursal: string;
-  nombreComercial?: string;
-  direccion?: string;
-}
-
-export interface AuthUser {
-  nombres: string;
-  apellidoPaterno: string;
-  apellidoMaterno?: string;
-  correo: string;
-  clave?: string;
-  rol?: string;
-  empresa?: AuthCompany | null;
-  resetCode?: string;
-  nombreCompleto?: string;
-}
-
-interface AuthResponse {
-  success: boolean;
-  message: string;
-  user?: AuthUser;
-  empresa?: AuthCompany;
-  token?: string;
-}
+import {
+  AuthUser,
+  AuthCompany,
+  AuthLogicResponse,
+} from "@/types/services/auth";
 
 function safeParse<T>(key: string): T | null {
   const raw = localStorage.getItem(key);
@@ -46,7 +23,7 @@ export function getAuthToken(): string | null {
   return localStorage.getItem("authToken");
 }
 
-export function registerUser(userData: AuthUser): AuthResponse {
+export function registerUser(userData: AuthUser): AuthLogicResponse {
   const users = safeParse<AuthUser[]>("users") || [];
   const correoNormalizado = String(userData.correo || "")
     .trim()
@@ -73,7 +50,7 @@ export function registerUser(userData: AuthUser): AuthResponse {
   return { success: true, message: "Usuario registrado correctamente" };
 }
 
-export function loginUser(correo: string, clave: string): AuthResponse {
+export function loginUser(correo: string, clave: string): AuthLogicResponse {
   const correoNormalizado = String(correo || "")
     .trim()
     .toLowerCase();
@@ -118,7 +95,7 @@ export function loginSunatUser({
   ruc: string;
   usuarioSol: string;
   claveSol: string;
-}): AuthResponse {
+}): AuthLogicResponse {
   if (!ruc || !usuarioSol || !claveSol) {
     return { success: false, message: "Todos los campos son requeridos" };
   }
@@ -167,7 +144,7 @@ export function getActiveUser(): AuthUser | null {
   return safeParse<AuthUser>("activeUser");
 }
 
-export function logoutUser(): AuthResponse {
+export function logoutUser(): AuthLogicResponse {
   localStorage.removeItem("activeUser");
   localStorage.removeItem("activeCompany");
   return { success: true, message: "Sesión cerrada" };
@@ -196,7 +173,7 @@ export function syncActiveCompany(): AuthCompany | null {
   return activeCompany;
 }
 
-export function requestResetPassword(correo: string): AuthResponse {
+export function requestResetPassword(correo: string): AuthLogicResponse {
   const correoNormalizado = String(correo || "")
     .trim()
     .toLowerCase();
@@ -223,7 +200,10 @@ export function requestResetPassword(correo: string): AuthResponse {
   };
 }
 
-export function verifyResetCode(correo: string, code: string): AuthResponse {
+export function verifyResetCode(
+  correo: string,
+  code: string
+): AuthLogicResponse {
   const users = safeParse<AuthUser[]>("users") || [];
   const user = users.find(
     (u) => u.correo === String(correo).trim().toLowerCase()
@@ -239,7 +219,7 @@ export function resetPassword(
   correo: string,
   code: string,
   nuevaClave: string
-): AuthResponse {
+): AuthLogicResponse {
   const users = safeParse<AuthUser[]>("users") || [];
   const idx = users.findIndex(
     (u) => u.correo === String(correo).trim().toLowerCase()

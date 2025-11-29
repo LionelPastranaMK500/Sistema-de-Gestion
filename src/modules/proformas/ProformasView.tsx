@@ -8,23 +8,19 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { configCalendar } from "@/utils/calendar/configCalendar";
 import { Calendar } from "primereact/calendar";
-// Importamos el modal (asumiendo que lo arreglaremos a continuación o usaremos @ts-ignore si aún no está listo)
 import ProformasModal from "./ProformasModal";
 import { menuItemsProformas } from "@/constants/menuItems";
 import { useDateFilter } from "@/hooks/data";
-import { VentaGenerada } from "@/services/generadorData"; // Importamos la interfaz
+import { VentaGenerada } from "@/types/services";
 
 const ProformasView = () => {
-  // Tipamos el estado
   const [proformas] = useState<VentaGenerada[]>([]);
   const [showConfig, setShowConfig] = useState(false);
   const [selectedProformas, setSelectedProformas] =
     useState<VentaGenerada | null>(null);
 
-  // Referencia al calendario
   const calendarRef = useRef<Calendar>(null);
 
-  // Usamos el genérico en useDateFilter
   const {
     fechaSeleccionada,
     setFechaSeleccionada,
@@ -174,7 +170,6 @@ const ProformasView = () => {
       </div>
 
       {selectedProformas && (
-        // @ts-ignore: Ignoramos error temporal si ProformasModal aún no está tipado
         <ProformasModal
           f={selectedProformas}
           onClose={() => setSelectedProformas(null)}

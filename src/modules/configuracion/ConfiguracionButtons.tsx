@@ -2,17 +2,10 @@ import { useMemo } from "react";
 import { menuItemsConfig } from "@/constants/menuItems";
 import { menuActionsConfig } from "@/utils/navigation/menuActions";
 import { useNavigate } from "react-router-dom";
-
-interface ConfiguracionButtonsProps {
-  query: string;
-}
-
-interface ConfigItem {
-  name: string;
-  action: string;
-  icon: any;
-  description?: string;
-}
+import {
+  ConfiguracionButtonsProps,
+  ConfigItem,
+} from "@/types/modules/configuracion";
 
 const ConfiguracionButtons = ({ query }: ConfiguracionButtonsProps) => {
   const navigate = useNavigate();

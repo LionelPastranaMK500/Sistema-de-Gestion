@@ -1,10 +1,6 @@
 import SimpleInputModal from "@/components/modals/SimpleInputModal";
 import useVentaStore from "@/stores/ventasStore";
-
-interface PlacaModalProps {
-  visible: boolean;
-  onHide: () => void;
-}
+import { PlacaModalProps } from "@/types/modules/ventas";
 
 const PlacaModal = ({ visible, onHide }: PlacaModalProps) => {
   const { placa, setPlaca } = useVentaStore();

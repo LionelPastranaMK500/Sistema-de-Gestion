@@ -1,28 +1,7 @@
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { useState, ReactNode } from "react";
-
-interface ListItem {
-  id?: string | number;
-  tempId?: string | number;
-  [key: string]: any;
-}
-
-interface AddListModalProps<T extends ListItem> {
-  visible: boolean;
-  onHide: () => void;
-  onSave: (items: T[]) => void;
-  title: string;
-  addButtonLabel: string;
-  items: T[];
-  setItems: (items: T[]) => void;
-  renderFormFields: () => ReactNode;
-  renderItemDisplay: (item: T) => ReactNode;
-  validateForm?: () => boolean;
-  onAddItem: () => void;
-  onRemoveItem: (id: string | number) => void;
-  width?: string;
-}
+import { useState } from "react";
+import { ListItem, AddListModalProps } from "@/types/components";
 
 const AddListModal = <T extends ListItem>({
   visible,
@@ -63,7 +42,6 @@ const AddListModal = <T extends ListItem>({
 
   const headerContent = <h2 className="text-xl font-bold">{title}</h2>;
 
-  // CORRECCIÓN: Movimos las clases de border y padding aquí
   const footer = (
     <div className="flex justify-end items-center gap-3 w-full p-5 bg-white border-t-2 border-gray-200">
       <Button
@@ -90,7 +68,6 @@ const AddListModal = <T extends ListItem>({
       footer={footer}
       headerClassName="!p-4 bg-blue-700 text-white rounded-t-lg"
       contentClassName="p-5 bg-white"
-      // CORRECCIÓN: Eliminamos footerClassName porque daba error de tipo
     >
       <div className="space-y-3">
         {items.length > 0 && (

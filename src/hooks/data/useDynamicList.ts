@@ -1,10 +1,5 @@
 import { useState, useCallback } from "react";
-
-export interface DynamicItem {
-  id?: string | number;
-  tempId?: number;
-  [key: string]: any;
-}
+import { DynamicItem } from "@/types/hooks/data";
 
 export const useDynamicList = <T extends DynamicItem>(
   initialItems: T[] = [],

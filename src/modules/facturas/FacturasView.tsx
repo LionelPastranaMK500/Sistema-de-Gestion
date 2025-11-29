@@ -1,4 +1,5 @@
-import { generarDataFalsa, VentaGenerada } from "@/services/generadorData";
+import { generarDataFalsa } from "@/services/generadorData";
+import { VentaGenerada } from "@/types/services";
 import {
   MoreVertIcon,
   PermIdentityTwoToneIcon,

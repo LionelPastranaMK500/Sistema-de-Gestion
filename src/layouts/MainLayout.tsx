@@ -1,14 +1,11 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { useLayoutEffect, useState, CSSProperties } from "react";
+import { useLayoutEffect, useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import SidebarSkeleton from "@/components/layout/SidebarSkeleton";
 import { useSidebar } from "@/utils/navigation/sidebarState";
 import { MenuIcon } from "@/constants/icons";
+import { CustomStyle } from "@/types/layouts";
 import "@/styles/ContentLoader.css";
-
-interface CustomStyle extends CSSProperties {
-  "--overlay-total"?: string;
-}
 
 export default function MainLayout() {
   const { sidebarReady } = useSidebar();

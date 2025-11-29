@@ -5,25 +5,10 @@ import { Button } from "primereact/button";
 import { CloseIcon } from "@/constants/icons";
 import { toast } from "react-toastify";
 import { useFormInput } from "@/hooks/forms";
-import { Almacen } from "@/services/generadorData";
+import { AlmacenModalProps, AlmacenForm } from "@/types/modules/configuracion";
 
 const inputStyle =
   "w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm";
-
-interface AlmacenModalProps {
-  visible: boolean;
-  onHide: (reload?: boolean) => void;
-  mode?: "add" | "edit";
-  data?: Almacen | null;
-}
-
-// Definimos la estructura del formulario
-interface AlmacenForm {
-  id?: string | number;
-  nombre: string;
-  direccion: string;
-  [key: string]: any; // Firma de índice para compatibilidad con useFormInput
-}
 
 export default function AlmacenModal({
   visible,

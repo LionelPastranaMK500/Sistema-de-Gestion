@@ -1,26 +1,6 @@
 import { ventasService } from "../api/ventas.service";
 import { toast } from "react-toastify";
-
-// Interfaz para los datos que vienen del formulario antes de ser una VentaGenerada completa
-interface VentaFormData {
-  cliente?: {
-    documento?: string;
-    tipoDocumento?: string;
-    razonSocial?: string;
-    direccion?: string;
-  };
-  items?: any[];
-  total?: number;
-  tipoComprobante?: string;
-  serie?: string;
-  fechaEmision?: Date | string;
-  fechaVencimiento?: Date | string;
-  placa?: string;
-  ordenCompra?: string;
-  observaciones?: string;
-  condicionPago?: any;
-  [key: string]: any;
-}
+import { VentaFormData, LogicResult } from "@/types/services/ventas";
 
 const validarVenta = (ventaData: VentaFormData): string[] => {
   const errors: string[] = [];
@@ -47,14 +27,6 @@ const validarVenta = (ventaData: VentaFormData): string[] => {
   return errors;
 };
 
-// Resultado de la operación
-interface LogicResult {
-  success: boolean;
-  data?: any;
-  error?: string;
-  errors?: string[];
-}
-
 export const handleEmitirVenta = async (
   ventaData: VentaFormData
 ): Promise<LogicResult> => {
@@ -66,8 +38,7 @@ export const handleEmitirVenta = async (
     }
 
     toast.info("Emitiendo documento...");
-    // Cast a any o VentaGenerada según lo que espere el servicio,
-    // aquí asumimos que ventaData cumple con lo necesario para el backend
+    // Cast a any o VentaGenerada según lo que espere el servicio
     const response = await ventasService.emitir(ventaData as any);
 
     toast.success(
@@ -76,7 +47,6 @@ export const handleEmitirVenta = async (
       } emitida exitosamente`
     );
 
-    // Si la respuesta trae una URL de PDF (simulado o real)
     if ((response as any).pdf) {
       window.open((response as any).pdf, "_blank");
     }
@@ -160,7 +130,6 @@ export const handleAnularDocumento = async (
   }
 };
 
-// Esta función transforma los datos del formulario y hooks en el objeto final para enviar
 export const prepararDatosVenta = (
   formData: VentaFormData,
   items: any[],

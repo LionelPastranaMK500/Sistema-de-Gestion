@@ -11,7 +11,6 @@ import {
 import { useSearch, usePagination } from "@/hooks/data";
 
 const ProductosView = () => {
-  // Usamos genéricos para tipar correctamente los hooks
   const { searchQuery, filteredItems, handleSearch } = useSearch<Producto>(
     productos,
     ["descripcion", "codigo"]
@@ -29,7 +28,6 @@ const ProductosView = () => {
 
   const defaultImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...";
 
-  // Tipamos los parámetros del template
   const itemTemplate = (p: Producto, i: number) => {
     if (!p) return null;
     return (

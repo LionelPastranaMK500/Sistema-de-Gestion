@@ -6,25 +6,15 @@ import { Button } from "primereact/button";
 import { CloseIcon, AddIcon, RemoveCircleIcon } from "@/constants/icons";
 import { toast } from "react-toastify";
 import { useDynamicList } from "@/hooks/data";
-import { DynamicItem } from "@/hooks/data/useDynamicList";
-import { Sucursal } from "@/services/generadorData";
+import {
+  SucursalNumeracionModalProps,
+  NumeracionItem,
+} from "@/types/modules/configuracion";
 
 const inputStyle =
   "w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm";
 const dropdownStyle =
   "w-full p-0 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm [&_.p-dropdown-label]:whitespace-normal [&_.p-dropdown-label]:py-2.5 [&_.p-dropdown-label]:px-3";
-
-interface NumeracionItem extends DynamicItem {
-  tipo?: string;
-  serie?: string;
-  inicial?: number | string; // string temporalmente mientras se edita
-}
-
-interface SucursalNumeracionModalProps {
-  visible: boolean;
-  sucursal: Sucursal;
-  onHide: () => void;
-}
 
 const SucursalNumeracionModal = ({
   visible,
@@ -56,7 +46,6 @@ const SucursalNumeracionModal = ({
 
   useEffect(() => {
     if (visible && sucursal?.numeracion) {
-      // Aseguramos que cada item tenga un tempId para el hook
       const mappedNumeracion = sucursal.numeracion.map((item, index) => ({
         ...item,
         tempId: Date.now() + index,

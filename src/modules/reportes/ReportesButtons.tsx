@@ -2,13 +2,7 @@ import { useMemo, useState } from "react";
 import { menuItemsReportes } from "@/constants/menuItems";
 import { menuActionsReportes } from "@/utils/navigation/menuActions";
 import { useNavigate } from "react-router-dom";
-
-interface ReporteItem {
-  name: string;
-  action: string;
-  icon: any;
-  description?: string;
-}
+import { ReporteItem } from "@/types/modules/reportes";
 
 const ReportesButtons = () => {
   const navigate = useNavigate();
@@ -16,7 +10,6 @@ const ReportesButtons = () => {
 
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
-    // Casting para asegurar el tipo
     const allItems = menuItemsReportes as ReporteItem[];
 
     if (!q) return allItems;

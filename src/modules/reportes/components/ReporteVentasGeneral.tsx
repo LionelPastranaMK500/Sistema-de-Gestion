@@ -13,29 +13,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getActiveCompany, getActiveUser } from "@/services/auth/authServices";
 import { handleReportes } from "@/services/reportes/reportesLogic";
 import { getClientes } from "@/services/generadorData";
-import { buildExcel, SheetsData } from "@/services/reportes/excelBuilder";
+import { buildExcel } from "@/services/reportes/excelBuilder";
+import { SheetsData } from "@/types/services/reportes";
 import { useFilterState } from "@/hooks/data";
-
-type ViewMode = "filter" | "generated" | "visualize";
-
-interface FilterState {
-  tipo: string;
-  moneda: string;
-  sucursal: string;
-  usuario: string;
-  cliente: string;
-  start: Date;
-  end: Date;
-  fechaInicio?: Date | null;
-  fechaFin?: Date | null;
-  [key: string]: any;
-}
+import { ReportViewMode, VentasFilterState } from "@/types/modules/reportes";
 
 const ReporteVentasGeneral = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
-  const [mode, setMode] = useState<ViewMode>("filter");
+  const [mode, setMode] = useState<ReportViewMode>("filter");
   const [sheetsData, setSheetsData] = useState<SheetsData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,14 +35,13 @@ const ReporteVentasGeneral = () => {
     return { start, end };
   };
 
-  // Inicializamos con fechas por defecto del mes actual
   const initialRange = getMonthRange();
 
   const {
     filters: filter,
     updateFilter,
     setFilters: setFilter,
-  } = useFilterState<FilterState>({
+  } = useFilterState<VentasFilterState>({
     tipo: "all",
     moneda: "all",
     sucursal: "all",
@@ -74,7 +60,6 @@ const ReporteVentasGeneral = () => {
   const initialCompany = getActiveCompany();
   const initialUser = getActiveUser();
 
-  // Acceso seguro a sucursales
   const companySucursales = (initialCompany as any)?.sucursales || [];
 
   const tipoOptions = [
@@ -210,8 +195,6 @@ const ReporteVentasGeneral = () => {
   const getTableData = (rows: (string | number | null | undefined)[][]) => {
     if (!rows || rows.length < 3) return [];
     const headers = rows[2] || [];
-    // Omitimos la última fila si es de totales, o ajustamos lógica según necesidad.
-    // En el original slice(3, -1) quitaba la última fila (totales) de la vista previa de tabla.
     return rows.slice(3, -1).map((row, rowIndex) =>
       row.reduce(
         (acc: any, cell, index) => {

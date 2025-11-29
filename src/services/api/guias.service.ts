@@ -1,14 +1,5 @@
 import api from "../api";
-
-export interface GuiaRemision {
-  id: number | string;
-  serie: string;
-  numero: string;
-  fecha: string | Date;
-  remitente: string;
-  destinatario: string;
-  [key: string]: any;
-}
+import { GuiaRemision } from "@/types/services";
 
 export const guiasService = {
   getAll: () => api.get<GuiaRemision[]>("/api/v1/guia-remision"),

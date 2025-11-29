@@ -1,32 +1,13 @@
 import { patternEmail, patternClave } from "@/constants/patterns";
+import {
+  LoginData,
+  RegisterData,
+  SunatData,
+  ResetPassData,
+  ValidationErrors,
+} from "@/types/services/auth";
 
-export interface LoginData {
-  correo?: string;
-  clave?: string;
-}
-
-export interface RegisterData {
-  nombres?: string;
-  apellidoPaterno?: string;
-  apellidoMaterno?: string;
-  correo?: string;
-  clave?: string;
-  aceptaTerminos?: boolean;
-}
-
-export interface SunatData {
-  ruc?: string;
-  usuarioSol?: string;
-  claveSol?: string;
-}
-
-export interface ResetPassData {
-  correo?: string;
-  codigo?: string;
-  nuevaClave?: string;
-}
-
-type ValidationErrors = Record<string, string>;
+export type { LoginData, RegisterData, SunatData, ResetPassData };
 
 export const validarLogin = (datos: LoginData): ValidationErrors => {
   const err: ValidationErrors = {};

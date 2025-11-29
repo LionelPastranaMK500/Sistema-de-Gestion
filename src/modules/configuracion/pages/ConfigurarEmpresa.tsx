@@ -1,14 +1,11 @@
-import { useEffect, ChangeEvent } from "react";
+import { useEffect } from "react";
 import { getActiveCompany } from "@/services/auth/authServices";
 import { useNavigate } from "react-router-dom";
 import { useFormInput } from "@/hooks/forms";
-
-interface ToggleSwitchProps {
-  label: string;
-  name: string;
-  checked: boolean;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
+import {
+  ToggleSwitchProps,
+  CompanyFormData,
+} from "@/types/modules/configuracion";
 
 const ToggleSwitch = ({
   label,
@@ -44,20 +41,6 @@ const ToggleSwitch = ({
   </label>
 );
 
-interface CompanyFormData {
-  ruc: string;
-  razonSocial: string;
-  nombreComercial: string;
-  direccionFiscal: string;
-  afectacionIGV: string;
-  moneda: string;
-  ventasSinStock: boolean;
-  clienteAnonimo: string;
-  cuentaDetraccion: string; // Corregido a camelCase
-  registroMTC: string;
-  [key: string]: any;
-}
-
 export default function ConfigurarEmpresa() {
   const navigate = useNavigate();
   const {
@@ -73,7 +56,7 @@ export default function ConfigurarEmpresa() {
     moneda: "PEN",
     ventasSinStock: true,
     clienteAnonimo: "PÚBLICO EN GENERAL",
-    cuentaDetraccion: "", // Inicializado correctamente
+    cuentaDetraccion: "",
     registroMTC: "",
   });
 

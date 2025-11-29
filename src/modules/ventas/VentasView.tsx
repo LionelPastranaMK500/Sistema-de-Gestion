@@ -15,9 +15,8 @@ import {
   getSeries,
   getProductos,
   mapTipo,
-  Cliente,
-  Producto,
 } from "@/services/generadorData";
+import { Cliente, Producto } from "@/types/services";
 import { visualizarPDF } from "@/utils/pdf/pdfViewer";
 import { useProductosAgregados } from "@/hooks/useProductosAgregados";
 import {
@@ -35,14 +34,8 @@ import ObservacionesModal from "./components/ObservacionesModal";
 import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
-import { PdfFormat } from "@/utils/pdf/pdfConfig";
-
-interface VentaComponent {
-  name: string;
-  action: string;
-  isInput: boolean;
-  placeholder?: string;
-}
+import { PdfFormat } from "@/types/utils/pdf";
+import { VentaComponent } from "@/types/modules/ventas";
 
 const VentasView = () => {
   const {
@@ -78,7 +71,6 @@ const VentasView = () => {
 
   const [globalDiscount, setGlobalDiscount] = useState(0);
 
-  // Esta es la función que faltaba
   const [modalsOtros, setModalsOtros] = useState<Record<string, boolean>>({});
   const handleHideModalOtros = (action: string) =>
     setModalsOtros((prev) => ({ ...prev, [action]: false }));
