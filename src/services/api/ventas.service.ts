@@ -1,31 +1,43 @@
-import api from "../api";
-import { VentaGenerada } from "@/types/services";
-import { CdrResponse, EstadoResponse } from "@/types/services/ventas";
+import apiClient from "@/config/api";
+import { ApiPaginatedResponse, ApiResponse, SearchParams } from "@/types/api";
+import { Venta, VentaPayload } from "@/types/models";
+
+const BASE_URL = "/ventas";
 
 export const ventasService = {
-  emitir: (ventaData: Partial<VentaGenerada>) =>
-    api.post<VentaGenerada>("/api/v1/documentos/emision", ventaData),
-
-  getById: (id: string | number) =>
-    api.get<VentaGenerada>(`/api/v1/documentos/${id}`),
-
-  getEstado: (id: string | number) =>
-    api.get<EstadoResponse>(`/api/v1/documentos/${id}/estado`),
-
-  getCdr: (id: string | number) =>
-    api.get<CdrResponse>(`/api/v1/documentos/${id}/cdr`),
-
-  listar: (params: Record<string, string | number> = {}) => {
-    const query = new URLSearchParams(
-      params as Record<string, string>
-    ).toString();
-    return api.get<VentaGenerada[]>(
-      `/api/v1/documentos${query ? `?${query}` : ""}`
+  getAll: async (
+    params?: SearchParams
+  ): Promise<ApiPaginatedResponse<Venta>> => {
+    const { data } = await apiClient.get<ApiPaginatedResponse<Venta>>(
+      BASE_URL,
+      {
+        params,
+      }
     );
+    return data;
   },
 
-  anular: (id: string | number, motivo: string) =>
-    api.post<{ success: boolean }>(`/api/v1/documentos/${id}/anular`, {
+  // OBTENER POR ID
+  getById: async (id: number): Promise<Venta> => {
+    const { data: response } = await apiClient.get<ApiResponse<Venta>>(
+      `${BASE_URL}/${id}`
+    );
+    return response.data;
+  },
+
+  // CREAR
+  create: async (payload: VentaPayload): Promise<Venta> => {
+    const { data: response } = await apiClient.post<ApiResponse<Venta>>(
+      BASE_URL,
+      payload
+    );
+    return response.data;
+  },
+
+  // ANULAR
+  anular: async (id: number, motivo: string): Promise<void> => {
+    await apiClient.post<ApiResponse<void>>(`${BASE_URL}/${id}/anular`, {
       motivo,
-    }),
+    });
+  },
 };

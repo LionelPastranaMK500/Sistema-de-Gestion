@@ -1,4 +1,5 @@
-import { ImpresionConfig } from "@/services/generadorData";
+import { Usuario, ImpresionConfig } from "../models";
+import { LoginRequest } from "../auth";
 
 // --- Ventas Store ---
 export interface CondicionPago {
@@ -51,6 +52,7 @@ export interface ImpresionState {
     };
   };
 
+  // Ahora usa la interfaz correcta que vive en models
   loadInitialConfig: (configFromApi: ImpresionConfig) => void;
 
   updateBasica: (
@@ -66,4 +68,15 @@ export interface ImpresionState {
     formatoKey: string,
     newColumns: { disponibles: string[]; visibles: string[] }
   ) => void;
+}
+
+export interface AuthState {
+  accessToken: string | null;
+  refreshToken: string | null;
+  user: Usuario | null;
+  isAuthenticated: boolean;
+
+  // Acciones
+  login: (credentials: LoginRequest) => Promise<void>;
+  logout: () => void;
 }

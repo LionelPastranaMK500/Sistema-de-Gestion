@@ -1,13 +1,40 @@
-import api from "../api";
-import { Usuario } from "@/types/services";
-import { ApiAuthResponse } from "@/types/services/auth";
+import apiClient from "@/config/api";
+import { LoginRequest, RegisterRequest, AuthResponse } from "@/types/auth";
+
+const AUTH_URL = "/auth";
 
 export const authService = {
-  register: (userData: Partial<Usuario>) =>
-    api.post<ApiAuthResponse>("/auth/register", userData),
+  // POST /auth/login
+  // Retorna directamente AuthResponse (sin ApiResponse wrapper, según tu AuthController)
+  login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+    const { data } = await apiClient.post<AuthResponse>(
+      `${AUTH_URL}/login`,
+      credentials
+    );
+    return data;
+  },
 
-  login: (credentials: { correo: string; clave: string }) =>
-    api.post<ApiAuthResponse>("/auth/login", credentials),
+  // POST /auth/register
+  register: async (info: RegisterRequest): Promise<AuthResponse> => {
+    const { data } = await apiClient.post<AuthResponse>(
+      `${AUTH_URL}/register`,
+      info
+    );
+    return data;
+  },
 
-  refreshToken: () => api.post<{ token: string }>("/auth/refresh-token", {}),
+  // POST /auth/refresh-token
+  // El backend lee el token del header Authorization (ver IAuthService.java -> refreshToken)
+  refreshToken: async (tokenActual: string): Promise<AuthResponse> => {
+    const { data } = await apiClient.post<AuthResponse>(
+      `${AUTH_URL}/refresh-token`,
+      {}, // Body vacío
+      {
+        headers: {
+          Authorization: `Bearer ${tokenActual}`,
+        },
+      }
+    );
+    return data;
+  },
 };
