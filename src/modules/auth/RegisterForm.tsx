@@ -1,11 +1,11 @@
 import { validarRegister, RegisterData } from "@/services/auth/validations";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ErrorText from "@/components/common/ErrorText";
-import { handleRegister } from "@/services/auth/authLogic";
+import { useRegisterLogic } from "@/services/auth/authLogic";
 import { useFormHandler } from "@/hooks/useFormHandler";
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
+  const { mutate: register, isPending } = useRegisterLogic();
 
   const initialValues: RegisterData = {
     nombres: "",
@@ -21,7 +21,13 @@ const RegisterForm = () => {
       initialValues,
       validarRegister,
       async (form) => {
-        await handleRegister(form, navigate);
+        register({
+          nombres: (form.nombres || "").trim(),
+          apellidoPa: (form.apellidoPaterno || "").trim(),
+          apellidoMa: (form.apellidoMaterno || "").trim(),
+          email: (form.correo || "").trim().toLowerCase(),
+          password: (form.clave || "").trim(),
+        });
       }
     );
 
@@ -140,9 +146,14 @@ const RegisterForm = () => {
 
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
+              disabled={isPending}
+              className={`w-full p-3 rounded-lg text-white transition ${
+                isPending
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              REGISTRARSE
+              {isPending ? "REGISTRANDO..." : "REGISTRARSE"}
             </button>
 
             <div className="text-gray-500 text-sm text-center">

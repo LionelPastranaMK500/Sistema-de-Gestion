@@ -1,11 +1,12 @@
 import { validarLogin, LoginData } from "@/services/auth/validations";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ErrorText from "@/components/common/ErrorText";
 import { useFormHandler } from "@/hooks/useFormHandler";
-import { handleLogin } from "@/services/auth/authLogic";
+import { useLoginLogic } from "@/services/auth/authLogic";
 
 const LoginForm = () => {
-  const navigate = useNavigate();
+  // Usamos el Hook de Lógica (React Query)
+  const { mutate: login, isPending } = useLoginLogic();
 
   const initialValues: LoginData = { correo: "", clave: "" };
 
@@ -13,7 +14,10 @@ const LoginForm = () => {
     initialValues,
     validarLogin,
     async (form) => {
-      await handleLogin(form, navigate);
+      login({
+        email: (form.correo || "").trim().toLowerCase(),
+        password: (form.clave || "").trim(),
+      });
     }
   );
 
@@ -74,9 +78,14 @@ const LoginForm = () => {
 
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg w-full text-white transition"
+              disabled={isPending}
+              className={`w-full p-3 rounded-lg text-white transition ${
+                isPending
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              INGRESA
+              {isPending ? "INGRESANDO..." : "INGRESA"}
             </button>
 
             <a

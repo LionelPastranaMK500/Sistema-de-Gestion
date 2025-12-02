@@ -1,6 +1,6 @@
-import { Producto } from "@/services/generadorData";
+import { Producto } from "@/types/models";
 
-const IGV_RATE = 0.18;
+export const IGV_RATE = 0.18;
 
 export const calcularValorVenta = (precioConIgv: number): number => {
   return precioConIgv / (1 + IGV_RATE);
@@ -24,58 +24,10 @@ export const calcularItemTotal = (cantidad: number, precioUnitario: number) => {
   };
 };
 
-// Interfaz mínima para un item que necesita cálculo de totales
-interface ItemCalculo {
-  total: number;
-  [key: string]: any;
-}
-
-export const calcularTotalesVenta = (
-  items: ItemCalculo[],
-  descuentoGlobal: number = 0
-) => {
-  const subtotal = items.reduce((sum, item) => sum + (item.total || 0), 0);
-  const descuento = (subtotal * descuentoGlobal) / 100;
-  const subtotalConDescuento = subtotal - descuento;
-
-  const valorVenta = calcularValorVenta(subtotalConDescuento);
-  const igv = calcularIGV(valorVenta);
-  const total = valorVenta + igv;
-
-  return {
-    subtotal: Number(subtotal.toFixed(2)),
-    descuento: Number(descuento.toFixed(2)),
-    valorVenta: Number(valorVenta.toFixed(2)),
-    igv: Number(igv.toFixed(2)),
-    total: Number(total.toFixed(2)),
-  };
-};
-
-// Interfaz para items que reciben descuento individual
-interface ItemVenta extends ItemCalculo {
-  cantidad: number;
-  precio?: number;
-}
-
-export const aplicarDescuentoItem = (
-  item: ItemVenta,
-  porcentajeDescuento: number
-) => {
-  const descuento = (item.total * porcentajeDescuento) / 100;
-  const nuevoTotal = item.total - descuento;
-
-  return {
-    ...item,
-    descuento: Number(descuento.toFixed(2)),
-    total: Number(nuevoTotal.toFixed(2)),
-  };
-};
-
 export const validarStock = (
   producto: Producto,
   cantidadSolicitada: number
 ): boolean => {
-  // Si no tiene propiedad stock o es undefined, asumimos que hay stock infinito (o servicio)
   if (producto.stock === undefined || producto.stock === null) return true;
   return (producto.stock as number) >= cantidadSolicitada;
 };

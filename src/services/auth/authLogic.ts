@@ -1,163 +1,115 @@
-import {
-  loginUser,
-  registerUser,
-  loginSunatUser,
-  logoutUser,
-  requestResetPassword,
-  verifyResetCode,
-  resetPassword,
-} from "@/services/auth/authServices";
-import { AuthUser, LogicResponse } from "@/types/services/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { authService } from "@/services/api/auth.service";
+import { useAuthStore } from "@/stores/authStore";
 import { notifySuccess, notifyError } from "@/utils/notifications/notify";
-import { redirectWithDelay } from "@/utils/navigation/redirectWithDelay";
-import { NavigateFunction } from "react-router-dom";
+import { LoginRequest, RegisterRequest } from "@/types/auth";
 
-export const handleRegister = async (
-  form: any,
-  navigate: NavigateFunction
-): Promise<LogicResponse> => {
-  try {
-    const payload: AuthUser = {
-      nombres: String(form.nombres || "").trim(),
-      apellidoPaterno: String(form.apellidoPaterno || "").trim(),
-      apellidoMaterno: String(form.apellidoMaterno || "").trim(),
-      correo: String(form.correo || "")
-        .trim()
-        .toLowerCase(),
-      clave: String(form.clave || "").trim(),
-    };
+/**
+ * Hook para la lógica de Login
+ */
+export const useLoginLogic = () => {
+  const navigate = useNavigate();
+  const setSession = useAuthStore((state) => state.setSession);
 
-    const res = registerUser(payload);
-
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false };
-    }
-
-    notifySuccess(res.message);
-    redirectWithDelay(navigate, "/");
-    return { success: true };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
+  return useMutation({
+    mutationFn: (data: LoginRequest) => authService.login(data),
+    onSuccess: (response) => {
+      setSession(response.access_token, response.refresh_token);
+      notifySuccess("Bienvenido al sistema");
+      navigate("/dashboard");
+    },
+    onError: (error: any) => {
+      const msg = error.response?.data?.message || "Credenciales incorrectas";
+      notifyError(msg);
+    },
+  });
 };
 
-export const handleLogin = async (
-  form: any,
-  navigate: NavigateFunction
-): Promise<LogicResponse> => {
-  const correo = String(form.correo || "")
-    .trim()
-    .toLowerCase();
-  const clave = String(form.clave || "").trim();
+/**
+ * Hook para la lógica de Registro
+ */
+export const useRegisterLogic = () => {
+  const navigate = useNavigate();
 
-  try {
-    const res = loginUser(correo, clave);
-
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false };
-    }
-
-    notifySuccess(res.message);
-    redirectWithDelay(navigate, "/dashboard");
-
-    return { success: true, user: res.user };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
+  return useMutation({
+    mutationFn: (data: RegisterRequest) => authService.register(data),
+    onSuccess: () => {
+      notifySuccess("Usuario registrado. Por favor inicia sesión.");
+      navigate("/");
+    },
+    onError: (error: any) => {
+      const msg = error.response?.data?.message || "Error al registrar usuario";
+      notifyError(msg);
+    },
+  });
 };
 
-export const handleSunatAuth = async (
-  form: any,
-  navigate: NavigateFunction
-): Promise<LogicResponse> => {
-  try {
-    const ruc = String(form.ruc || "").trim();
-    const usuarioSol = String(form.usuarioSol || "").trim();
-    const claveSol = String(form.claveSol || "").trim();
+/**
+ * Hook para la lógica de Cerrar Sesión
+ */
+export const useLogoutLogic = () => {
+  const navigate = useNavigate();
+  const logoutStore = useAuthStore((state) => state.logout);
 
-    const res = loginSunatUser({ ruc, usuarioSol, claveSol });
-
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false, message: res.message };
-    }
-
-    notifySuccess(res.message);
-    redirectWithDelay(navigate, "/dashboard");
-    return { success: true, data: res };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
+  return () => {
+    logoutStore();
+    notifySuccess("Sesión cerrada");
+    navigate("/");
+  };
 };
 
-export const handleLogout = (navigate: NavigateFunction) => {
-  const res = logoutUser();
-  if (res.success) {
-    notifySuccess(res.message);
-    redirectWithDelay(navigate, "/");
-  } else {
-    notifyError(res.message);
-  }
-  return res;
+/**
+ * Paso 1: Solicitar código de recuperación
+ */
+export const useRequestResetLogic = () => {
+  return useMutation({
+    mutationFn: (email: string) => authService.requestPasswordReset(email),
+    onSuccess: () => {
+      notifySuccess("Se envió un código de recuperación a tu correo");
+    },
+    onError: (error: any) => {
+      const msg = error.response?.data?.message || "Error al solicitar código";
+      notifyError(msg);
+    },
+  });
 };
 
-export const handleRequestReset = async (
-  correo: string
-): Promise<LogicResponse> => {
-  try {
-    const res = requestResetPassword(correo);
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false };
-    }
-    notifySuccess(res.message);
-    return { success: true };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
+/**
+ * Paso 2: Verificar el código ingresado
+ */
+export const useVerifyCodeLogic = () => {
+  return useMutation({
+    mutationFn: (data: { email: string; code: string }) =>
+      authService.verifyResetCode(data.email, data.code),
+    onSuccess: () => {
+      notifySuccess("Código verificado correctamente");
+    },
+    onError: (error: any) => {
+      const msg =
+        error.response?.data?.message || "Código incorrecto o expirado";
+      notifyError(msg);
+    },
+  });
 };
 
-export const handleVerifyResetCode = async (
-  correo: string,
-  code: string
-): Promise<LogicResponse> => {
-  try {
-    const res = verifyResetCode(correo, code);
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false };
-    }
-    notifySuccess(res.message);
-    return { success: true };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
-};
+/**
+ * Paso 3: Restablecer la contraseña
+ */
+export const useResetPasswordLogic = () => {
+  const navigate = useNavigate();
 
-export const handleResetPassword = async (
-  correo: string,
-  code: string,
-  nuevaClave: string,
-  navigate: NavigateFunction
-): Promise<LogicResponse> => {
-  try {
-    const res = resetPassword(correo, code, nuevaClave);
-    if (!res.success) {
-      notifyError(res.message);
-      return { success: false };
-    }
-    notifySuccess(res.message);
-    redirectWithDelay(navigate, "/");
-    return { success: true };
-  } catch {
-    notifyError("Error inesperado");
-    return { success: false };
-  }
+  return useMutation({
+    mutationFn: (data: { email: string; code: string; nuevaClave: string }) =>
+      authService.resetPassword(data.email, data.code, data.nuevaClave),
+    onSuccess: () => {
+      notifySuccess("Contraseña actualizada correctamente");
+      navigate("/"); // Redirige al login
+    },
+    onError: (error: any) => {
+      const msg =
+        error.response?.data?.message || "Error al restablecer contraseña";
+      notifyError(msg);
+    },
+  });
 };

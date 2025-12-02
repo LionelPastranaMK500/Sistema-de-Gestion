@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { patternEmail, patternClave } from "@/constants/patterns";
 import {
   LoginData,
@@ -9,89 +10,102 @@ import {
 
 export type { LoginData, RegisterData, SunatData, ResetPassData };
 
+const validateWithZod = (schema: any, data: any): ValidationErrors => {
+  const result = schema.safeParse(data);
+
+  if (result.success) {
+    return {};
+  }
+
+  const errors: ValidationErrors = {};
+  result.error.issues.forEach((issue: any) => {
+    const key = issue.path[0];
+    errors[key] = issue.message;
+  });
+
+  return errors;
+};
+
+// --- SCHEMAS DE ZOD ---
+
+const loginSchema = z.object({
+  correo: z
+    .string()
+    .min(1, "El correo es obligatorio")
+    .regex(new RegExp(patternEmail), "Correo inválido"),
+  clave: z
+    .string()
+    .min(1, "La clave es obligatoria")
+    .regex(
+      new RegExp(patternClave),
+      "La clave debe tener al menos 6 caracteres, letras y números"
+    ),
+});
+
+const registerSchema = z.object({
+  nombres: z.string().min(1, "Nombre es obligatorio"),
+  apellidoPaterno: z.string().min(1, "Apellido paterno es obligatorio"),
+  apellidoMaterno: z.string().min(1, "Apellido materno es obligatorio"),
+  correo: z
+    .string()
+    .min(1, "Correo es obligatorio")
+    .regex(new RegExp(patternEmail), "Correo inválido"),
+  clave: z
+    .string()
+    .min(1, "La clave es obligatoria")
+    .regex(
+      new RegExp(patternClave),
+      "La clave debe tener al menos 6 caracteres, letras y números"
+    ),
+  // [CORREGIDO] Usamos boolean().refine() en lugar de literal(true)
+  // Esto acepta el tipo 'boolean' de tu interfaz, pero da error si es false.
+  aceptaTerminos: z.boolean().refine((val) => val === true, {
+    message: "Debes aceptar los términos y condiciones",
+  }),
+});
+
+const sunatSchema = z.object({
+  ruc: z
+    .string()
+    .min(1, "El RUC es obligatorio")
+    .regex(/^\d{11}$/, "El RUC debe tener 11 dígitos numéricos"),
+  usuarioSol: z.string().min(1, "El usuario SOL es obligatorio"),
+  claveSol: z.string().min(1, "La clave SOL es obligatoria"),
+});
+
+const resetStep1Schema = z.object({
+  correo: z
+    .string()
+    .min(1, "El correo es obligatorio")
+    .regex(new RegExp(patternEmail), "Correo inválido"),
+});
+
+const resetStep2Schema = z.object({
+  codigo: z.string().min(1, "El código es obligatorio"),
+  nuevaClave: z
+    .string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres"),
+});
+
+// --- FUNCIONES EXPORTABLES ---
+
 export const validarLogin = (datos: LoginData): ValidationErrors => {
-  const err: ValidationErrors = {};
-
-  if (!datos.correo?.trim()) {
-    err.correo = "El correo es obligatorio";
-  } else if (!new RegExp(patternEmail).test(datos.correo)) {
-    err.correo = "Correo inválido";
-  }
-
-  if (!datos.clave?.trim()) {
-    err.clave = "La clave es obligatoria";
-  } else if (!new RegExp(patternClave).test(datos.clave)) {
-    err.clave =
-      "La clave debe tener al menos 6 caracteres, incluyendo letras y números";
-  }
-
-  return err;
+  return validateWithZod(loginSchema, datos);
 };
 
 export const validarRegister = (datos: RegisterData): ValidationErrors => {
-  const err: ValidationErrors = {};
-
-  if (!datos.nombres?.trim()) err.nombres = "Nombre es obligatorio";
-  if (!datos.apellidoPaterno?.trim())
-    err.apellidoPaterno = "Apellido paterno es obligatorio";
-  if (!datos.apellidoMaterno?.trim())
-    err.apellidoMaterno = "Apellido materno es obligatorio";
-
-  if (!datos.correo?.trim()) {
-    err.correo = "Correo es obligatorio";
-  } else if (!new RegExp(patternEmail).test(datos.correo)) {
-    err.correo = "Correo inválido";
-  }
-
-  if (!datos.clave?.trim()) {
-    err.clave = "La clave es obligatoria";
-  } else if (!new RegExp(patternClave).test(datos.clave)) {
-    err.clave =
-      "La clave debe tener al menos 6 caracteres, incluyendo letras y números";
-  }
-
-  if (!datos.aceptaTerminos) {
-    err.aceptaTerminos = "Debes aceptar los términos y condiciones";
-  }
-
-  return err;
+  return validateWithZod(registerSchema, datos);
 };
 
 export const validarSunat = (datos: SunatData): ValidationErrors => {
-  const err: ValidationErrors = {};
-
-  if (!datos.ruc?.trim()) {
-    err.ruc = "El RUC es obligatorio";
-  } else if (!/^\d{11}$/.test(datos.ruc)) {
-    err.ruc = "El RUC debe tener 11 dígitos numéricos";
-  }
-
-  if (!datos.usuarioSol?.trim()) {
-    err.usuarioSol = "El usuario SOL es obligatorio";
-  }
-
-  if (!datos.claveSol?.trim()) {
-    err.claveSol = "La clave SOL es obligatoria";
-  }
-
-  return err;
+  return validateWithZod(sunatSchema, datos);
 };
 
 export const validateResetPassword = (
   form: ResetPassData,
   step: number
 ): ValidationErrors | null => {
-  const errors: ValidationErrors = {};
-  if (step === 1) {
-    if (!form.correo) errors.correo = "El correo es obligatorio";
-    else if (!new RegExp(patternEmail).test(form.correo))
-      errors.correo = "Correo inválido";
-  } else {
-    if (!form.codigo) errors.codigo = "El código es obligatorio";
-    if (!form.nuevaClave)
-      errors.nuevaClave = "La nueva contraseña es obligatoria";
-    else if (form.nuevaClave.length < 6)
-      errors.nuevaClave = "La contraseña debe tener al menos 6 caracteres";
-  }
+  const schema = step === 1 ? resetStep1Schema : resetStep2Schema;
+  const errors = validateWithZod(schema, form);
   return Object.keys(errors).length ? errors : null;
 };

@@ -1,7 +1,5 @@
-import { Usuario, ImpresionConfig } from "../models";
-import { LoginRequest } from "../auth";
+import { Usuario, ImpresionConfig, Cliente, Producto } from "../models";
 
-// --- Ventas Store ---
 export interface CondicionPago {
   condicion: string;
   metodo: string;
@@ -21,7 +19,17 @@ export interface StoreGuiaRemision {
   [key: string]: any;
 }
 
+export interface DetalleVentaItem extends Producto {
+  cantidadVenta: number;
+  totalVenta: number; // precio * cantidad
+}
+
 export interface VentaState {
+  // --- Datos Principales ---
+  clienteVenta: Cliente | null;
+  productosVenta: DetalleVentaItem[];
+
+  // --- Metadatos (Lo que ya tenías) ---
   placa: string;
   ordenCompra: string;
   observaciones: string;
@@ -29,16 +37,27 @@ export interface VentaState {
   datosAdicionales: DatoAdicional[];
   guiasRemision: StoreGuiaRemision[];
 
+  // --- Acciones ---
+  setClienteVenta: (cliente: Cliente | null) => void;
+  agregarProducto: (producto: Producto, cantidad: number) => void;
+  removerProducto: (codigoProducto: string) => void;
+  actualizarCantidad: (codigoProducto: string, cantidad: number) => void;
+
   setPlaca: (nuevaPlaca: string) => void;
   setOrdenCompra: (nuevaOrden: string) => void;
   setObservaciones: (nuevasObservaciones: string) => void;
   setCondicionPago: (nuevosDatos: CondicionPago) => void;
   setDatosAdicionales: (nuevosDatos: DatoAdicional[]) => void;
   setGuiasRemision: (nuevosDatos: StoreGuiaRemision[]) => void;
+
   limpiarFormularioVenta: () => void;
+
+  // Getters computados (opcional, pero útil para totales)
+  calcularTotales: () => { subtotal: number; igv: number; total: number };
 }
 
-// --- Impresion Store ---
+// ... (ImpresionState y AuthState se quedan igual) ...
+// --- IMPRESION ---
 export interface ImpresionState {
   formatoDefecto: string;
   decimales: number;
@@ -52,7 +71,6 @@ export interface ImpresionState {
     };
   };
 
-  // Ahora usa la interfaz correcta que vive en models
   loadInitialConfig: (configFromApi: ImpresionConfig) => void;
 
   updateBasica: (
@@ -70,13 +88,11 @@ export interface ImpresionState {
   ) => void;
 }
 
+// --- AUTH STORE ---
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: Usuario | null;
   isAuthenticated: boolean;
-
-  // Acciones
-  login: (credentials: LoginRequest) => Promise<void>;
   logout: () => void;
 }

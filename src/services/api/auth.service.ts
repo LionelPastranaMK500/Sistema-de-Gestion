@@ -5,7 +5,6 @@ const AUTH_URL = "/auth";
 
 export const authService = {
   // POST /auth/login
-  // Retorna directamente AuthResponse (sin ApiResponse wrapper, según tu AuthController)
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {
     const { data } = await apiClient.post<AuthResponse>(
       `${AUTH_URL}/login`,
@@ -24,17 +23,47 @@ export const authService = {
   },
 
   // POST /auth/refresh-token
-  // El backend lee el token del header Authorization (ver IAuthService.java -> refreshToken)
   refreshToken: async (tokenActual: string): Promise<AuthResponse> => {
     const { data } = await apiClient.post<AuthResponse>(
       `${AUTH_URL}/refresh-token`,
-      {}, // Body vacío
+      {},
       {
         headers: {
           Authorization: `Bearer ${tokenActual}`,
         },
       }
     );
+    return data;
+  },
+
+  // POST /auth/forgot-password
+  requestPasswordReset: async (email: string): Promise<any> => {
+    const { data } = await apiClient.post(`${AUTH_URL}/forgot-password`, {
+      email,
+    });
+    return data;
+  },
+
+  // POST /auth/verify-code
+  verifyResetCode: async (email: string, code: string): Promise<any> => {
+    const { data } = await apiClient.post(`${AUTH_URL}/verify-code`, {
+      email,
+      code,
+    });
+    return data;
+  },
+
+  // POST /auth/reset-password
+  resetPassword: async (
+    email: string,
+    code: string,
+    password: string
+  ): Promise<any> => {
+    const { data } = await apiClient.post(`${AUTH_URL}/reset-password`, {
+      email,
+      code,
+      password,
+    });
     return data;
   },
 };

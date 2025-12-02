@@ -1,3 +1,5 @@
+// src/types/auth.ts
+
 /**
  * Refleja: studios.tkoh.billing.dto.request.AuthRequest (Java)
  * Endpoint: /auth/login
@@ -15,13 +17,13 @@ export interface RegisterRequest {
   email: string;
   password: string;
   nombres: string;
-  apellidoPa: string; // Tal cual el backend
-  apellidoMa: string; // Tal cual el backend
+  apellidoPa: string;
+  apellidoMa: string;
 }
 
 /**
  * Refleja: studios.tkoh.billing.dto.response.AuthResponse (Java)
- * NOTA: El backend usa snake_case aquí.
+ * IMPORTANTE: Asumimos que tu backend está configurado para devolver snake_case
  */
 export interface AuthResponse {
   access_token: string;

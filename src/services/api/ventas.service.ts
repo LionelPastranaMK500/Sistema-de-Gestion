@@ -5,6 +5,7 @@ import { Venta, VentaPayload } from "@/types/models";
 const BASE_URL = "/ventas";
 
 export const ventasService = {
+  // OBTENER TODAS (Paginadas y con filtros)
   getAll: async (
     params?: SearchParams
   ): Promise<ApiPaginatedResponse<Venta>> => {
@@ -25,7 +26,7 @@ export const ventasService = {
     return response.data;
   },
 
-  // CREAR
+  // CREAR UNA NUEVA VENTA
   create: async (payload: VentaPayload): Promise<Venta> => {
     const { data: response } = await apiClient.post<ApiResponse<Venta>>(
       BASE_URL,
@@ -34,7 +35,7 @@ export const ventasService = {
     return response.data;
   },
 
-  // ANULAR
+  // ANULAR VENTA
   anular: async (id: number, motivo: string): Promise<void> => {
     await apiClient.post<ApiResponse<void>>(`${BASE_URL}/${id}/anular`, {
       motivo,

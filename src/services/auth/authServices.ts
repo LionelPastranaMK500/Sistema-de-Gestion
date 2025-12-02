@@ -1,4 +1,4 @@
-import {
+/*import {
   AuthUser,
   AuthCompany,
   AuthLogicResponse,
@@ -235,3 +235,4 @@ export function resetPassword(
 
   return { success: true, message: "Contraseña actualizada correctamente" };
 }
+*/

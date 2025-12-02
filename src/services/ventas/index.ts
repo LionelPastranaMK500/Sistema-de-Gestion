@@ -1,17 +1,14 @@
-export { ventasService } from '../api/ventas.service';
+// 1. Servicio API (Comunicación HTTP)
+export { ventasService } from "../api/ventas.service";
+
+export { useCrearVentaLogic } from "./ventas.logic";
+
 export {
-    handleEmitirVenta,
-    handleConsultarEstado,
-    handleDescargarCDR,
-    handleAnularDocumento,
-    prepararDatosVenta
-} from './ventas.logic';
-export {
-    calcularValorVenta,
-    calcularIGV,
-    calcularItemTotal,
-    calcularTotalesVenta,
-    aplicarDescuentoItem,
-    validarStock,
-    formatearMoneda
-} from './ventas.calculations';
+  calcularValorVenta,
+  calcularIGV,
+  calcularItemTotal,
+  validarStock,
+  formatearMoneda,
+} from "./ventas.calculations";
+
+export { validarVenta, validarCantidadProducto } from "./validations";

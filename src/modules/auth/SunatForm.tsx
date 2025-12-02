@@ -1,10 +1,10 @@
-import { handleSunatAuth, handleLogout } from "@/services/auth/authLogic";
+import { useLogoutLogic } from "@/services/auth/authLogic";
 import { useFormHandler } from "@hooks/useFormHandler";
 import ErrorText from "@/components/common/ErrorText";
 import { useNavigate } from "react-router-dom";
-import { validarSunat } from "@/services/auth/validations";
+import { validarSunat, SunatData } from "@/services/auth/validations";
 import { useSidebar } from "@utils/navigation/sidebarState";
-import { getActiveCompany, getActiveUser } from "@services/auth/authServices";
+import { useAuthStore } from "@/stores/authStore";
 import { useEffect, useState } from "react";
 
 const SunatForm = () => {
@@ -12,25 +12,27 @@ const SunatForm = () => {
   const { setSidebarReady } = useSidebar();
   const [shouldRender, setShouldRender] = useState(false);
 
-  useEffect(() => {
-    const user = getActiveUser();
-    const company = getActiveCompany();
+  const user = useAuthStore((state) => state.user);
+  const logout = useLogoutLogic();
 
-    if (user?.empresa || company) {
-      navigate("/welcome");
+  useEffect(() => {
+    if (user && (user as any).empresa) {
+      navigate("/dashboard");
+    } else if (!user) {
+      navigate("/");
     } else {
       setShouldRender(true);
     }
-  }, [navigate]);
+  }, [navigate, user]);
 
-  const { values, err, handleChange, handleSubmit } = useFormHandler(
+  const { values, err, handleChange, handleSubmit } = useFormHandler<SunatData>(
     { ruc: "", usuarioSol: "", claveSol: "" },
     validarSunat,
     async (form) => {
-      const res = await handleSunatAuth(form, navigate);
-      if (res.success) {
-        setSidebarReady(true);
-      }
+      console.log("Datos SUNAT:", form);
+
+      setSidebarReady(true);
+      navigate("/dashboard");
     }
   );
 
@@ -92,7 +94,7 @@ const SunatForm = () => {
             </button>
             <button
               type="button"
-              onClick={() => handleLogout(navigate)}
+              onClick={logout}
               className="hover:bg-blue-50 py-2 border border-blue-600 rounded-lg w-full font-medium text-blue-600 transition"
             >
               Regresar

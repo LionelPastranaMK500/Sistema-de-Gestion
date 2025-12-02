@@ -1,169 +1,60 @@
-import { ventasService } from "../api/ventas.service";
-import { toast } from "react-toastify";
-import { VentaFormData, LogicResult } from "@/types/services/ventas";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { notifySuccess, notifyError } from "@/utils/notifications/notify";
+import useVentaStore from "@/stores/ventasStore";
+import { ventasService } from "@/services/api/ventas.service";
+import { VentaPayload } from "@/types/models/ventas";
+import { validarVenta } from "./validations";
 
-const validarVenta = (ventaData: VentaFormData): string[] => {
-  const errors: string[] = [];
+/**
+ * Hook para procesar la creación de una venta
+ */
+export const useCrearVentaLogic = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  if (!ventaData.cliente || !ventaData.cliente.documento) {
-    errors.push("Cliente es requerido");
-  }
+  const store = useVentaStore();
 
-  if (!ventaData.items || ventaData.items.length === 0) {
-    errors.push("Debe agregar al menos un producto");
-  }
+  return useMutation({
+    mutationFn: async () => {
+      const errors = validarVenta(store);
+      if (Object.keys(errors).length > 0) {
+        throw new Error(Object.values(errors)[0]);
+      }
 
-  if ((ventaData.total ?? 0) <= 0) {
-    errors.push("El total debe ser mayor a cero");
-  }
+      const payload: VentaPayload = {
+        fechaVenta: new Date().toISOString(),
+        montoTotal: store.calcularTotales().total,
+        estado: "COMPLETADO",
+        doc_cliente: {
+          numeroRuc: store.clienteVenta?.numeroRuc || "",
+        },
+        listadetalles: store.productosVenta.map((p) => ({
+          descripcion: p.nombreProducto,
+          cantidad: p.cantidadVenta,
+          precioUnitario: p.precioVenta,
+          total: p.totalVenta,
+          productoId: undefined,
+        })),
+      };
 
-  if (
-    ventaData.tipoComprobante === "FACTURA" &&
-    ventaData.cliente?.tipoDocumento !== "RUC"
-  ) {
-    errors.push("Para factura el cliente debe tener RUC");
-  }
-
-  return errors;
-};
-
-export const handleEmitirVenta = async (
-  ventaData: VentaFormData
-): Promise<LogicResult> => {
-  try {
-    const errors = validarVenta(ventaData);
-    if (errors.length > 0) {
-      errors.forEach((err) => toast.error(err));
-      return { success: false, errors };
-    }
-
-    toast.info("Emitiendo documento...");
-    // Cast a any o VentaGenerada según lo que espere el servicio
-    const response = await ventasService.emitir(ventaData as any);
-
-    toast.success(
-      `${response.tDocumento || "Documento"} ${
-        response.numero
-      } emitida exitosamente`
-    );
-
-    if ((response as any).pdf) {
-      window.open((response as any).pdf, "_blank");
-    }
-
-    return { success: true, data: response };
-  } catch (err: any) {
-    const message = err.data?.message || "Error al emitir documento";
-    toast.error(message);
-    return { success: false, error: message };
-  }
-};
-
-export const handleConsultarEstado = async (
-  documentoId: string | number
-): Promise<LogicResult> => {
-  try {
-    toast.info("Consultando estado SUNAT...");
-    const response = await ventasService.getEstado(documentoId);
-
-    if (response.estado === "ACEPTADO") {
-      toast.success("Documento aceptado por SUNAT");
-    } else if (response.estado === "RECHAZADO") {
-      toast.error(`Documento rechazado: ${response.motivo}`);
-    } else {
-      toast.warning(`Estado: ${response.estado}`);
-    }
-
-    return { success: true, data: response };
-  } catch (err) {
-    toast.error("Error al consultar estado");
-    return { success: false };
-  }
-};
-
-export const handleDescargarCDR = async (
-  documentoId: string | number
-): Promise<LogicResult> => {
-  try {
-    const response = await ventasService.getCdr(documentoId);
-    const byteCharacters = atob(response.cdrBase64);
-    const byteArray = new Uint8Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteArray[i] = byteCharacters.charCodeAt(i);
-    }
-    const blob = new Blob([byteArray], { type: "application/zip" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `CDR-${response.numero}.zip`;
-    link.click();
-
-    toast.success("CDR descargado");
-    return { success: true };
-  } catch (err) {
-    toast.error("Error al descargar CDR");
-    return { success: false };
-  }
-};
-
-export const handleAnularDocumento = async (
-  documentoId: string | number,
-  motivo: string
-): Promise<LogicResult> => {
-  try {
-    if (!motivo || motivo.trim().length < 10) {
-      toast.error("El motivo debe tener al menos 10 caracteres");
-      return { success: false };
-    }
-
-    const confirmed = window.confirm("¿Está seguro de anular este documento?");
-    if (!confirmed) return { success: false };
-
-    toast.info("Anulando documento...");
-    await ventasService.anular(documentoId, motivo);
-
-    toast.success("Documento anulado exitosamente");
-    return { success: true };
-  } catch (err: any) {
-    toast.error(err.data?.message || "Error al anular documento");
-    return { success: false };
-  }
-};
-
-export const prepararDatosVenta = (
-  formData: VentaFormData,
-  items: any[],
-  desglose: any
-): VentaFormData => {
-  return {
-    tipoComprobante: formData.tipoComprobante,
-    serie: formData.serie,
-    fechaEmision: formData.fechaEmision,
-    fechaVencimiento: formData.fechaVencimiento,
-    cliente: {
-      tipoDocumento: formData.cliente?.tipoDocumento,
-      documento: formData.cliente?.documento,
-      razonSocial: formData.cliente?.razonSocial,
-      direccion: formData.cliente?.direccion,
+      return await ventasService.create(payload);
     },
-    items: items.map((item) => ({
-      codigo: item.codigo,
-      descripcion: item.descripcion,
-      cantidad: item.cantidad,
-      precioUnitario: item.precioUnitario,
-      valorVenta: item.valorVenta,
-      igv: item.igv,
-      total: item.total,
-    })),
-    totales: {
-      subtotal: desglose.subtotal,
-      igv: desglose.igv,
-      total: desglose.total,
-      descuento: desglose.descuento || 0,
+    onSuccess: () => {
+      notifySuccess("Venta registrada con éxito");
+
+      store.limpiarFormularioVenta();
+
+      queryClient.invalidateQueries({ queryKey: ["ventas"] });
+
+      navigate("/ventas");
     },
-    placa: formData.placa,
-    ordenCompra: formData.ordenCompra,
-    observaciones: formData.observaciones,
-    condicionPago: formData.condicionPago,
-  };
+    onError: (error: any) => {
+      const msg =
+        error.message ||
+        error.response?.data?.message ||
+        "Error al procesar la venta";
+      notifyError(msg);
+    },
+  });
 };
