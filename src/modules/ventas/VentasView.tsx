@@ -1,44 +1,52 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Calendar } from "primereact/calendar";
 import {
   AutoComplete,
   AutoCompleteCompleteEvent,
-  AutoCompleteChangeEvent,
   AutoCompleteSelectEvent,
 } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
 import { Menu } from "primereact/menu";
 import { configCalendar } from "@/utils/calendar/configCalendar";
+
+// Servicios y Lógica
+import { clientesService, productosService } from "@/services/api";
 import {
-  getClientes,
-  getTiposComprobante,
-  getSeries,
-  getProductos,
-  mapTipo,
-} from "@/services/generadorData";
-import { Cliente, Producto } from "@/types/services";
+  useVentaData,
+  useVentaMutations,
+} from "@/services/ventas/ventas.logic";
+import useVentaStore from "@/stores/ventasStore";
+
+// Tipos
+import { PdfFormat } from "@/types/utils/pdf";
+import { VentaComponent } from "@/types/modules/ventas";
+
+// Utilidades
 import { visualizarPDF } from "@/utils/pdf/pdfViewer";
-import { useProductosAgregados } from "@/hooks/useProductosAgregados";
 import {
   PermIdentityTwoToneIcon,
   CloseIcon,
   MenuIcon,
 } from "@/constants/icons";
-import useVentaStore from "@/stores/ventasStore";
 import { componentsVentas } from "@/constants/menuItems";
 
+// Componentes
 import PlacaModal from "./components/PlacaModal";
 import OrdenCompraModal from "./components/OrdenCompraModal";
 import ObservacionesModal from "./components/ObservacionesModal";
-
 import CondicionPagoModal from "./components/CondicionPagoModal";
 import DatosAdicionalesModal from "./components/DatosAdicionalesModal";
 import GuiaRemisionModal from "./components/GuiaRemisionModal";
-import { PdfFormat } from "@/types/utils/pdf";
-import { VentaComponent } from "@/types/modules/ventas";
 
 const VentasView = () => {
+  // --- 1. STORE ---
   const {
+    clienteVenta,
+    setClienteVenta,
+    productosVenta,
+    agregarProducto,
+    removerProducto,
+    actualizarCantidad,
     placa,
     ordenCompra,
     observaciones,
@@ -47,243 +55,241 @@ const VentasView = () => {
     guiasRemision,
   } = useVentaStore();
 
+  // --- 2. LOGIC HOOKS ---
+  const { monedas, tiposDocumento, series, isLoadingMaestros } = useVentaData();
+  const { crearVenta, isCrearVentaLoading } = useVentaMutations();
+
+  // --- 3. ESTADO LOCAL ---
   const [fechaEmision, setFechaEmision] = useState<Date | null>(new Date());
   const [fechaVencimiento, setFechaVencimiento] = useState<Date | null>(null);
+
   const [clienteInput, setClienteInput] = useState("");
-  const [clienteSel, setClienteSel] = useState<Cliente | null>(null);
-  const [producto, setProducto] = useState<Producto | null>(null);
-  const [comprobante, setComprobante] = useState("BOLETA DE VENTA ELECTRÓNICA");
-  const [seriesDisponibles, setSeriesDisponibles] = useState<string[]>([]);
-  const [serie, setSerie] = useState("B001");
-  const [clientesFiltrados, setClientesFiltrados] = useState<Cliente[]>([]);
-  const [productosFiltrados, setProductosFiltrados] = useState<Producto[]>([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState<any[]>([]);
+
+  const [productoInput, setProductoInput] = useState<string>("");
+  const [productosFiltrados, setProductosFiltrados] = useState<any[]>([]);
+
+  const [tipoDocId, setTipoDocId] = useState("");
+  const [serieId, setSerieId] = useState("");
+  const [monedaId, setMonedaId] = useState("PEN");
+  const [globalDiscount, setGlobalDiscount] = useState(0);
+
   const [proformaChecked, setProformaChecked] = useState(false);
+
+  // Variables PDF
   const [visiblePreview, setVisiblePreview] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [tipoPdf, setTipoPdf] = useState<PdfFormat>("A4");
 
-  const acClienteRef = useRef<AutoComplete>(null);
-  const menuOtrosRef = useRef<Menu>(null);
-
+  // Modales
   const [showPlacaModal, setShowPlacaModal] = useState(false);
   const [showOrdenCompraModal, setShowOrdenCompraModal] = useState(false);
   const [showObservacionesModal, setShowObservacionesModal] = useState(false);
-
-  const [globalDiscount, setGlobalDiscount] = useState(0);
-
   const [modalsOtros, setModalsOtros] = useState<Record<string, boolean>>({});
-  const handleHideModalOtros = (action: string) =>
-    setModalsOtros((prev) => ({ ...prev, [action]: false }));
 
-  const allComponents = componentsVentas as VentaComponent[];
+  const acClienteRef = useRef<AutoComplete>(null);
+  const menuOtrosRef = useRef<Menu>(null);
 
-  const otrosModalItems = allComponents
-    .filter((c) => !c.isInput)
-    .map(({ name, action }) => ({
-      label: `${name} ${(() => {
-        switch (action) {
-          case "guia":
-            return guiasRemision && guiasRemision.length > 0 ? " ✓" : "";
-          case "adicionales":
-            return datosAdicionales && datosAdicionales.length > 0 ? " ✓" : "";
-          case "condicionPago":
-            return condicionPago && condicionPago.condicion ? " ✓" : "";
-          default:
-            return "";
-        }
-      })()}`,
-      command: () => setModalsOtros((prev) => ({ ...prev, [action]: true })),
-    }));
-
-  const clientesList = getClientes();
-  const productosList = getProductos();
-  const comprobantesList = getTiposComprobante();
-  const DEFAULT_COMPROBANTE = "BOLETA DE VENTA ELECTRÓNICA";
-  const DEFAULT_SERIE = "B001";
-
-  const {
-    productosAgregados,
-    agregarProducto,
-    actualizarCantidad,
-    eliminarProducto,
-    getDiscountedItem,
-    totalGeneral,
-    totalsDesglose,
-  } = useProductosAgregados(globalDiscount);
-
+  // --- EFECTOS ---
   useEffect(() => {
     configCalendar();
   }, []);
 
-  const formatCliente = (c: Cliente | null) => {
+  const formatCliente = (c: any) => {
     if (!c) return "";
-    const doc = c.documento ? String(c.documento).trim() : "";
-    const nombreCompleto = (c.nombre || c.razonSocial || "").trim();
-    if (doc && nombreCompleto) return `${doc} — ${nombreCompleto}`;
-    return nombreCompleto || doc;
+    const doc = c.documento || c.numeroDocumento || "";
+    const nombre = c.razonSocial || c.nombre || "";
+    return `${doc} - ${nombre}`;
   };
 
   useEffect(() => {
-    if (mapTipo[comprobante]) {
-      const nuevasSeries = getSeries(mapTipo[comprobante]);
-      setSeriesDisponibles(nuevasSeries);
-      setSerie(
-        nuevasSeries.includes(DEFAULT_SERIE)
-          ? DEFAULT_SERIE
-          : nuevasSeries[0] || ""
-      );
+    if (!clienteVenta) {
+      setClienteInput("");
     } else {
-      setSeriesDisponibles([]);
-      setSerie("");
+      setClienteInput(formatCliente(clienteVenta));
     }
-  }, [comprobante]);
+  }, [clienteVenta]);
+
+  useEffect(() => {
+    if (series && series.length > 0 && !serieId) {
+      const first = series[0] as any;
+      setSerieId(first.serie || first.id);
+    }
+  }, [series, serieId]);
+
+  // --- CÁLCULOS ---
+  const { totalGeneral, totalsDesglose } = useMemo(() => {
+    const subtotal = productosVenta.reduce(
+      (acc, p: any) => acc + (p.totalVenta || 0),
+      0
+    );
+    // Aplicar descuento global
+    const totalConDescuento = subtotal * (1 - globalDiscount / 100);
+
+    // Desglose Base/IGV
+    const opGravada = totalConDescuento / 1.18;
+    const igv = totalConDescuento - opGravada;
+
+    return {
+      totalGeneral: totalConDescuento,
+      totalsDesglose: {
+        gravado: opGravada,
+        igv: igv,
+      },
+    };
+  }, [productosVenta, globalDiscount]);
+
+  // --- HANDLERS BÚSQUEDA ---
+  const HEADER = { __type: "header" };
+  const TIPS = { __type: "tips" };
+
+  const buscarClientes = async (e: AutoCompleteCompleteEvent) => {
+    try {
+      const response = await clientesService.getAll({ q: e.query });
+      // Manejo seguro de la respuesta Axios vs Array directo
+      const data = (response as any).data || response;
+      const lista = Array.isArray(data) ? data : data.content || [];
+      setClientesFiltrados([HEADER, ...lista, TIPS]);
+    } catch (error) {
+      setClientesFiltrados([HEADER, TIPS]);
+    }
+  };
+
+  const buscarProductos = async (e: AutoCompleteCompleteEvent) => {
+    try {
+      const response = await productosService.search({ q: e.query });
+      const data = (response as any).data || response;
+      const lista = Array.isArray(data) ? data : data.content || [];
+      setProductosFiltrados(lista);
+    } catch (error) {
+      setProductosFiltrados([]);
+    }
+  };
+
+  const handleSelectCliente = (e: AutoCompleteSelectEvent) => {
+    const selected = e.value;
+    if (selected && typeof selected !== "string" && !selected.__type) {
+      setClienteVenta(selected);
+    }
+    setTimeout(() => setClientesFiltrados([]), 100);
+  };
+
+  const handleSelectProducto = (e: AutoCompleteSelectEvent) => {
+    const selected = e.value;
+    if (selected && typeof selected !== "string") {
+      agregarProducto(selected, 1);
+      setProductoInput("");
+    }
+  };
 
   const handleProformaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProformaChecked(e.target.checked);
-    if (e.target.checked) {
-      setComprobante("PROFORMA ELECTRÓNICA");
-      const s = getSeries("PROFORMA");
-      setSeriesDisponibles(s);
-      setSerie(s[0] || "");
-    } else {
-      setComprobante(DEFAULT_COMPROBANTE);
-    }
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setGlobalDiscount(Math.min(100, Math.max(0, value || 0)));
+    setGlobalDiscount(Number(e.target.value));
   };
 
+  // --- PDF GENERATOR (RESTAURADO) ---
   const handleVistaPrevia = async () => {
-    let doc = clienteSel?.documento;
-    if (!doc) {
-      doc = (comprobante || "").includes("FACTURA")
-        ? "20000000001"
-        : "00000001";
-    }
+    const docCliente =
+      (clienteVenta as any)?.documento ||
+      (clienteVenta as any)?.numeroDocumento ||
+      "00000000";
+    const nomCliente =
+      (clienteVenta as any)?.razonSocial ||
+      (clienteVenta as any)?.nombre ||
+      "CLIENTE VARIOS";
+    const dirCliente = (clienteVenta as any)?.direccion || "Sin dirección";
 
-    const p = {
-      documento: doc,
-      documentoTipo: clienteSel?.documentoTipo || "DNI",
-      cliente:
-        clienteSel?.razonSocial || clienteSel?.nombre || "CLIENTE VARIOS",
-      direccion: clienteSel?.direccion || "",
-      tDocumento: comprobante,
-      serie,
-      numero: String(Date.now() % 10000),
-      items: productosAgregados.map((p) => getDiscountedItem(p)),
+    const payloadPdf = {
+      documento: docCliente,
+      documentoTipo: (clienteVenta as any)?.tipoDocumento || "DNI",
+      cliente: nomCliente,
+      direccion: dirCliente,
+      tDocumento: proformaChecked ? "PROFORMA" : "PRE-VENTA",
+      serie: serieId || "###",
+      numero: "#####",
+
+      items: productosVenta.map((p: any) => ({
+        ...p,
+        descripcion: p.descripcion || p.nombre,
+        precioUnitario: p.precioVenta,
+        total: p.totalVenta,
+      })),
+
       fecha: fechaEmision || new Date(),
       fechaVencimiento: fechaVencimiento
         ? fechaVencimiento.toISOString()
         : undefined,
+
       monto: {
         total: totalGeneral,
-        ...totalsDesglose,
+        gravado: totalsDesglose.gravado,
+        igv: totalsDesglose.igv,
+        exonerado: 0,
+        inafecto: 0,
+        gratuito: 0,
+        isc: 0,
+        icbper: 0,
       },
-      state: "PENDIENTE",
+
+      state: "BORRADOR",
       tipoOperacion: "VENTA",
       sucursal: "PRINCIPAL",
       usuario: "DEMO",
       placaVehiculo: placa,
       ordenCompra: ordenCompra,
-      observaciones,
-      condicionPago,
-      datosAdicionales,
-      guiasRemision,
+      observaciones: observaciones,
+      condicionPago: condicionPago,
+      datosAdicionales: datosAdicionales,
+      guiasRemision: guiasRemision,
     };
 
-    if (pdfUrl) URL.revokeObjectURL(pdfUrl);
-    const blob = await visualizarPDF(p as any, tipoPdf);
-    setPdfUrl(URL.createObjectURL(blob));
-    setVisiblePreview(true);
+    try {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+      const blob = await visualizarPDF(payloadPdf, tipoPdf);
+      const newUrl = URL.createObjectURL(blob);
+      setPdfUrl(newUrl);
+      setVisiblePreview(true);
+    } catch (error) {
+      console.error("Error PDF:", error);
+    }
   };
 
-  const HEADER = { __type: "header" };
-  const TIPS = { __type: "tips" };
-  const closePanelLater = () => setTimeout(() => setClientesFiltrados([]), 120);
-
-  const buildClienteSuggestions = (q: string) => {
-    if (!q) return [HEADER, TIPS];
-    const query = q.toLowerCase().trim();
-    const matches = clientesList.filter(
-      (c) =>
-        (c.nombre || "").toLowerCase().includes(query) ||
-        (c.razonSocial || "").toLowerCase().includes(query) ||
-        (c.documento || "").toString().toLowerCase().includes(query)
-    );
-    return [HEADER, ...matches, TIPS];
-  };
-
-  const buscarClientes = (e: AutoCompleteCompleteEvent) => {
-    // @ts-ignore
-    setClientesFiltrados(buildClienteSuggestions(e.query));
-  };
-
-  const buscarProductos = (e: AutoCompleteCompleteEvent) => {
-    const q = (e.query ?? "").toLowerCase();
-    setProductosFiltrados(
-      productosList.filter((p) =>
-        (p.descripcion || "").toLowerCase().includes(q)
-      )
-    );
-  };
+  const handleHideModalOtros = (action: string) =>
+    setModalsOtros((prev) => ({ ...prev, [action]: false }));
 
   const clienteItemTemplate = (opt: any) => {
-    if (opt?.__type) {
-      if (opt.__type === "header")
-        return (
-          <div
-            className="top-0 z-10 sticky flex justify-between items-center bg-white px-4 py-3 border-b"
-            onMouseDown={(e) => e.preventDefault()}
-          >
-            <span className="font-semibold text-[13px] text-gray-600 uppercase tracking-wide">
-              Resultados
-            </span>
-            <button
-              type="button"
-              className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md font-bold text-[12px] text-white"
-              onMouseDown={(e) => e.preventDefault()}
-            >
-              REGISTRAR NUEVO
-            </button>
-          </div>
-        );
-      if (opt.__type === "tips")
-        return (
-          <div
-            className="bottom-0 sticky bg-white px-4 py-3 border-t text-[12px] text-gray-600 leading-5"
-            onMouseDown={(e) => e.preventDefault()}
-          >
-            <div>
-              <strong>TIP:</strong> Escribe para buscar
-            </div>
-            <div>
-              <strong>TIP:</strong> Para DNI/RUC, escribe el número y presiona{" "}
-              <strong>ENTER</strong>
-            </div>
-          </div>
-        );
-    }
+    if (opt?.__type === "header")
+      return <div className="p-2 bg-gray-100 font-bold">Resultados</div>;
+    if (opt?.__type === "tips")
+      return (
+        <div className="p-2 text-xs text-gray-500">Busca por RUC/Nombre</div>
+      );
     return (
-      <div className="hover:bg-gray-50 px-3 py-2">
-        <div className="text-[12px] text-gray-500">{opt.documento}</div>
-        <div className="font-semibold text-[13px] text-gray-800">
-          {opt.razonSocial || opt.nombre || "Cliente"}
+      <div className="p-2 border-b hover:bg-gray-50 cursor-pointer">
+        <div className="font-bold text-sm">{opt.razonSocial || opt.nombre}</div>
+        <div className="text-xs text-gray-500">
+          {opt.documento || opt.numeroDocumento}
         </div>
       </div>
     );
   };
 
-  const handleSelectCliente = (e: AutoCompleteSelectEvent) => {
-    const selected = e.value;
-    if (selected && typeof selected !== "string") {
-      const clientObj = selected as Cliente;
-      setClienteSel(clientObj);
-      setClienteInput(formatCliente(clientObj));
-    }
-    closePanelLater();
-  };
+  const allComponents = componentsVentas as VentaComponent[];
+  const otrosModalItems = allComponents
+    .filter((c) => !c.isInput)
+    .map(({ name, action }) => ({
+      label: `${name} ${
+        (action === "guia" && guiasRemision?.length) ||
+        (action === "adicionales" && datosAdicionales?.length) ||
+        (action === "condicionPago" && (condicionPago as any)?.condicion)
+          ? "✓"
+          : ""
+      }`,
+      command: () => setModalsOtros((prev) => ({ ...prev, [action]: true })),
+    }));
 
   return (
     <div className="flex flex-col bg-white shadow-md p-6 rounded-lg w-full h-full">
@@ -300,364 +306,308 @@ const VentasView = () => {
         </label>
       </div>
 
+      {/* FILA 1 */}
       <div className="gap-4 grid grid-cols-4 mb-4">
         <div className="col-span-2">
           <label className="block mb-1 text-gray-500 text-xs">Cliente</label>
           <div className="relative w-full h-11">
-            {clienteSel ? (
+            {clienteVenta ? (
               <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 w-full h-full border border-gray-300">
-                <PermIdentityTwoToneIcon
-                  className="text-gray-600"
-                  style={{ fontSize: "1.1rem" }}
-                />
+                <PermIdentityTwoToneIcon className="text-gray-600" />
                 <span className="font-medium text-sm text-gray-800 truncate">
-                  {formatCliente(clienteSel)}
+                  {formatCliente(clienteVenta)}
                 </span>
                 <button
                   type="button"
                   className="ml-auto text-gray-400 hover:text-gray-700"
-                  onClick={() => {
-                    setClienteSel(null);
-                    setClienteInput("");
-                  }}
+                  onClick={() => setClienteVenta(null)}
                 >
-                  <CloseIcon style={{ fontSize: "1rem" }} />
+                  <CloseIcon />
                 </button>
               </div>
             ) : (
               <AutoComplete
                 ref={acClienteRef}
-                appendTo="self"
-                panelStyle={{ width: "100%" }}
                 value={clienteInput}
                 suggestions={clientesFiltrados}
                 completeMethod={buscarClientes}
                 field="razonSocial"
-                onChange={(e: AutoCompleteChangeEvent) =>
-                  setClienteInput(e.value ?? "")
-                }
+                onChange={(e) => setClienteInput(e.value)}
                 onSelect={handleSelectCliente}
                 itemTemplate={clienteItemTemplate}
-                placeholder="Escribe para buscar un cliente..."
+                placeholder="Buscar cliente..."
                 className="w-full"
-                inputClassName="h-11 rounded-md border border-gray-300 px-3 text-[14px] w-full focus:ring-2 focus:ring-blue-400"
-                panelClassName="max-h-[340px] rounded-md border border-gray-300 shadow-lg overflow-y-auto"
+                inputClassName="h-11 rounded-md border border-gray-300 px-3 w-full"
+                panelClassName="max-h-[300px] overflow-y-auto"
               />
             )}
           </div>
         </div>
-
         <div>
-          <label className="block mb-1 text-gray-500 text-xs">
-            Fecha de emisión
-          </label>
+          <label className="block mb-1 text-gray-500 text-xs">Emisión</label>
           <Calendar
             value={fechaEmision}
-            onChange={(e) => setFechaEmision(e.value as Date | null)}
+            onChange={(e) => setFechaEmision(e.value as Date)}
             dateFormat="dd/mm/yy"
             showIcon
             className="w-full"
-            inputClassName="w-full h-11 border border-gray-300 rounded-md px-3 text-[14px] focus:ring-2 focus:ring-blue-400"
+            inputClassName="w-full h-11 border border-gray-300 rounded-md px-3"
           />
         </div>
-
         <div>
           <label className="block mb-1 text-gray-500 text-xs">
-            Fecha de vencimiento
+            Vencimiento
           </label>
           <Calendar
             value={fechaVencimiento}
-            onChange={(e) => setFechaVencimiento(e.value as Date | null)}
+            onChange={(e) => setFechaVencimiento(e.value as Date)}
             dateFormat="dd/mm/yy"
             showIcon
             className="w-full"
-            inputClassName="w-full h-11 border border-gray-300 rounded-md px-3 text-[14px] focus:ring-2 focus:ring-blue-400"
+            inputClassName="w-full h-11 border border-gray-300 rounded-md px-3"
           />
         </div>
       </div>
 
+      {/* FILA 2 */}
       <div className="gap-4 grid grid-cols-4 mb-4">
         <div>
           <label className="block mb-1 text-gray-500 text-xs">
-            Tipo de comprobante
+            Comprobante
           </label>
           <select
-            value={comprobante}
-            onChange={(e) => setComprobante(e.target.value)}
-            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
+            value={tipoDocId}
+            onChange={(e) => setTipoDocId(e.target.value)}
+            disabled={isLoadingMaestros}
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-sm"
           >
-            <option value="">---Seleccionar---</option>
-            {comprobantesList.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {tiposDocumento.map((t: any) => (
+              <option key={t.id} value={t.id}>
+                {t.descripcion}
               </option>
             ))}
           </select>
         </div>
-
         <div>
           <label className="block mb-1 text-gray-500 text-xs">Serie</label>
           <select
-            value={serie}
-            onChange={(e) => setSerie(e.target.value)}
-            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
+            value={serieId}
+            onChange={(e) => setSerieId(e.target.value)}
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-sm"
           >
-            <option>---Seleccionar---</option>
-            {seriesDisponibles.map((s) => (
-              <option key={s} value={s}>
-                {s}
+            {series.map((s: any) => (
+              <option key={s.id || s.serie} value={s.serie}>
+                {s.serie}
               </option>
             ))}
           </select>
         </div>
-
         <div>
-          <label className="block mb-1 text-gray-500 text-xs">
-            Tipo de operación
-          </label>
-          <select className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]">
-            <option>VENTA INTERNA</option>
+          <label className="block mb-1 text-gray-500 text-xs">Moneda</label>
+          <select
+            value={monedaId}
+            onChange={(e) => setMonedaId(e.target.value)}
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-sm"
+          >
+            {monedas.map((m: any) => (
+              <option key={m.id} value={m.id}>
+                {m.codigo}
+              </option>
+            ))}
           </select>
         </div>
-
         <div>
-          <label className="block mb-1 text-gray-500 text-xs">
-            Dscto. global (%)
-          </label>
+          <label className="block mb-1 text-gray-500 text-xs">Dscto (%)</label>
           <input
             type="number"
-            placeholder="0.00"
-            value={globalDiscount || ""}
+            value={globalDiscount}
             onChange={handleDiscountChange}
-            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-[14px]"
+            className="px-2 py-2.5 border border-gray-300 rounded-md w-full h-11 text-sm"
           />
         </div>
       </div>
 
+      {/* FILA 3 */}
       <div className="flex items-center gap-4 mb-4">
         <button
-          type="button"
           onClick={() => setShowPlacaModal(true)}
-          className={`w-full py-2 px-4 rounded-lg font-bold text-white transition-colors ${
-            placa
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-blue-600 hover:bg-blue-700"
+          className={`w-full py-2 px-4 rounded-lg font-bold text-white ${
+            placa ? "bg-green-600" : "bg-blue-600"
           }`}
         >
           PLACA {placa && "✓"}
         </button>
-
         <button
-          type="button"
           onClick={() => setShowOrdenCompraModal(true)}
-          className={`w-full py-2 px-4 rounded-lg font-bold text-white transition-colors ${
-            ordenCompra
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-blue-600 hover:bg-blue-700"
+          className={`w-full py-2 px-4 rounded-lg font-bold text-white ${
+            ordenCompra ? "bg-green-600" : "bg-blue-600"
           }`}
         >
           O. COMPRA {ordenCompra && "✓"}
         </button>
-
         <button
-          type="button"
           onClick={() => setShowObservacionesModal(true)}
-          className={`w-full py-2 px-4 rounded-lg font-bold text-white transition-colors ${
-            observaciones
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-blue-600 hover:bg-blue-700"
+          className={`w-full py-2 px-4 rounded-lg font-bold text-white ${
+            observaciones ? "bg-green-600" : "bg-blue-600"
           }`}
         >
           OBSERVACIONES {observaciones && "✓"}
         </button>
-
         <div className="relative w-full">
           <Menu model={otrosModalItems} popup ref={menuOtrosRef} />
           <button
-            type="button"
             onClick={(e) => menuOtrosRef.current?.toggle(e)}
-            className="w-full py-2 px-4 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2"
+            className="flex justify-center items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg w-full font-bold text-white"
           >
             OTROS <MenuIcon className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="flex-1 bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md overflow-auto text-gray-500 text-sm text-center">
-        {productosAgregados.length === 0 ? (
-          <div className="p-6 text-gray-500 text-sm text-center">
-            Busca un producto....
-          </div>
+      {/* TABLA */}
+      <div className="flex-1 bg-gray-50 mb-6 p-6 border border-gray-300 rounded-md overflow-auto text-center text-gray-500 text-sm">
+        {productosVenta.length === 0 ? (
+          <div className="p-6">Agrega productos...</div>
         ) : (
           <table className="w-full text-gray-700 text-sm">
             <thead className="bg-gray-100 border-b text-gray-500 text-xs uppercase">
               <tr>
                 <th className="px-4 py-2 text-left">Producto</th>
-                <th className="px-4 py-2">Precio Unit.</th>
-                <th className="px-4 py-2">Descuento</th>
+                <th className="px-4 py-2">Precio</th>
+                <th className="px-4 py-2">Cant.</th>
                 <th className="px-4 py-2">Total</th>
-                <th className="px-4 py-2">Cantidad</th>
                 <th className="px-4 py-2"></th>
               </tr>
             </thead>
             <tbody>
-              {productosAgregados.map((p) => {
-                const discountedItem = getDiscountedItem(p);
-                const descuento = discountedItem.descuentoAplicado || 0;
-                const total = discountedItem.totalFinal || 0;
-
-                return (
-                  <tr key={p.codigo} className="border-b">
-                    <td className="px-4 py-2 text-left">{p.descripcion}</td>
-                    <td className="px-4 py-2 text-center">
-                      S/{p.precio?.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      S/{descuento.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      S/{total.toFixed(2)}
-                    </td>
-                    <td className="flex justify-center items-center gap-2 px-4 py-2">
-                      <button
-                        type="button"
-                        className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
-                        onClick={() =>
-                          actualizarCantidad(p.codigo, p.cantidad - 1)
-                        }
-                      >
-                        -
-                      </button>
-                      <span>{p.cantidad}</span>
-                      <button
-                        type="button"
-                        className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
-                        onClick={() =>
-                          actualizarCantidad(p.codigo, p.cantidad + 1)
-                        }
-                      >
-                        +
-                      </button>
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      <button
-                        type="button"
-                        className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white"
-                        onClick={() => eliminarProducto(p.codigo)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {productosVenta.map((p: any) => (
+                <tr key={p.codigoProducto || p.id} className="border-b">
+                  <td className="px-4 py-2 text-left">
+                    {p.descripcion || p.nombre}
+                  </td>
+                  <td className="px-4 py-2">S/ {p.precioVenta?.toFixed(2)}</td>
+                  <td className="flex justify-center items-center gap-2 px-4 py-2">
+                    <button
+                      className="bg-gray-200 px-2 rounded"
+                      onClick={() =>
+                        actualizarCantidad(
+                          p.codigoProducto!,
+                          Math.max(1, p.cantidadVenta - 1)
+                        )
+                      }
+                    >
+                      -
+                    </button>
+                    <span>{p.cantidadVenta}</span>
+                    <button
+                      className="bg-gray-200 px-2 rounded"
+                      onClick={() =>
+                        actualizarCantidad(
+                          p.codigoProducto!,
+                          p.cantidadVenta + 1
+                        )
+                      }
+                    >
+                      +
+                    </button>
+                  </td>
+                  <td className="px-4 py-2">S/ {p.totalVenta?.toFixed(2)}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => removerProducto(p.codigoProducto!)}
+                    >
+                      <CloseIcon />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
       </div>
 
+      {/* FOOTER */}
       <div className="bottom-0 sticky bg-white pt-4 border-gray-300 border-t">
         <div className="mb-4">
           <AutoComplete
-            value={producto}
+            value={productoInput}
             suggestions={productosFiltrados}
             completeMethod={buscarProductos}
             field="descripcion"
-            onChange={(e: AutoCompleteChangeEvent) => setProducto(e.value)}
-            onSelect={(e: AutoCompleteSelectEvent) => {
-              agregarProducto(e.value);
-              setProducto(null);
-            }}
-            placeholder="Escriba nombre del producto..."
+            onChange={(e) => setProductoInput(e.value)}
+            onSelect={handleSelectProducto}
+            placeholder="Buscar producto..."
             className="w-full"
-            inputClassName="h-11 rounded-md border border-gray-300 px-3 text-[14px] w-full focus:ring-2 focus:ring-blue-400"
+            inputClassName="h-11 rounded-md border border-gray-300 px-3 w-full"
           />
         </div>
-
         <div className="flex justify-between items-center gap-4">
           <div className="group relative flex-[22] text-center cursor-pointer">
             <p className="font-bold text-gray-700 text-lg">
-              <strong>
-                TOTAL{" "}
-                <span className="text-black">
-                  S/. {totalGeneral.toFixed(2)}
-                </span>
-              </strong>
+              TOTAL{" "}
+              <span className="text-black">S/ {totalGeneral.toFixed(2)}</span>
             </p>
             <div className="hidden group-hover:block bottom-full left-1/2 absolute bg-white shadow-lg mb-2 p-4 border rounded-lg w-52 text-gray-700 text-sm -translate-x-1/2 z-10">
-              {[
-                "Anticipios",
-                "DSCTO",
-                "Gravado",
-                "Exonerado",
-                "Inafecto",
-                "Exportación",
-                "Gratuito",
-                "I.S.C",
-                "I.G.V",
-                "R.C",
-                "I.C.B.P.E.R",
-              ].map((item) => (
-                <div key={item} className="flex justify-between">
-                  <span>{item}</span>
-                  <span>
-                    S/{" "}
-                    {(totalsDesglose as any)[
-                      item.toLowerCase().replace(".", "").replace(" ", "")
-                    ]?.toFixed(2) || "0.00"}
-                  </span>
-                </div>
-              ))}
+              <div className="flex justify-between">
+                <span>Gravado:</span>
+                <span>{totalsDesglose.gravado.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>IGV:</span>
+                <span>{totalsDesglose.igv.toFixed(2)}</span>
+              </div>
             </div>
           </div>
-
           <button
-            type="button"
             onClick={handleVistaPrevia}
             className="flex-[9] bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded font-semibold text-gray-700"
           >
             VISTA PREVIA
           </button>
           <button
-            type="button"
-            className="flex-[9] bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white"
+            onClick={() => crearVenta()}
+            disabled={isCrearVentaLoading}
+            className={`flex-[9] px-4 py-2 rounded font-semibold text-white ${
+              isCrearVentaLoading
+                ? "bg-gray-400"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
           >
-            PROCESAR
+            {isCrearVentaLoading ? "PROCESANDO..." : "PROCESAR"}
           </button>
         </div>
-
-        <Dialog
-          header="Vista previa PDF"
-          visible={visiblePreview}
-          maximized
-          onHide={() => setVisiblePreview(false)}
-        >
-          <div className="flex gap-10 mb-3">
-            <select
-              value={tipoPdf}
-              onChange={(e) => setTipoPdf(e.target.value as PdfFormat)}
-              className="px-2 py-1 border rounded text-sm"
-            >
-              <option value="A4">Formato A4</option>
-              <option value="t80mm">Ticket 80mm</option>
-            </select>
-            <button
-              type="button"
-              onClick={handleVistaPrevia}
-              className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
-            >
-              Actualizar
-            </button>
-          </div>
-          {pdfUrl && (
-            <iframe
-              src={pdfUrl}
-              title="Vista previa PDF"
-              className="border-0 w-full h-[calc(100vh-100px)]"
-            />
-          )}
-        </Dialog>
       </div>
+
+      <Dialog
+        header="PDF"
+        visible={visiblePreview}
+        maximized
+        onHide={() => setVisiblePreview(false)}
+      >
+        <div className="flex gap-4 mb-2">
+          <select
+            value={tipoPdf}
+            onChange={(e) => setTipoPdf(e.target.value as PdfFormat)}
+            className="border p-1 rounded"
+          >
+            <option value="A4">A4</option>
+            <option value="t80mm">Ticket</option>
+          </select>
+          <button
+            onClick={handleVistaPrevia}
+            className="bg-blue-600 text-white px-3 rounded text-sm"
+          >
+            Actualizar
+          </button>
+        </div>
+        {pdfUrl && (
+          <iframe
+            src={pdfUrl}
+            className="border-0 w-full h-[calc(100vh-100px)]"
+          />
+        )}
+      </Dialog>
 
       <PlacaModal
         visible={showPlacaModal}

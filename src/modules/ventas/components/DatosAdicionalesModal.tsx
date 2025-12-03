@@ -4,46 +4,46 @@ import { useDynamicList } from "@/hooks/data/useDynamicList";
 import { useState, useEffect } from "react";
 import AddListModal from "@/components/modals/AddListModal";
 import useVentaStore from "@/stores/ventasStore";
-import { DatosAdicionalesModalProps, DatoItem } from "@/types/modules/ventas";
+import { BaseVentaModalProps, DatoAdicionalItem } from "@/types/ui/modules";
 
-const DatosAdicionalesModal = ({
-  visible,
-  onHide,
-}: DatosAdicionalesModalProps) => {
+const DatosAdicionalesModal = ({ visible, onHide }: BaseVentaModalProps) => {
   const { datosAdicionales, setDatosAdicionales } = useVentaStore();
 
-  const initialItems = (datosAdicionales || []).map((d, i) => ({
-    ...d,
-    tempId: Date.now() + i,
+  // Mapeo inicial asegurando tempId para el hook
+  const initialItems = (datosAdicionales || []).map((d: any, i: number) => ({
+    id: d.id || Date.now() + i,
+    tempId: d.id || Date.now() + i, // Necesario para useDynamicList
     titulo: d.titulo || "",
     descripcion: d.descripcion || "",
-  })) as DatoItem[];
+  })) as DatoAdicionalItem[];
 
   const { items, addItem, removeItem, setItems } =
-    useDynamicList<DatoItem>(initialItems);
+    useDynamicList<DatoAdicionalItem>(initialItems);
+
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
   useEffect(() => {
     if (visible) {
-      const mapped = (datosAdicionales || []).map((d, i) => ({
-        ...d,
-        tempId: Date.now() + i,
+      const mapped = (datosAdicionales || []).map((d: any, i: number) => ({
+        id: d.id || Date.now() + i,
+        tempId: d.id || Date.now() + i,
         titulo: d.titulo || "",
         descripcion: d.descripcion || "",
-      })) as DatoItem[];
+      })) as DatoAdicionalItem[];
       setItems(mapped);
     }
   }, [visible, datosAdicionales, setItems]);
 
-  const handleSave = (newItems: DatoItem[]) => {
+  const handleSave = (newItems: DatoAdicionalItem[]) => {
     setDatosAdicionales(newItems as any);
     onHide();
   };
 
   const handleAddItem = () => {
     if (titulo && descripcion) {
-      addItem({ titulo, descripcion });
+      const newId = Date.now();
+      addItem({ titulo, descripcion, id: newId, tempId: newId } as any);
       setTitulo("");
       setDescripcion("");
     }
@@ -78,7 +78,7 @@ const DatosAdicionalesModal = ({
     </div>
   );
 
-  const renderItemDisplay = (item: DatoItem) => (
+  const renderItemDisplay = (item: DatoAdicionalItem) => (
     <div className="flex gap-2 flex-1">
       <div className="flex-1 p-2 bg-white border border-gray-300 rounded-lg">
         <label className="block text-xs text-gray-600 mb-1">Título *</label>

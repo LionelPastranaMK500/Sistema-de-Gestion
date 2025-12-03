@@ -1,8 +1,8 @@
 import SimpleInputModal from "@/components/modals/SimpleInputModal";
 import useVentaStore from "@/stores/ventasStore";
-import { ObservacionesModalProps } from "@/types/modules/ventas";
+import { BaseVentaModalProps } from "@/types/ui/modules"; // CAMBIO
 
-const ObservacionesModal = ({ visible, onHide }: ObservacionesModalProps) => {
+const ObservacionesModal = ({ visible, onHide }: BaseVentaModalProps) => {
   const { observaciones, setObservaciones } = useVentaStore();
 
   return (

@@ -4,15 +4,12 @@ import { Button } from "primereact/button";
 import { useState, useEffect } from "react";
 import AddListModal from "@/components/modals/AddListModal";
 import useVentaStore from "@/stores/ventasStore";
-import { GuiaRemisionVentaModalProps, GuiaItem } from "@/types/modules/ventas";
+import { BaseVentaModalProps, GuiaRemisionItem } from "@/types/ui/modules";
 
-const GuiaRemisionModal = ({
-  visible,
-  onHide,
-}: GuiaRemisionVentaModalProps) => {
+const GuiaRemisionModal = ({ visible, onHide }: BaseVentaModalProps) => {
   const { guiasRemision, setGuiasRemision } = useVentaStore();
 
-  const [guias, setGuias] = useState<GuiaItem[]>([]);
+  const [guias, setGuias] = useState<GuiaRemisionItem[]>([]);
   const [tipo, setTipo] = useState("REMITENTE");
   const [serie, setSerie] = useState("");
   const [numero, setNumero] = useState("");
@@ -22,19 +19,19 @@ const GuiaRemisionModal = ({
       const mappedGuias = (guiasRemision || []).map(
         (g: any, index: number) => ({
           ...g,
-          tempId: g.tempId || Date.now() + index,
+          id: g.id || Date.now() + index, // Usamos 'id' estándar
           tipo: g.tipo || "REMITENTE",
           serie: g.serie || "",
           numero: g.numero || "",
         })
-      ) as GuiaItem[];
+      ) as GuiaRemisionItem[];
 
       setGuias(mappedGuias);
     }
   }, [visible, guiasRemision]);
 
-  const handleSave = (itemsToSave: GuiaItem[]) => {
-    setGuiasRemision(itemsToSave);
+  const handleSave = (itemsToSave: GuiaRemisionItem[]) => {
+    setGuiasRemision(itemsToSave as any);
     onHide();
   };
 
@@ -44,11 +41,10 @@ const GuiaRemisionModal = ({
   ];
 
   const handleAddItem = () => {
-    const nuevaGuia: GuiaItem = {
+    const nuevaGuia: GuiaRemisionItem = {
       tipo,
       serie,
       numero,
-      tempId: Date.now(),
       id: Date.now(),
     };
     setGuias((prev) => [...prev, nuevaGuia]);
@@ -59,7 +55,7 @@ const GuiaRemisionModal = ({
   };
 
   const handleRemoveItem = (id: string | number) => {
-    setGuias((prev) => prev.filter((g) => g.tempId !== id && g.id !== id));
+    setGuias((prev) => prev.filter((g) => g.id !== id));
   };
 
   const renderFormFields = () => (
@@ -106,7 +102,7 @@ const GuiaRemisionModal = ({
     </>
   );
 
-  const renderItemDisplay = (guia: GuiaItem) => (
+  const renderItemDisplay = (guia: GuiaRemisionItem) => (
     <div className="flex gap-2 flex-1">
       <div className="flex-1 p-2 bg-white border border-gray-300 rounded-lg">
         <label className="block text-xs text-gray-600 mb-1">Tipo *</label>

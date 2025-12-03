@@ -1,43 +1,71 @@
-import { Cliente } from "./cliente";
-import { Documento } from "./documento";
+// src/types/models/ventas.ts
 
-export interface DetalleVenta {
-  id?: number;
-  descripcion: string;
+// Enum para asegurar que enviamos los códigos correctos a Java/SUNAT
+export enum TipoDocumentoCodigo {
+  FACTURA = "01",
+  BOLETA = "03",
+  NOTA_CREDITO = "07",
+  NOTA_DEBITO = "08",
+}
+
+export enum MonedaCodigo {
+  SOLES = "PEN",
+  DOLARES = "USD",
+}
+
+// Detalle de cada ítem (alineado con DetalleVentaCreateDto en Java)
+export interface VentaDetallePayload {
+  productoId: number;
   cantidad: number;
-  precioUnitario: number;
+  precioUnitario: number; // Precio con IGV o sin IGV (depende de tu lógica de backend, usualmente unitario final)
+  descuento?: number;
+  // Campos calculados que el backend suele esperar para validar
+  subtotal: number;
+  igv: number;
   total: number;
-  productoId?: number;
+  observacion?: string;
 }
 
-/**
- * Modelo Maestro de Venta (Lectura)
- * Refleja VentaDetailDto.java
- */
-export interface Venta {
-  fechaVenta: string; // LocalDateTime -> String
-  montoTotal: number; // BigDecimal -> number
-  estado: string;
-
-  // Relaciones
-  listadetalles: DetalleVenta[];
-  doc_cliente: Cliente;
-  documentoAsociado?: Documento;
-}
-
-/**
- * Payload para Crear Venta
- * Refleja VentaCreateDto.java
- */
+// EL PAYLOAD PRINCIPAL (Esto es lo que Java espera en @RequestBody)
 export interface VentaPayload {
-  fechaVenta: string | Date;
-  montoTotal: number;
-  estado: string;
+  // 1. Contexto de la transacción (CRÍTICO: Faltaba esto)
+  sucursalId: number;
+  usuarioId: number;
 
-  // CORRECCIÓN CRÍTICA: Java espera un objeto 'doc_cliente', no un ID suelto.
-  // Enviamos al menos el RUC para que el backend lo mapee.
-  doc_cliente: Partial<Cliente> & { numeroRuc: string };
+  // 2. Datos del Cliente
+  clienteId: number;
 
-  // Opcional: Si el backend llegara a aceptar detalles en el futuro
-  listadetalles?: DetalleVenta[];
+  // 3. Configuración del Documento
+  tipoDocumentoId: string; // "01", "03" (Debe coincidir con tus IDs de maestras en DB)
+  serie?: string; // Opcional si el backend la autoselecciona, obligatorio si el front la elige
+  monedaId: string; // "PEN"
+  fechaEmision: string; // ISO String (YYYY-MM-DDTHH:mm:ss)
+  fechaVencimiento?: string;
+
+  // 4. Totales (Calculados en ventas.calculations.ts)
+  opGravada: number;
+  opExonerada: number;
+  opInafecta: number;
+  igv: number;
+  total: number;
+  totalDescuentos?: number;
+
+  // 5. Detalles
+  detalles: VentaDetallePayload[];
+
+  // 6. Extras
+  observaciones?: string;
+  condicionPagoId?: number; // Contado/Crédito
+  ordenCompra?: string;
+  placaVehiculo?: string; // Si aplica
+}
+
+// La respuesta que devuelve el backend (DocumentoEmissionResponse)
+export interface VentaResponse {
+  documentoId: number;
+  serie: string;
+  correlativo: string;
+  ticket?: string;
+  estadoSunat: string; // ACEPTADO, RECHAZADO, PENDIENTE
+  linkPdf?: string; // Si tu backend generara el link
 }

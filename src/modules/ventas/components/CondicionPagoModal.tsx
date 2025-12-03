@@ -4,9 +4,9 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useState, useEffect } from "react";
 import useVentaStore from "@/stores/ventasStore";
-import { CondicionPagoModalProps } from "@/types/modules/ventas";
+import { BaseVentaModalProps } from "@/types/ui/modules"; // CAMBIO
 
-const CondicionPagoModal = ({ visible, onHide }: CondicionPagoModalProps) => {
+const CondicionPagoModal = ({ visible, onHide }: BaseVentaModalProps) => {
   const { condicionPago, setCondicionPago } = useVentaStore();
   const [condicion, setCondicion] = useState("");
   const [metodo, setMetodo] = useState("");
@@ -28,9 +28,9 @@ const CondicionPagoModal = ({ visible, onHide }: CondicionPagoModalProps) => {
 
   useEffect(() => {
     if (visible && condicionPago) {
-      setCondicion(condicionPago.condicion || "");
-      setMetodo(condicionPago.metodo || "");
-      setReferencia(condicionPago.referencia || "");
+      setCondicion((condicionPago as any).condicion || "");
+      setMetodo((condicionPago as any).metodo || "");
+      setReferencia((condicionPago as any).referencia || "");
     }
   }, [visible, condicionPago]);
 

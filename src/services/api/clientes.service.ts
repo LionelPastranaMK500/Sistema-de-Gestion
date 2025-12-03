@@ -1,22 +1,38 @@
-import api from "../api";
+import api from "@/config/api";
 import { Cliente } from "@/types/services";
 
 export const clientesService = {
-  getAll: (params: Record<string, string> = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return api.get<Cliente[]>(`/api/v1/clientes${query ? `?${query}` : ""}`);
+  // GET /
+  getAll: (
+    params: { q?: string; page?: number; size?: number; sort?: string } = {}
+  ) => {
+    const query = new URLSearchParams(params as any).toString();
+    return api.get<any>(`/api/v1/clientes${query ? `?${query}` : ""}`);
   },
 
-  create: (clienteData: Cliente) =>
-    api.post<Cliente>("/api/v1/clientes", clienteData),
+  // GET /reporte
+  getReporte: (
+    params: { q?: string; page?: number; size?: number; sort?: string } = {}
+  ) => {
+    const query = new URLSearchParams(params as any).toString();
+    return api.get<any>(`/api/v1/clientes/reporte${query ? `?${query}` : ""}`);
+  },
 
-  getById: (id: string | number) => api.get<Cliente>(`/api/v1/clientes/${id}`),
+  // GET /{id}
+  getById: (id: number) => api.get<Cliente>(`/api/v1/clientes/${id}`),
 
-  update: (id: string | number, clienteData: Partial<Cliente>) =>
-    api.put<Cliente>(`/api/v1/clientes/${id}`, clienteData),
+  // POST /
+  create: (data: Partial<Cliente>) =>
+    api.post<Cliente>("/api/v1/clientes", data),
 
-  delete: (id: string | number) => api.delete<void>(`/api/v1/clientes/${id}`),
+  // PUT /{id}
+  update: (id: number, data: Partial<Cliente>) =>
+    api.put<Cliente>(`/api/v1/clientes/${id}`, data),
 
+  // DELETE /{id}
+  delete: (id: number) => api.delete<void>(`/api/v1/clientes/${id}`),
+
+  // GET /consulta?numero=...
   consultarDocumento: (numero: string) =>
-    api.get<Cliente>(`/api/v1/clientes/consulta?numero=${numero}`),
+    api.get<any>(`/api/v1/clientes/consulta?numero=${numero}`),
 };

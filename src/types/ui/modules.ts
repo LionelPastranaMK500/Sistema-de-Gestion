@@ -1,14 +1,13 @@
 import {
   Cliente,
   Producto,
-  Venta,
+  // Venta, // ELIMINADO: No existe en models
   Usuario,
   Sucursal,
   Almacen,
   Documento,
   GuiaRemision,
 } from "../models";
-import { DynamicItem } from "../hooks/data";
 
 // --- CLIENTES UI ---
 export interface ClienteCardProps {
@@ -33,25 +32,26 @@ export interface BaseVentaModalProps {
   onHide: () => void;
 }
 
-// Items específicos para la UI de Ventas (Estado local, no modelo de BD)
-export interface DatoAdicionalItem extends DynamicItem {
+// Items específicos para la UI de Ventas (Estado local)
+export interface DatoAdicionalItem {
+  id?: string | number; // Reemplaza DynamicItem si no quieres importar de hooks
   titulo: string;
   descripcion: string;
 }
 
-// --- PRODUCTOS & GUÍAS UI (Lo que faltaba) ---
+// --- PRODUCTOS & GUÍAS UI ---
 export interface AgregarProductoModalProps {
   onSelect?: (productos: Producto | Producto[]) => void;
   onClose?: () => void;
 }
 
-// Interfaz para la lista de productos en la creación de Guía (extiende el modelo base con campos de UI)
 export interface ProductoGuiaUI extends Producto {
-  cantidad: number | string; // string temporal mientras el usuario escribe
+  cantidad: number | string;
   detalle?: string;
 }
 
-export interface GuiaRemisionItem extends DynamicItem {
+export interface GuiaRemisionItem {
+  id?: string | number;
   tipo: string;
   serie: string;
   numero: string;
@@ -59,7 +59,7 @@ export interface GuiaRemisionItem extends DynamicItem {
 
 // --- MODALES DE DOCUMENTOS ---
 export interface DocumentoModalProps {
-  documento: Documento | Venta;
+  documento: Documento; // CORREGIDO: Solo Documento, Venta es redundante
   onClose: () => void;
 }
 
@@ -67,7 +67,7 @@ export type FacturaModalProps = DocumentoModalProps;
 export type ProformasModalProps = DocumentoModalProps;
 
 export interface GuiaRemisionModalProps {
-  guia: GuiaRemision; // Tipado fuerte con el modelo real
+  guia: GuiaRemision;
   onClose: () => void;
 }
 

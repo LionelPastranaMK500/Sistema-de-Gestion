@@ -1,8 +1,8 @@
 import SimpleInputModal from "@/components/modals/SimpleInputModal";
 import useVentaStore from "@/stores/ventasStore";
-import { OrdenCompraModalProps } from "@/types/modules/ventas";
+import { BaseVentaModalProps } from "@/types/ui/modules"; // CAMBIO
 
-const OrdenCompraModal = ({ visible, onHide }: OrdenCompraModalProps) => {
+const OrdenCompraModal = ({ visible, onHide }: BaseVentaModalProps) => {
   const { ordenCompra, setOrdenCompra } = useVentaStore();
 
   return (
