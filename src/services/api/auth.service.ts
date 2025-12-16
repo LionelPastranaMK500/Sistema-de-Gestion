@@ -1,5 +1,5 @@
 import apiClient from "@/config/api";
-import { LoginRequest, RegisterRequest, AuthResponse } from "@/types/auth";
+import { LoginRequest, RegisterRequest, AuthResponse } from "@/types/models";
 
 const AUTH_URL = "/auth";
 
@@ -33,37 +33,6 @@ export const authService = {
         },
       }
     );
-    return data;
-  },
-
-  // POST /auth/forgot-password
-  requestPasswordReset: async (email: string): Promise<any> => {
-    const { data } = await apiClient.post(`${AUTH_URL}/forgot-password`, {
-      email,
-    });
-    return data;
-  },
-
-  // POST /auth/verify-code
-  verifyResetCode: async (email: string, code: string): Promise<any> => {
-    const { data } = await apiClient.post(`${AUTH_URL}/verify-code`, {
-      email,
-      code,
-    });
-    return data;
-  },
-
-  // POST /auth/reset-password
-  resetPassword: async (
-    email: string,
-    code: string,
-    password: string
-  ): Promise<any> => {
-    const { data } = await apiClient.post(`${AUTH_URL}/reset-password`, {
-      email,
-      code,
-      password,
-    });
     return data;
   },
 };

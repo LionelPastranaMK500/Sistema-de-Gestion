@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { authService } from "@/services/api/auth.service";
 import { useAuthStore } from "@/stores/authStore";
 import { notifySuccess, notifyError } from "@/utils/notifications/notify";
-import { LoginRequest, RegisterRequest } from "@/types/auth";
+import { LoginRequest, RegisterRequest } from "@/types/models/auth";
 
 /**
  * Hook para la lógica de Login
