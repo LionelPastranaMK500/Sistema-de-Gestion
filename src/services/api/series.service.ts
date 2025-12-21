@@ -1,27 +1,63 @@
-import api from "@/config/api";
-import { Serie } from "@/types/services";
+import apiClient from "@/config/api";
+import { ApiResponse } from "@/types/api";
+import { SerieDto, SerieCreateDto } from "@/types/models";
+
+const SERIE_URL = "/api/v1/series";
 
 export const seriesService = {
-  // GET /
-  getAll: () => api.get<Serie[]>("/api/v1/series"),
+  // GET /api/v1/series
+  listAll: async (): Promise<ApiResponse<SerieDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<SerieDto[]>>(SERIE_URL);
+    return data;
+  },
 
-  // GET /{id}
-  getById: (id: number) => api.get<Serie>(`/api/v1/series/${id}`),
+  // GET /api/v1/series/{id}
+  getById: async (id: number): Promise<ApiResponse<SerieDto>> => {
+    const { data } = await apiClient.get<ApiResponse<SerieDto>>(
+      `${SERIE_URL}/${id}`
+    );
+    return data;
+  },
 
-  // POST /
-  create: (data: Partial<Serie>) => api.post<Serie>("/api/v1/series", data),
+  // POST /api/v1/series
+  create: async (dto: SerieCreateDto): Promise<ApiResponse<SerieDto>> => {
+    const { data } = await apiClient.post<ApiResponse<SerieDto>>(
+      SERIE_URL,
+      dto
+    );
+    return data;
+  },
 
-  // PUT / (El backend recibe el ID dentro del DTO)
-  update: (data: Partial<Serie>) => api.put<Serie>("/api/v1/series", data),
+  // PUT /api/v1/series
+  update: async (dto: SerieDto): Promise<ApiResponse<SerieDto>> => {
+    const { data } = await apiClient.put<ApiResponse<SerieDto>>(SERIE_URL, dto);
+    return data;
+  },
 
-  // DELETE /{id}
-  delete: (id: number) => api.delete<void>(`/api/v1/series/${id}`),
+  // DELETE /api/v1/series/{id}
+  delete: async (id: number): Promise<ApiResponse<void>> => {
+    const { data } = await apiClient.delete<ApiResponse<void>>(
+      `${SERIE_URL}/${id}`
+    );
+    return data;
+  },
 
-  // GET /buscar?serie=...
-  buscarPorSerie: (serie: string) =>
-    api.get<Serie[]>(`/api/v1/series/buscar?serie=${serie}`),
+  // GET /api/v1/series/buscar?serie={serie}
+  buscarPorSerie: async (serie: string): Promise<ApiResponse<SerieDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<SerieDto[]>>(
+      `${SERIE_URL}/buscar`,
+      { params: { serie } }
+    );
+    return data;
+  },
 
-  // GET /comprobante/{comprobanteId}
-  buscarPorComprobante: (comprobanteId: number) =>
-    api.get<Serie[]>(`/api/v1/series/comprobante/${comprobanteId}`),
+  // GET /api/v1/series/comprobante/{comprobanteId}
+  buscarPorComprobante: async (
+    comprobanteId: number
+  ): Promise<ApiResponse<SerieDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<SerieDto[]>>(
+      `${SERIE_URL}/comprobante/${comprobanteId}`
+    );
+    return data;
+  },
 };

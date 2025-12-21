@@ -1,63 +1,128 @@
 import {
-  Moneda,
-  UnidadMedida,
-  AfectacionIGV,
-  AfectacionISC,
+  MonedaDto,
+  MonedaSummaryDto,
+  UnidadMedidaDto,
+  UnidadMedidaSummaryDto,
   TipoProducto,
-  EstadoStock,
+  EstadoStockProducto,
   EstadoProducto,
 } from "./comunes";
 
+import { AfectacionIGVDto } from "./afectacionIgv";
+import { AfectacionISCDto } from "./afectacionIsc";
+
 /**
- * Modelo Maestro de Producto (Lectura / Detail)
- * Refleja ProductoDetailDto.java
+ * Espejo de: studios.tkoh.billing.dto.simple.ProductoDto
  */
-export interface Producto {
-  // Identificadores y Datos Base
-  codigoProducto: string; // Parece ser el ID principal en tus DTOs
-  codigoBarras?: string; // Estaba en Create, lo hacemos opcional aquí por si acaso
+export interface ProductoDto {
+  productoID: number;
+  codigoProducto: string;
+  codigoBarras: string;
   nombreProducto: string;
   descripcion: string;
-  categoria: string;
-
-  // Precios y Stock
-  precioVenta: number; // BigDecimal en Java -> number en TS
+  precioVenta: number;
   precioTotal: number;
-  stock: number;
   incluyeIGV: boolean;
 
-  // Impuestos (Valores calculados o fijos)
+  tipoProducto: TipoProducto;
+  estadoStockProducto: EstadoStockProducto;
+
   afectacionICBPER: number;
   afectacionIGVPorcentaje: number;
   afectacionISCPorcentaje: number;
   afectacionISCMontoFijo: number;
   afectacionISCFactorPublico: number;
 
-  // Estados
-  tipoProducto: TipoProducto;
-  estadoStockProducto: EstadoStock;
+  categoria: string;
+  stock: number;
   estadoProducto: EstadoProducto;
 
-  // Relaciones (Objetos completos para lectura)
-  moneda: Moneda;
-  unidadMedida: UnidadMedida;
-  afectacionIgv: AfectacionIGV;
-  afectacionIsc: AfectacionISC;
+  moneda: MonedaSummaryDto;
+  unidadMedida: UnidadMedidaSummaryDto;
+  afectacionIgv: AfectacionIGVDto;
+  afectacionIsc: AfectacionISCDto;
 }
 
 /**
- * Payload para Crear/Editar Producto
- * Refleja ProductoCreateDto.java
- * Omitimos los objetos completos y agregamos los IDs necesarios para el backend.
+ * Espejo de: studios.tkoh.billing.dto.detail.ProductoDetailDto
+ * */
+export interface ProductoDetailDto {
+  codigoProducto: string;
+  nombreProducto: string;
+  descripcion: string;
+  precioVenta: number;
+  precioTotal: number;
+  incluyeIGV: boolean;
+
+  tipoProducto: TipoProducto;
+  estadoStockProducto: EstadoStockProducto;
+
+  afectacionICBPER: number;
+  afectacionIGVPorcentaje: number;
+  afectacionISCPorcentaje: number;
+  afectacionISCMontoFijo: number;
+  afectacionISCFactorPublico: number;
+
+  categoria: string;
+  stock: number;
+  estadoProducto: EstadoProducto;
+
+  moneda: MonedaDto;
+  unidadMedida: UnidadMedidaDto;
+  afectacionIgv: AfectacionIGVDto;
+  afectacionIsc: AfectacionISCDto;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.ProductoCreateDto
  */
-export interface ProductoPayload
-  extends Omit<
-    Producto,
-    "moneda" | "unidadMedida" | "afectacionIgv" | "afectacionIsc"
-  > {
-  // Foreign Keys requeridas por el backend
+export interface ProductoCreateDto {
+  codigoProducto: string;
+  codigoBarras: string;
+  nombreProducto: string;
+  descripcion: string;
+  precioVenta: number;
+  precioTotal: number;
+  incluyeIGV: boolean;
+
+  tipoProducto: TipoProducto;
+  estadoStockProducto: EstadoStockProducto;
+
+  afectacionICBPER: number;
+  afectacionIGVPorcentaje: number;
+  afectacionISCPorcentaje: number;
+  afectacionISCMontoFijo: number;
+  afectacionISCFactorPublico: number;
+
+  categoria: string;
+  stock: number;
+  estadoProducto: EstadoProducto;
+
   monedaId: number;
   unidadMedidaId: number;
   afectacionIgvId: number;
   afectacionIscId: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.update.ProductoUpdateDto
+ */
+export interface ProductoUpdateDto extends ProductoCreateDto {
+  productoID: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.summary.ProductoSummaryDto
+ */
+export interface ProductoSummaryDto {
+  productoID: number;
+  codigoProducto: string;
+  codigoBarras: string;
+  nombreProducto: string;
+  categoria: string;
+  precioVenta: number;
+  incluyeIGV: boolean;
+
+  monedaSummaryDto: MonedaSummaryDto;
+  unidadMedidaSummaryDto: UnidadMedidaSummaryDto;
 }

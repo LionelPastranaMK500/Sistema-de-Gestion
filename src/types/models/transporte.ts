@@ -1,10 +1,11 @@
-import { TipoLicencia, TipoVehiculo, ClienteSummary } from "./comunes";
+// src/types/models/transporte.ts
+
+import { TipoLicencia, TipoVehiculo, ClienteSummaryDto } from "./comunes";
 
 /**
- * Modelo Maestro de Chofer
- * Refleja ChoferDto.java
+ * Espejo de: studios.tkoh.billing.dto.simple.ChoferDto
  */
-export interface Chofer {
+export interface ChoferDto {
   id: number;
   nombre: string;
   dni: string;
@@ -13,15 +14,22 @@ export interface Chofer {
   licencia: string;
 }
 
-export interface ChoferPayload extends Omit<Chofer, "id"> {
-  clienteSummaryDto?: ClienteSummary; // Requerido en create según DTO
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.ChoferCreateDto
+ */
+export interface ChoferCreateDto {
+  nombre: string;
+  dni: string;
+  telefono: string;
+  tipolicencia: TipoLicencia;
+  licencia: string;
+  clienteSummaryDto?: ClienteSummaryDto;
 }
 
 /**
- * Modelo Maestro de Vehículo
- * Refleja VehiculoDto.java
+ * Espejo de: studios.tkoh.billing.dto.simple.VehiculoDto
  */
-export interface Vehiculo {
+export interface VehiculoDto {
   id: number;
   placa: string;
   tarjetaUnicaCirculacion: string;
@@ -31,7 +39,11 @@ export interface Vehiculo {
   kilometrajeProximo: string;
 }
 
-export interface VehiculoPayload
-  extends Pick<Vehiculo, "placa" | "tarjetaUnicaCirculacion"> {
-  clienteSummaryDto?: ClienteSummary;
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.VehiculoCreateDto
+ */
+export interface VehiculoCreateDto {
+  placa: string;
+  tarjetaUnicaCirculacion: string;
+  clienteSummaryDto?: ClienteSummaryDto;
 }

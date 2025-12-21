@@ -1,72 +1,161 @@
-import api from "@/config/api";
-import { ImpresionConfig } from "@/types/services";
+import apiClient from "@/config/api";
+import { ApiResponse } from "@/types/api";
+import {
+  ImpresionDto,
+  ImpresionCreateDto,
+  ImpresionUpdateDto,
+  FormatoImpresion,
+} from "@/types/models";
+
+const IMPRESION_URL = "/api/v1/impresiones";
 
 export const impresionesService = {
-  // CRUD Básico
-  getAll: () => api.get<ImpresionConfig[]>("/api/v1/impresiones"),
+  // --- CRUD BÁSICO ---
 
-  getById: (id: number) =>
-    api.get<ImpresionConfig>(`/api/v1/impresiones/${id}`),
+  // GET /api/v1/impresiones
+  listAll: async (): Promise<ApiResponse<ImpresionDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto[]>>(
+      IMPRESION_URL
+    );
+    return data;
+  },
 
-  create: (data: Partial<ImpresionConfig>) =>
-    api.post<ImpresionConfig>("/api/v1/impresiones", data),
+  // GET /api/v1/impresiones/{id}
+  getById: async (id: number): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto>>(
+      `${IMPRESION_URL}/${id}`
+    );
+    return data;
+  },
 
-  update: (data: Partial<ImpresionConfig>) =>
-    api.put<ImpresionConfig>("/api/v1/impresiones", data),
+  // POST /api/v1/impresiones
+  create: async (
+    dto: ImpresionCreateDto
+  ): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.post<ApiResponse<ImpresionDto>>(
+      IMPRESION_URL,
+      dto
+    );
+    return data;
+  },
 
-  delete: (id: number) => api.delete<void>(`/api/v1/impresiones/${id}`),
+  // PUT /api/v1/impresiones
+  update: async (
+    dto: ImpresionUpdateDto
+  ): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.put<ApiResponse<ImpresionDto>>(
+      IMPRESION_URL,
+      dto
+    );
+    return data;
+  },
 
-  // Búsquedas por Formato
-  findByFormatoPage: (formato: string, params: any = {}) =>
-    api.get<any>(
-      `/api/v1/impresiones/search/formato?formato=${formato}&${new URLSearchParams(
-        params
-      ).toString()}`
-    ),
+  // DELETE /api/v1/impresiones/{id}
+  delete: async (id: number): Promise<ApiResponse<void>> => {
+    const { data } = await apiClient.delete<ApiResponse<void>>(
+      `${IMPRESION_URL}/${id}`
+    );
+    return data;
+  },
 
-  findByFormatoList: (formato: string) =>
-    api.get<ImpresionConfig[]>(
-      `/api/v1/impresiones/search/formato/list?formato=${formato}`
-    ),
+  // GET /api/v1/impresiones/search/formato?formato=...
+  findByFormatoPage: async (
+    formato: FormatoImpresion,
+    params?: { page?: number; size?: number }
+  ): Promise<ApiResponse<any>> => {
+    // Retorna Page<ImpresionDto>
+    const { data } = await apiClient.get<ApiResponse<any>>(
+      `${IMPRESION_URL}/search/formato`,
+      { params: { formato, ...params } }
+    );
+    return data;
+  },
 
-  findFirstByFormato: (formato: string) =>
-    api.get<ImpresionConfig>(
-      `/api/v1/impresiones/search/formato/first?formato=${formato}`
-    ),
+  // GET /api/v1/impresiones/search/formato/list?formato=...
+  findByFormatoList: async (
+    formato: FormatoImpresion
+  ): Promise<ApiResponse<ImpresionDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto[]>>(
+      `${IMPRESION_URL}/search/formato/list`,
+      { params: { formato } }
+    );
+    return data;
+  },
 
-  // Búsquedas por ID Usuario
-  findByUsuarioIdPage: (usuarioId: number, params: any = {}) =>
-    api.get<any>(
-      `/api/v1/impresiones/search/usuario/${usuarioId}?${new URLSearchParams(
-        params
-      ).toString()}`
-    ),
+  // GET /api/v1/impresiones/search/formato/first?formato=...
+  findFirstByFormato: async (
+    formato: FormatoImpresion
+  ): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto>>(
+      `${IMPRESION_URL}/search/formato/first`,
+      { params: { formato } }
+    );
+    return data;
+  },
 
-  findByUsuarioIdList: (usuarioId: number) =>
-    api.get<ImpresionConfig[]>(
-      `/api/v1/impresiones/search/usuario/${usuarioId}/list`
-    ),
+  // GET /api/v1/impresiones/search/usuario/{usuarioId}
+  findByUsuarioIdPage: async (
+    usuarioId: number,
+    params?: { page?: number; size?: number }
+  ): Promise<ApiResponse<any>> => {
+    const { data } = await apiClient.get<ApiResponse<any>>(
+      `${IMPRESION_URL}/search/usuario/${usuarioId}`,
+      { params }
+    );
+    return data;
+  },
 
-  findFirstByUsuarioId: (usuarioId: number) =>
-    api.get<ImpresionConfig>(
-      `/api/v1/impresiones/search/usuario/${usuarioId}/first`
-    ),
+  // GET /api/v1/impresiones/search/usuario/{usuarioId}/list
+  findByUsuarioIdList: async (
+    usuarioId: number
+  ): Promise<ApiResponse<ImpresionDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto[]>>(
+      `${IMPRESION_URL}/search/usuario/${usuarioId}/list`
+    );
+    return data;
+  },
 
-  // Búsquedas por Nombre Usuario
-  findByUsuarioNombrePage: (nombre: string, params: any = {}) =>
-    api.get<any>(
-      `/api/v1/impresiones/search/usuario/nombre?q=${nombre}&${new URLSearchParams(
-        params
-      ).toString()}`
-    ),
+  // GET /api/v1/impresiones/search/usuario/{usuarioId}/first
+  findFirstByUsuarioId: async (
+    usuarioId: number
+  ): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto>>(
+      `${IMPRESION_URL}/search/usuario/${usuarioId}/first`
+    );
+    return data;
+  },
 
-  findByUsuarioNombreList: (nombre: string) =>
-    api.get<ImpresionConfig[]>(
-      `/api/v1/impresiones/search/usuario/nombre/list?q=${nombre}`
-    ),
+  // GET /api/v1/impresiones/search/usuario/nombre?q=...
+  findByUsuarioNombrePage: async (
+    nombre: string,
+    params?: { page?: number; size?: number }
+  ): Promise<ApiResponse<any>> => {
+    const { data } = await apiClient.get<ApiResponse<any>>(
+      `${IMPRESION_URL}/search/usuario/nombre`,
+      { params: { q: nombre, ...params } }
+    );
+    return data;
+  },
 
-  findFirstByUsuarioNombre: (nombre: string) =>
-    api.get<ImpresionConfig>(
-      `/api/v1/impresiones/search/usuario/nombre/first?q=${nombre}`
-    ),
+  // GET /api/v1/impresiones/search/usuario/nombre/list?q=...
+  findByUsuarioNombreList: async (
+    nombre: string
+  ): Promise<ApiResponse<ImpresionDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto[]>>(
+      `${IMPRESION_URL}/search/usuario/nombre/list`,
+      { params: { q: nombre } }
+    );
+    return data;
+  },
+
+  // GET /api/v1/impresiones/search/usuario/nombre/first?q=...
+  findFirstByUsuarioNombre: async (
+    nombre: string
+  ): Promise<ApiResponse<ImpresionDto>> => {
+    const { data } = await apiClient.get<ApiResponse<ImpresionDto>>(
+      `${IMPRESION_URL}/search/usuario/nombre/first`,
+      { params: { q: nombre } }
+    );
+    return data;
+  },
 };

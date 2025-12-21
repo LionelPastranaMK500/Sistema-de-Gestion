@@ -1,34 +1,111 @@
-import { Moneda, EstadoDocumento } from "./comunes";
-import { ClienteSummary } from "./comunes";
+import { EstadoDocumento, MonedaDto, ClienteSummaryDto } from "./comunes";
+import { TipoDocumentoDto } from "./maestras";
 
 /**
- * Modelo Maestro de Documento (Factura, Boleta, Nota)
- * Refleja DocumentoDetailDto.java
+ * Espejo de: studios.tkoh.billing.dto.simple.DocumentoDto
  */
-export interface Documento {
+export interface DocumentoDto {
   id: number;
   serie: string;
   correlativo: string;
   fechaEmision: string;
-  fechaVencimiento: string;
-
-  // Montos
-  totalGravada: number;
-  totalIgv: number;
-  total: number;
-
+  tipoDocumento: string;
+  clienteNombre: string;
+  totalVenta: number;
   estado: EstadoDocumento;
-
-  // Relaciones
-  moneda: Moneda;
-  cliente: ClienteSummary; // Usamos la versión ligera
-  // detalles: DetalleDocumento[]; // Se define aquí o se importa
+  xmlUrl?: string;
+  pdfUrl?: string;
 }
 
-export interface DocumentoPayload
-  extends Omit<Documento, "id" | "moneda" | "cliente" | "estado"> {
+/**
+ * Espejo de: studios.tkoh.billing.dto.simple.DetalleDocumentoDto
+ */
+export interface DetalleDocumentoDto {
+  id: number;
+  productoId: number;
+  productoCodigo: string;
+  productoNombre: string;
+  cantidad: number;
+  precioUnitario: number;
+  precioTotal: number;
+  igv: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.detail.DocumentoDetailDto
+ */
+export interface DocumentoDetailDto {
+  id: number;
+  serie: string;
+  correlativo: string;
+  fechaEmision: string;
+
+  tipoDocumento: TipoDocumentoDto;
+  cliente: ClienteSummaryDto;
+  moneda: MonedaDto;
+
+  detalles: DetalleDocumentoDto[];
+
+  opGravada: number;
+  opExonerada: number;
+  opInafecta: number;
+  igv: number;
+  totalVenta: number;
+
+  observaciones: string;
+  estado: EstadoDocumento;
+
+  // URLs para descarga
+  xmlUrl?: string;
+  cdrUrl?: string;
+  pdfUrl?: string;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.DetalleDocumentoCreateDto
+ */
+export interface DetalleDocumentoCreateDto {
+  productoId: number;
+  cantidad: number;
+  precioUnitario: number;
+  descuento?: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.DocumentoCreateDto
+ */
+export interface DocumentoCreateDto {
   clienteId: number;
-  monedaId: number;
   tipoDocumentoId: number;
-  items: any[]; // DetalleDocumentoPayload[]
+  monedaId: number;
+  serieId: number;
+
+  fechaEmision: string;
+  tipoCambio: number;
+  observaciones?: string;
+
+  detalles: DetalleDocumentoCreateDto[];
+
+  formaPago?: string;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.response.DocumentoEmissionResponse
+ */
+export interface DocumentoEmissionResponse {
+  success: boolean;
+  message: string;
+  sunatTicket?: string;
+  cdrUrl?: string;
+  xmlUrl?: string;
+  estadoSunat?: string;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.response.DocumentoCdrResponse
+ */
+export interface DocumentoCdrResponse {
+  estadoCdr: string;
+  mensajeCdr: string;
+  cdrFile?: string;
 }

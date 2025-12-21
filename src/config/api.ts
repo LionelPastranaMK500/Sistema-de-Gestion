@@ -23,9 +23,8 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// --- INTERCEPTOR RESPONSE (Manejo de Errores Globales) ---
 apiClient.interceptors.response.use(
-  (response) => response, // Si todo sale bien, pasamos la respuesta limpia
+  (response) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
       console.warn("Sesión expirada o inválida.");

@@ -1,47 +1,75 @@
-import { Documento } from "./documento";
-import { GuiaRemision } from "./guia";
+import { TipoClienteDto, TipoDocumentoDto } from "./maestras";
 
-export interface ClienteDireccion {
+// Espejo de: studios.tkoh.billing.dto.simple.ClienteDireccionDto
+export interface ClienteDireccionDto {
   id?: number;
   direccion: string;
-  ubigeoId?: number;
-  esPrincipal: boolean;
+  codigoUbigeo: string;
+  codLocal?: string;
 }
 
 /**
- * Modelo Maestro de Cliente (Lectura)
+ * Espejo de: studios.tkoh.billing.dto.simple.ClienteDto
  */
-export interface Cliente {
-  // Identificadores
-  numeroRuc: string; // ID principal
-
-  // Datos Personales/Empresariales
-  nombreRazonSocial: string;
-  telefonoCelular: string;
+export interface ClienteDto {
+  id: number;
+  tipoCliente: TipoClienteDto;
+  tipoDocumento: TipoDocumentoDto;
+  numeroDocumento: string;
+  razonSocial: string;
+  nombreComercial: string;
   email: string;
-  direccionPrincipal: string;
-  observaciones: string;
-
-  // Tipificación
-  tipoClienteID: number;
-  tipoCliente: string;
-
-  // Relaciones (Solo lectura)
-  listaDocumentos?: Documento[];
-  listaGuias?: GuiaRemision[];
-  listaDireccionesAdicionales?: ClienteDireccion[];
+  telefono: string;
 }
 
 /**
- * Payload para Crear/Editar Cliente
+ * Espejo de: studios.tkoh.billing.dto.detail.ClienteDetailDto
  */
-export interface ClientePayload
-  extends Omit<
-    Cliente,
-    | "tipoCliente"
-    | "listaDocumentos"
-    | "listaGuias"
-    | "listaDireccionesAdicionales"
-  > {
-  ubigeoID: number;
+export interface ClienteDetailDto extends ClienteDto {
+  direcciones: ClienteDireccionDto[];
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.ClienteCreateDto
+ */
+export interface ClienteCreateDto {
+  tipoClienteID: number;
+  tipoDocumentoID: number;
+  numeroDocumento: string;
+  razonSocial: string;
+  nombreComercial?: string;
+  email?: string;
+  telefono?: string;
+
+  // Lista de direcciones para crear junto con el cliente
+  direcciones: ClienteDireccionDto[];
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.update.ClienteUpdateDto
+ */
+export interface ClienteUpdateDto {
+  id: number;
+  tipoClienteID: number;
+  tipoDocumentoID: number;
+  numeroDocumento: string;
+  razonSocial: string;
+  nombreComercial?: string;
+  email?: string;
+  telefono?: string;
+
+  // Lista de direcciones para actualizar
+  direcciones: ClienteDireccionDto[];
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.simple.ClienteLookupResult
+ */
+export interface ClienteLookupResult {
+  razonSocial: string;
+  numeroDocumento: string;
+  direccion: string;
+  estado: string;
+  condicion: string;
+  ubigeo: string;
 }

@@ -1,34 +1,157 @@
-// Tipos genéricos para mantenedores simples (Tablas maestras)
+// src/types/models/maestras.ts
 
-export interface TipoDocumento {
-  id: number;
-  codigo: string; // ej. "01", "03"
-  descripcion: string; // ej. "FACTURA"
-  abreviatura: string;
+/**
+ * Espejo de: studios.tkoh.billing.dto.simple.TipoDocumentoDto
+ */
+export interface TipoDocumentoDto {
+  tipoDocumentoID: number; // Long -> number
+  codigoSUNAT: string;
+  tipoDocumento: string;
+  descripcion: string;
 }
 
-export interface TipoCliente {
-  id: number;
-  codigo: string; // ej. "1", "6"
-  descripcion: string; // ej. "DNI", "RUC"
+/**
+ * Espejo de: studios.tkoh.billing.dto.summary.TipoDocumentoSummaryDto
+ */
+export interface TipoDocumentoSummaryDto {
+  tipoDocumentoID: number;
+  tipoDocumento: string;
 }
 
-export interface TipoEnvio {
+/**
+ * Espejo de: studios.tkoh.billing.dto.simple.SerieDto
+ */
+export interface SerieDto {
+  id: number;
+  serie: string;
+  inicialSerie: string;
+  serieNumActual: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.summary.SerieSummaryDto
+ */
+export interface SerieSummaryDto {
+  id: number;
+  serie: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.TipoClienteDto
+ *
+ */
+export interface TipoClienteDto {
+  tipoClienteID: number; // Long -> number
+  codigoSUNAT: string;
+  tipoCliente: string;
+  descripcion: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.TipoClienteCreateDto
+ *
+ */
+export interface TipoClienteCreateDto {
+  codigoSUNAT: string;
+  tipoCliente: string;
+  descripcion: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.TipoClienteSummaryDto
+ *
+ */
+export interface TipoClienteSummaryDto {
+  tipoClienteID: number;
+  tipoCliente: string;
+}
+
+export interface TipoEnvioDto {
   id: number;
   codigo: string;
   descripcion: string;
 }
 
-export interface TipoDocNota {
+/**
+ * Espejo de: studios.tkoh.billing.dto.simple.SerieDto
+ */
+export interface SerieDto {
   id: number;
-  codigo: string;
-  descripcion: string;
-  tipoAsociado: "CREDITO" | "DEBITO"; // Para saber si es NC o ND
+  serie: string;
+  inicialSerie: string;
+  serieNumActual: number;
 }
 
-// Payloads genéricos (casi siempre son solo descripción y código)
-export interface MaestraPayload {
-  codigo: string;
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.SerieCreateDto
+ */
+export interface SerieCreateDto {
+  serie: string;
+  inicialSerie: string;
+  serieNumActual: number;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.summary.SerieSummaryDto
+ */
+export interface SerieSummaryDto {
+  id: number;
+  serie: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.TipoDocNotaDto
+ *
+ */
+export interface TipoDocNotaDto {
+  id: number; // Integer -> number
+  codigoSUNAT: string;
+  tipoDocumento: string;
   descripcion: string;
-  abreviatura?: string;
+  tipoDocId: number; // Long -> number
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.TipoDocNotaCreateDto
+ *
+ */
+export interface TipoDocNotaCreateDto {
+  codigoSUNAT: string;
+  tipoDocumento: string;
+  descripcion?: string;
+  tipoDocId: number;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.update.TipoDocNotaUpdateDto
+ *
+ */
+export interface TipoDocNotaUpdateDto {
+  id: number;
+  codigoSUNAT?: string;
+  tipoDocumento?: string;
+  descripcion?: string;
+  tipoDocId?: number;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.TipoDocNotaSummary
+ *
+ */
+export interface TipoDocNotaSummary {
+  id: number;
+  codigoSUNAT: string;
+  tipoDocumento: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.detail.TipoDocNotaDetailDto
+ *
+ */
+export interface TipoDocNotaDetailDto {
+  id: number;
+  codigoSUNAT: string;
+  tipoDocumento: string;
+  descripcion: string;
+  tipDocSummary: TipoDocumentoSummaryDto; // Objeto anidado
 }

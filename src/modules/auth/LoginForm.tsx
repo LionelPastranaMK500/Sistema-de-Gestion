@@ -5,7 +5,6 @@ import { useFormHandler } from "@/hooks/useFormHandler";
 import { useLoginLogic } from "@/services/auth/authLogic";
 
 const LoginForm = () => {
-  // Usamos el Hook de Lógica (React Query)
   const { mutate: login, isPending } = useLoginLogic();
 
   const initialValues: LoginData = { correo: "", clave: "" };

@@ -1,7 +1,11 @@
-// --- ENUMS DEL SISTEMA (Reflejan studios.tkoh.billing.util.Enums) ---
+// src/types/models/comunes.ts
 
-// Usuarios y Transporte
+// ==========================================
+// 1. ENUMS (Espejo de studios.tkoh.billing.util.Enums)
+// ==========================================
+
 export type EstadoUsuario = "ACTIVO" | "INACTIVO" | "BLOQUEADO" | "PENDIENTE";
+
 export type TipoLicencia =
   | "A_I"
   | "A_IIa"
@@ -9,12 +13,12 @@ export type TipoLicencia =
   | "A_IIIa"
   | "A_IIIb"
   | "A_IIIc";
+
 export type TipoVehiculo = "CAMION" | "AUTO" | "CAMIONETA" | "MOTO";
 export type ModalidadTransporte = "TRANSPORTE_PUBLICO" | "TRANSPORTE_PRIVADO";
 export type TrasladoEstado = "PROGRAMADO" | "EN_CAMINO" | "ENTREGADO";
 export type PesoUnidad = "KGM" | "TNE";
 
-// Documentos
 export type EstadoDocumento =
   | "PENDIENTE"
   | "ENVIADO"
@@ -22,57 +26,70 @@ export type EstadoDocumento =
   | "RECHAZADO"
   | "ANULADO";
 
-// --- LO QUE FALTABA (Productos e Inventario) ---
+// Estos son vitales para Producto
 export type TipoProducto = "BIEN" | "SERVICIO";
-export type EstadoStock = "DISPONIBLE" | "AGOTADO" | "POR_AGOTAR";
+export type EstadoStockProducto = "DISPONIBLE" | "AGOTADO" | "POR_AGOTAR";
 export type EstadoProducto = "ACTIVO" | "INACTIVO";
 
-// --- INTERFACES BÁSICAS COMUNES ---
+// ==========================================
+// 2. DTOs REUTILIZABLES (Solo los que no tienen archivo propio)
+// ==========================================
 
-export interface Moneda {
+export interface MonedaDto {
   monedaID: number;
   nombreMoneda: string;
   simbolo: string;
   codigoISO: string;
 }
 
-export interface UnidadMedida {
+export interface UnidadMedidaDto {
   unidadMedidaID: number;
   nombreUnidadMedida: string;
   abreviatura: string;
   codigoSUNAT: string;
 }
 
-// --- LO QUE FALTABA (Impuestos) ---
-export interface AfectacionIGV {
-  tipoAfectacionIGVID: number; // o 'id' dependiendo del DTO
-  descripcion: string;
-  codigoSUNAT: string;
-  porcentajeIGV: number;
-}
+// ==========================================
+// 3. SUMMARIES (Espejos de dto.summary.*)
+// ==========================================
 
-export interface AfectacionISC {
-  tipoAfectacionISCID: number; // o 'id' dependiendo del DTO
-  descripcion: string;
-  codigoSUNAT: string;
-}
-
-// --- SUMMARIES (Versiones ligeras) ---
-
-export interface UsuarioSummary {
+export interface UsuarioSummaryDto {
   id: number;
   nombres: string;
   apellidoPaterno: string;
   email: string;
 }
 
-export interface ClienteSummary {
+export interface ClienteSummaryDto {
   id: number;
   razonSocial: string;
   numeroRuc: string;
 }
 
-export interface SucursalSummary {
+export interface SucursalSummaryDto {
   id: number;
   nombre: string;
+}
+
+// Espejo de MonedaSummaryDto.java
+export interface MonedaSummaryDto {
+  monedaID: number; // Long -> number
+  nombreMoneda: string;
+  simbolo: string;
+}
+
+// Espejo de UnidadMedidaSummaryDto.java
+export interface UnidadMedidaSummaryDto {
+  unidadMedidaID: number; // Long -> number
+  nombreUnidadMedida: string;
+  abreviatura: string;
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.create.MonedaCreateDto
+ */
+export interface MonedaCreateDto {
+  nombreMoneda: string;
+  simbolo: string;
+  codigoISO: string;
 }
