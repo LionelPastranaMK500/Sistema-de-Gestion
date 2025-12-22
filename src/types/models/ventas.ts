@@ -1,6 +1,87 @@
-// src/types/models/ventas.ts
+// =============================================================================
+// 1. DTOs DE DETALLE (Ítems individuales)
+// =============================================================================
 
-// Enum para asegurar que enviamos los códigos correctos a Java/SUNAT
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.DetalleVentaCreateDto
+ * Usado dentro de DocumentoCreateDto y VentaCreateDto
+ */
+export interface DetalleVentaCreateDto {
+  nombreProducto: string; // @NotBlank
+  cantidad: number; // BigDecimal -> number
+  precioUnitario: number; // BigDecimal -> number
+  descuento: number; // BigDecimal -> number
+  productoID?: number; // Java: Long (Puede ser null si es producto libre)
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.DetalleVentaDto
+ * Este es el que reemplaza a "DetalleDocumento" cuando sale hacia el frontend.
+ */
+export interface DetalleVentaDto {
+  detalleDocumentoID: number; // Java: Long
+  nombreProducto: string;
+  cantidad: number;
+  precioUnitario: number;
+  descuento: number;
+  productoID: number;
+  documentoID: number;
+}
+
+// =============================================================================
+// 2. DTOs DE VENTA (Gestión Interna / Cabeceras)
+// =============================================================================
+
+interface VentaBase {
+  fechaVenta: string; // Date/LocalDateTime -> ISO string
+  montoTotal: number; // BigDecimal/double -> number
+  estado: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.VentaDto
+ */
+export interface VentaDto extends VentaBase {
+  ventaID: number;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.VentaSummaryDto
+ */
+export interface VentaSummaryDto extends VentaBase {
+  ventaID: number;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.VentaCreateDto
+ */
+export interface VentaCreateDto extends VentaBase {
+  // Java: private Cliente doc_cliente;
+  // Al ser la Entidad completa y no un DTO, definimos any para evitar bloqueos.
+  doc_cliente: any;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.update.VentaUpdateDto
+ */
+export interface VentaUpdateDto extends VentaBase {
+  // Java: private Set<DetalleDocumento> listadetalles;
+  // Mapeamos la entidad DetalleDocumento a su representación DTO más cercana.
+  listadetalles: DetalleVentaDto[];
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.detail.VentaDetailDto
+ */
+export interface VentaDetailDto extends VentaBase {
+  listadetalles: DetalleVentaDto[]; // Java: Set<DetalleDocumento>
+  doc_cliente: any; // Java: Cliente
+}
+
+// =============================================================================
+// 3. HELPERS DE UI (Para formularios y lógica de frontend)
+// =============================================================================
+
 export enum TipoDocumentoCodigo {
   FACTURA = "01",
   BOLETA = "03",
@@ -13,59 +94,45 @@ export enum MonedaCodigo {
   DOLARES = "USD",
 }
 
-// Detalle de cada ítem (alineado con DetalleVentaCreateDto en Java)
+// Payload interno para el manejo del formulario en React
 export interface VentaDetallePayload {
   productoId: number;
   cantidad: number;
-  precioUnitario: number; // Precio con IGV o sin IGV (depende de tu lógica de backend, usualmente unitario final)
+  precioUnitario: number;
   descuento?: number;
-  // Campos calculados que el backend suele esperar para validar
   subtotal: number;
   igv: number;
   total: number;
   observacion?: string;
 }
 
-// EL PAYLOAD PRINCIPAL (Esto es lo que Java espera en @RequestBody)
 export interface VentaPayload {
-  // 1. Contexto de la transacción (CRÍTICO: Faltaba esto)
   sucursalId: number;
   usuarioId: number;
-
-  // 2. Datos del Cliente
   clienteId: number;
-
-  // 3. Configuración del Documento
-  tipoDocumentoId: string; // "01", "03" (Debe coincidir con tus IDs de maestras en DB)
-  serie?: string; // Opcional si el backend la autoselecciona, obligatorio si el front la elige
-  monedaId: string; // "PEN"
-  fechaEmision: string; // ISO String (YYYY-MM-DDTHH:mm:ss)
+  tipoDocumentoId: string;
+  serie?: string;
+  monedaId: string;
+  fechaEmision: string;
   fechaVencimiento?: string;
-
-  // 4. Totales (Calculados en ventas.calculations.ts)
   opGravada: number;
   opExonerada: number;
   opInafecta: number;
   igv: number;
   total: number;
   totalDescuentos?: number;
-
-  // 5. Detalles
   detalles: VentaDetallePayload[];
-
-  // 6. Extras
   observaciones?: string;
-  condicionPagoId?: number; // Contado/Crédito
+  condicionPagoId?: number;
   ordenCompra?: string;
-  placaVehiculo?: string; // Si aplica
+  placaVehiculo?: string;
 }
 
-// La respuesta que devuelve el backend (DocumentoEmissionResponse)
 export interface VentaResponse {
   documentoId: number;
   serie: string;
   correlativo: string;
   ticket?: string;
-  estadoSunat: string; // ACEPTADO, RECHAZADO, PENDIENTE
-  linkPdf?: string; // Si tu backend generara el link
+  estadoSunat: string;
+  linkPdf?: string;
 }

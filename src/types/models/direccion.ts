@@ -1,25 +1,32 @@
-/**
- * Espejo de: studios.tkoh.billing.dto.simple.DireccionDto
- */
-export interface DireccionDto {
-  id: number;
-  direccionAdicional: string;
-  descripcion: string;
-}
+// =============================================================================
+// 1. DTOs DE DIRECCIÓN (Basados en tu Java)
+// =============================================================================
 
 /**
- * Espejo de: studios.tkoh.billing.dto.create.DireccionCreateDto
+ * BASE / CREATE
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.DireccionCreateDto
  */
 export interface DireccionCreateDto {
-  direccionAdicional: string;
-  descripcion: string;
+  direccionAdicional: string; // Java: String direccionAdicional
+  descripcion: string; // Java: String descripcion
 }
 
-// Puedes agregar UbigeoDto aquí o en un archivo 'maestras.ts' si lo usas en otros lados
-export interface UbigeoDto {
-  ubigeoId: number;
-  departamento: string;
-  provincia: string;
-  distrito: string;
-  codigoUbigeo: string;
+/**
+ * SIMPLE
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.DireccionDto
+ * Hereda los campos del Create y agrega el ID.
+ */
+export interface DireccionDto extends DireccionCreateDto {
+  id: number; // Java: Long id
+}
+
+/**
+ * SUMMARY
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.DireccionSummaryDto
+ * Solo tiene ID y la dirección (sin descripción).
+ * Usamos Pick para tomar solo 'direccionAdicional' del base.
+ */
+export interface DireccionSummaryDto
+  extends Pick<DireccionCreateDto, "direccionAdicional"> {
+  id: number; // Java: Long id
 }

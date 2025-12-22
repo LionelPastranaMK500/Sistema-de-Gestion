@@ -31,65 +31,17 @@ export type TipoProducto = "BIEN" | "SERVICIO";
 export type EstadoStockProducto = "DISPONIBLE" | "AGOTADO" | "POR_AGOTAR";
 export type EstadoProducto = "ACTIVO" | "INACTIVO";
 
-// ==========================================
-// 2. DTOs REUTILIZABLES (Solo los que no tienen archivo propio)
-// ==========================================
+// NUEVO: Agregado para que compile DocumentoDto
+export type EstadoEnvioSunat =
+  | "PENDIENTE"
+  | "ENVIADO"
+  | "ACEPTADO"
+  | "RECHAZADO"
+  | "OBSERVADO"
+  | "ANULADO"
+  | "ERROR";
 
-export interface MonedaDto {
-  monedaID: number;
-  nombreMoneda: string;
-  simbolo: string;
-  codigoISO: string;
-}
+export type FormatoImpresion = "A4" | "TICKET" | "A5" | "A6" | string;
 
-export interface UnidadMedidaDto {
-  unidadMedidaID: number;
-  nombreUnidadMedida: string;
-  abreviatura: string;
-  codigoSUNAT: string;
-}
-
-// ==========================================
-// 3. SUMMARIES (Espejos de dto.summary.*)
-// ==========================================
-
-export interface UsuarioSummaryDto {
-  id: number;
-  nombres: string;
-  apellidoPaterno: string;
-  email: string;
-}
-
-export interface ClienteSummaryDto {
-  id: number;
-  razonSocial: string;
-  numeroRuc: string;
-}
-
-export interface SucursalSummaryDto {
-  id: number;
-  nombre: string;
-}
-
-// Espejo de MonedaSummaryDto.java
-export interface MonedaSummaryDto {
-  monedaID: number; // Long -> number
-  nombreMoneda: string;
-  simbolo: string;
-}
-
-// Espejo de UnidadMedidaSummaryDto.java
-export interface UnidadMedidaSummaryDto {
-  unidadMedidaID: number; // Long -> number
-  nombreUnidadMedida: string;
-  abreviatura: string;
-}
-
-/**
- * Espejo de: studios.tkoh.billing.dto.create.MonedaCreateDto
- */
-export interface MonedaCreateDto {
-  nombreMoneda: string;
-  simbolo: string;
-  codigoISO: string;
-}
+// Valores del Enum NumDecimalesMaximo
+export type NumDecimalesMaximo = "DOS" | "CUATRO" | "SEIS" | string;

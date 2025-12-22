@@ -52,8 +52,8 @@ export const almacenesService = {
   },
 
   // GET /api/v1/almacen/search?q={query}
-  search: async (query: string): Promise<ApiResponse<any>> => {
-    const { data } = await apiClient.get<ApiResponse<any>>(
+  search: async (query: string): Promise<ApiResponse<AlmacenDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<AlmacenDto[]>>(
       `${ALMACEN_URL}/search?q=${query}`
     );
     return data;

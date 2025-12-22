@@ -1,42 +1,61 @@
-import { UsuarioSummaryDto } from "./comunes";
+import { UsuarioSummaryDto } from "./usuario";
+import { FormatoImpresion, NumDecimalesMaximo } from "./comunes";
 
-// Enums (Ajustar según los valores reales de tu backend Java)
-export type FormatoImpresion = "A4" | "TICKET" | "A5" | string;
-export type NumDecimalesMaximo = "DOS" | "CUATRO" | string;
+// =============================================================================
+// 1. BASE (Campos comunes)
+// =============================================================================
 
-/**
- * Espejo de: studios.tkoh.billing.dto.simple.ImpresionDto
- */
-export interface ImpresionDto {
-  id: number;
+interface ImpresionBase {
   formatoImpresionDefecto: FormatoImpresion;
   numDecimalesMaximo: NumDecimalesMaximo;
-  infoCabecera: string;
-  cuentaBancaria: string;
-  infoPiePagina: string;
+  infoCabecera: string; // Java: String
+  cuentaBancaria: string; // Java: String
+  infoPiePagina: string; // Java: String
 }
 
+// =============================================================================
+// 2. DTOs DE TRANSACCIÓN (Create / Update)
+// =============================================================================
+
 /**
- * Espejo de: studios.tkoh.billing.dto.detail.ImpresionDetailDto
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.ImpresionCreateDto
  */
-export interface ImpresionDetailDto extends ImpresionDto {
-  usuarios: UsuarioSummaryDto[]; // Set<UsuarioSummaryDto> -> Array
+export interface ImpresionCreateDto extends ImpresionBase {
+  // Hereda todo (formato, decimales, textos)
 }
 
 /**
- * Espejo de: studios.tkoh.billing.dto.create.ImpresionCreateDto
- */
-export interface ImpresionCreateDto {
-  formatoImpresionDefecto: FormatoImpresion;
-  numDecimalesMaximo: NumDecimalesMaximo;
-  infoCabecera?: string;
-  cuentaBancaria?: string;
-  infoPiePagina?: string;
-}
-
-/**
- * Espejo de: studios.tkoh.billing.dto.update.ImpresionUpdateDto
+ * Espejo EXACTO de: studios.tkoh.billing.dto.update.ImpresionUpdateDto
  */
 export interface ImpresionUpdateDto extends ImpresionCreateDto {
-  id: number;
+  id: number; // Java: Integer id
+}
+
+// =============================================================================
+// 3. DTOs DE LECTURA (Simple / Detail / Summary)
+// =============================================================================
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.ImpresionDto
+ */
+export interface ImpresionDto extends ImpresionBase {
+  id: number; // Java: Integer id
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.ImpresionSummaryDto
+ */
+export interface ImpresionSummaryDto
+  extends Pick<
+    ImpresionBase,
+    "formatoImpresionDefecto" | "numDecimalesMaximo"
+  > {
+  id: number; // Java: Integer id
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.detail.ImpresionDetailDto
+ */
+export interface ImpresionDetailDto extends ImpresionDto {
+  usuarios: UsuarioSummaryDto[]; // Java: Set<UsuarioSummaryDto>
 }

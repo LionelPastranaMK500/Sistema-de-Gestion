@@ -1,3 +1,4 @@
+// src/types/api/requests.ts
 /**
  * Parámetros estándar para endpoints paginados de Spring
  * Se envían como query params: ?page=0&size=10&sort=id,desc

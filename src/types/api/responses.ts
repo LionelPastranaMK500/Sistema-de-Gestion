@@ -1,3 +1,4 @@
+// src/types/api/responses.ts
 /**
  * Envoltorio estándar de respuesta del Backend
  * Refleja: studios.tkoh.billing.dto.response.ApiResponse.java

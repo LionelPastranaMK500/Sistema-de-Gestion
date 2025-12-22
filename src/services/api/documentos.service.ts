@@ -7,23 +7,51 @@ import {
   DocumentoEmissionResponse,
   DocumentoCdrResponse,
 } from "@/types/models";
-import { EstadoDocumento } from "@/types/models/comunes";
 
-const DOC_URL = "/api/v1/documento";
+// URL corregida a PLURAL (requerido por Backend)
+const DOC_URL = "/api/v1/documentos";
 
 export const documentosService = {
-  // GET /api/v1/documento
-  listAll: async (): Promise<ApiResponse<DocumentoDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<DocumentoDto[]>>(DOC_URL);
-    return data;
+  // ADAPTADOR: listAll -> Backend: /page/sucursal/{id}
+  // Tu frontend llama a listAll() sin argumentos.
+  // Problema: El backend EXIGE sucursalId.
+  // Solución temporal: Hardcodear sucursal 1 o pedirla.
+  listAll: async (
+    sucursalId: number = 1
+  ): Promise<ApiResponse<DocumentoDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<any>>( // data.data es Page<DocumentoDto>
+      `${DOC_URL}/page/sucursal/${sucursalId}`
+    );
+
+    // Mapeo manual para que tu UI vieja no se rompa
+    const listaAdaptada = data.data.content.map((d: any) => ({
+      ...d,
+      id: d.documentoID,
+      serie: d.serSummaryDto?.serie,
+      clienteNombre: d.cliente?.razonSocial,
+      tipoDocumento: d.tipDocumento?.descripcion,
+      totalVenta: d.total,
+    }));
+
+    return { ...data, data: listaAdaptada };
   },
 
-  // GET /api/v1/documento/{id}
+  // GET /api/v1/documentos/{id}
   getById: async (id: number): Promise<ApiResponse<DocumentoDetailDto>> => {
-    const { data } = await apiClient.get<ApiResponse<DocumentoDetailDto>>(
-      `${DOC_URL}/${id}`
-    );
-    return data;
+    // El backend devuelve el objeto directo, no ApiResponse.
+    // Lo envolvemos artificialmente para que tu UI no falle.
+    const { data } = await apiClient.get<any>(`${DOC_URL}/${id}`);
+
+    const detalleAdaptado = {
+      ...data,
+      id: data.documentoID,
+      detalles: data.detallesDto,
+      cliente: data.clienteSummaryDto,
+      moneda: data.monedaDto,
+      // ... mapear resto de campos necesarios
+    };
+
+    return { success: true, message: "OK", data: detalleAdaptado };
   },
 
   // POST /api/v1/documento (Crea el documento pero NO lo envía a SUNAT automáticamente, usualmente)

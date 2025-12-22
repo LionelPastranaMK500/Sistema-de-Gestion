@@ -1,60 +1,102 @@
-// src/types/models/sucursal.ts
-import { UsuarioSummaryDto } from "./comunes";
+import { UsuarioSummaryDto } from "./usuario";
 import { AlmacenSummaryDto } from "./almacen";
-import { SerieSummaryDto, TipoDocumentoSummaryDto } from "./maestras";
+import { SerieDto, SerieSummaryDto } from "./serie";
+import {
+  TipoDocumentoSummaryDto,
+  TipoDocumentoDetailDto,
+} from "./tipoDocumento";
 
-export interface SucursalDto {
+// =============================================================================
+// 1. DTOs AUXILIARES
+// =============================================================================
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.command.SucursalComprobanteConfigCommandDto
+ */
+export interface SucursalComprobanteConfigCommandDto {
+  tipoDocumentoId: number;
+  serieId: number;
+  usarComoDefecto?: boolean;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.Sucursal_ComprobanteDto
+ * (Confirmado: usa SerieDto completo, no summary)
+ */
+export interface Sucursal_ComprobanteDto {
   id: number;
-  nombre: string;
-  direccion: string;
-  telefono: string;
-  email: string;
-  codigoAnexo: string;
-  esPrincipal: boolean;
+  tipoDocumento: TipoDocumentoSummaryDto;
+  serie: SerieDto;
 }
 
-export interface SucursalCreateDto {
-  nombre: string;
-  direccion: string;
-  telefono?: string;
-  email?: string;
-  codigoAnexo: string;
-  esPrincipal: boolean;
+/**
+ * Espejo de la clase estática: SucursalDetailDto.ConfigOptionsDto
+ */
+export interface ConfigOptionsDto {
+  availableDocumentTypes: TipoDocumentoDetailDto[];
+  availableSeries: SerieSummaryDto[];
 }
 
+// =============================================================================
+// 2. DTOs DE TRANSACCIÓN (Create / Update)
+// =============================================================================
+
+interface SucursalBase {
+  nombre: string;
+  direccion: string;
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.SucursalCreateUpdateDto
+ * (El que te habías olvidado: Versión simplificada SIN comprobantes)
+ */
+export interface SucursalCreateUpdateDto extends SucursalBase {
+  usuariosIds: number[]; // Java: Set<Long>
+  almacenesIds: number[]; // Java: Set<Long>
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.SucursalCreateDto
+ * (Versión completa CON comprobantes)
+ */
+export interface SucursalCreateDto extends SucursalCreateUpdateDto {
+  // Hereda nombre, direccion, usuariosIds, almacenesIds
+  comprobantes: SucursalComprobanteConfigCommandDto[];
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.update.SucursalUpdateDto
+ * (Versión completa CON comprobantes + ID)
+ */
 export interface SucursalUpdateDto extends SucursalCreateDto {
   id: number;
 }
 
-export interface Sucursal_ComprobanteDto {
+// =============================================================================
+// 3. DTOs DE LECTURA (Simple / Detail / Summary)
+// =============================================================================
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.SucursalSummaryDto
+ */
+export interface SucursalSummaryDto extends SucursalBase {
   id: number;
-  tipoDocumento: string;
-  serie: string;
-  usarComoDefecto: boolean;
 }
 
-export interface ConfigOptionsDto {
-  availableDocumentTypes: TipoDocumentoSummaryDto[];
-  availableSeries: SerieSummaryDto[];
-}
-
-export interface SucursalDetailDto {
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.SucursalDto
+ */
+export interface SucursalDto extends SucursalBase {
   id: number;
-  nombre: string;
-  direccion: string;
 
-  // Aquí es donde se usa UsuarioSummaryDto. Si tu Java no lo tiene, bórralo.
   vendedores: UsuarioSummaryDto[];
-
   almacenes: AlmacenSummaryDto[];
   comprobantes: Sucursal_ComprobanteDto[];
-  configOptions: ConfigOptionsDto;
 }
 
-export interface SucursalComprobanteConfigCommandDto {
-  id?: number;
-  sucursalId: number;
-  tipoDocumentoId: number;
-  serieId: number;
-  usarComoDefecto: boolean;
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.detail.SucursalDetailDto
+ */
+export interface SucursalDetailDto extends SucursalDto {
+  configOptions: ConfigOptionsDto;
 }

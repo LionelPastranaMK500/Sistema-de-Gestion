@@ -5,45 +5,17 @@ import { ChoferDto, ChoferCreateDto, ChoferUpdateDto } from "@/types/models";
 const CHOFER_URL = "/api/v1/chofer";
 
 export const choferService = {
-  // GET /api/v1/chofer
-  listAll: async (): Promise<ApiResponse<ChoferDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<ChoferDto[]>>(CHOFER_URL);
-    return data;
-  },
-
-  // GET /api/v1/chofer/{id}
-  getById: async (id: number): Promise<ApiResponse<ChoferDto>> => {
-    const { data } = await apiClient.get<ApiResponse<ChoferDto>>(
-      `${CHOFER_URL}/${id}`
-    );
-    return data;
-  },
-
-  // POST /api/v1/chofer
-  create: async (dto: ChoferCreateDto): Promise<ApiResponse<ChoferDto>> => {
-    const { data } = await apiClient.post<ApiResponse<ChoferDto>>(
-      CHOFER_URL,
-      dto
-    );
-    return data;
-  },
-
-  // PUT /api/v1/chofer
-  update: async (dto: ChoferUpdateDto): Promise<ApiResponse<ChoferDto>> => {
-    const { data } = await apiClient.put<ApiResponse<ChoferDto>>(
-      CHOFER_URL,
-      dto
-    );
-    return data;
-  },
-
-  // DELETE /api/v1/chofer/{id}
-  delete: async (id: number): Promise<ApiResponse<void>> => {
-    const { data } = await apiClient.delete<ApiResponse<void>>(
-      `${CHOFER_URL}/${id}`
-    );
-    return data;
-  },
+  // CRUD Estándar (Coinciden perfecto)
+  listAll: async () =>
+    (await apiClient.get<ApiResponse<ChoferDto[]>>(CHOFER_URL)).data,
+  getById: async (id: number) =>
+    (await apiClient.get<ApiResponse<ChoferDto>>(`${CHOFER_URL}/${id}`)).data,
+  create: async (dto: ChoferCreateDto) =>
+    (await apiClient.post<ApiResponse<ChoferDto>>(CHOFER_URL, dto)).data,
+  update: async (dto: ChoferUpdateDto) =>
+    (await apiClient.put<ApiResponse<ChoferDto>>(CHOFER_URL, dto)).data,
+  delete: async (id: number) =>
+    (await apiClient.delete<ApiResponse<void>>(`${CHOFER_URL}/${id}`)).data,
 
   // GET /api/v1/chofer/search/dni/{dni}
   getByDni: async (dni: string): Promise<ApiResponse<ChoferDto>> => {
@@ -53,32 +25,25 @@ export const choferService = {
     return data;
   },
 
-  // GET /api/v1/chofer/search/page?nombre=...&dni=...
+  // GET /api/v1/chofer/search/page
   searchPage: async (params: {
     nombre?: string;
     dni?: string;
     page?: number;
     size?: number;
-  }): Promise<ApiResponse<any>> => {
-    const { data } = await apiClient.get<ApiResponse<any>>(
+  }) => {
+    const { data } = await apiClient.get<ApiResponse<any>>( // O ApiResponse<Page<ChoferDto>>
       `${CHOFER_URL}/search/page`,
-      {
-        params,
-      }
+      { params }
     );
     return data;
   },
 
-  // GET /api/v1/chofer/search/list?nombre=...&dni=...
-  listByNombreOrDni: async (params: {
-    nombre?: string;
-    dni?: string;
-  }): Promise<ApiResponse<ChoferDto[]>> => {
+  // GET /api/v1/chofer/search/list
+  listByNombreOrDni: async (params: { nombre?: string; dni?: string }) => {
     const { data } = await apiClient.get<ApiResponse<ChoferDto[]>>(
       `${CHOFER_URL}/search/list`,
-      {
-        params,
-      }
+      { params }
     );
     return data;
   },

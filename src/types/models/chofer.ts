@@ -1,13 +1,14 @@
-// src/types/models/chofer.ts
+import { TipoLicencia } from "./comunes";
+import { GuiaRemisionSummaryDto } from "./guia";
+import { ClienteSummaryDto } from "./cliente";
 
-import { TipoLicencia, ClienteSummaryDto } from "./comunes";
-import { GuiaRemisionSummaryDto } from "./guia"; // Asumiendo que existe o existirá en guia.ts
-
+// =============================================================================
+// 1. BASE (Helper para evitar repetir campos comunes)
+// =============================================================================
 /**
- * Espejo de: studios.tkoh.billing.dto.simple.ChoferDto
+ * Campos comunes encontrados en Create, Update y Simple DTOs.
  */
-export interface ChoferDto {
-  id: number;
+interface ChoferBase {
   nombre: string;
   dni: string;
   telefono: string;
@@ -15,43 +16,39 @@ export interface ChoferDto {
   licencia: string;
 }
 
-/**
- * Espejo de: studios.tkoh.billing.dto.create.ChoferCreateDto
- */
-export interface ChoferCreateDto {
-  nombre: string;
-  dni: string;
-  telefono: string;
-  tipolicencia: TipoLicencia;
-  licencia: string;
+// =============================================================================
+// 2. DTOs DE TRANSACCIÓN Y LECTURA
+// =============================================================================
 
-  // En Java es un objeto anidado. Si es opcional, lo marcamos con ?
-  clienteSummaryDto?: ClienteSummaryDto;
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.create.ChoferCreateDto
+ */
+export interface ChoferCreateDto extends ChoferBase {
+  clienteSummaryDto: ClienteSummaryDto;
 }
 
 /**
- * Espejo de: studios.tkoh.billing.dto.update.ChoferUpdateDto
+ * Espejo EXACTO de: studios.tkoh.billing.dto.simple.ChoferDto
+ * Hereda campos base y agrega el ID.
  */
-export interface ChoferUpdateDto {
-  id: number;
-  nombre: string;
-  dni: string;
-  telefono: string;
-  tipolicencia: TipoLicencia;
-  licencia: string;
-
-  // Set<Long> en Java -> number[] en TS
-  vehiculoIds?: number[];
-
-  // Relación con Guía
-  guiaSummaryDto?: GuiaRemisionSummaryDto;
+export interface ChoferDto extends ChoferBase {
+  id: number; // Java: Long id
 }
 
 /**
- * Espejo de: studios.tkoh.billing.dto.summary.ChoferSummaryDto
+ * Espejo EXACTO de: studios.tkoh.billing.dto.summary.ChoferSummaryDto
+ * Solo tiene ID, licencia y tipo. Usamos Pick para reutilizar definiciones.
  */
-export interface ChoferSummaryDto {
+export interface ChoferSummaryDto
+  extends Pick<ChoferBase, "tipolicencia" | "licencia"> {
+  id: number; // Java: Long id
+}
+
+/**
+ * Espejo EXACTO de: studios.tkoh.billing.dto.update.ChoferUpdateDto
+ */
+export interface ChoferUpdateDto extends ChoferBase {
   id: number;
-  tipolicencia: TipoLicencia;
-  licencia: string;
+  vehiculoIds: number[];
+  guiaSummaryDto: GuiaRemisionSummaryDto;
 }

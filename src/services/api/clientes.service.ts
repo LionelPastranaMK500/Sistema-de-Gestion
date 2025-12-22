@@ -8,20 +8,28 @@ import {
   ClienteLookupResult,
 } from "@/types/models";
 
-const CLIENTE_URL = "/api/v1/cliente";
+const CLIENTE_URL = "/api/v1/clientes";
 
 export const clientesService = {
-  // --- CRUD BÁSICO ---
+  // GET /api/v1/clientes
+  // Devuelve Page<ClienteDto>
+  listAll: async (params?: any): Promise<ApiResponse<any>> => {
+    const { data } = await apiClient.get<ApiResponse<any>>(CLIENTE_URL, {
+      params,
+    });
+    return data;
+  },
 
-  // GET /api/v1/cliente
-  listAll: async (): Promise<ApiResponse<ClienteDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<ClienteDto[]>>(
-      CLIENTE_URL
+  // GET /api/v1/clientes/reporte
+  getReporte: async (params?: any): Promise<ApiResponse<any>> => {
+    const { data } = await apiClient.get<ApiResponse<any>>(
+      `${CLIENTE_URL}/reporte`,
+      { params }
     );
     return data;
   },
 
-  // GET /api/v1/cliente/{id}
+  // GET /api/v1/clientes/{id}
   getById: async (id: number): Promise<ApiResponse<ClienteDetailDto>> => {
     const { data } = await apiClient.get<ApiResponse<ClienteDetailDto>>(
       `${CLIENTE_URL}/${id}`
@@ -29,7 +37,7 @@ export const clientesService = {
     return data;
   },
 
-  // POST /api/v1/cliente
+  // POST /api/v1/clientes
   create: async (dto: ClienteCreateDto): Promise<ApiResponse<ClienteDto>> => {
     const { data } = await apiClient.post<ApiResponse<ClienteDto>>(
       CLIENTE_URL,
@@ -38,16 +46,16 @@ export const clientesService = {
     return data;
   },
 
-  // PUT /api/v1/cliente
+  // PUT /api/v1/clientes/{id}
   update: async (dto: ClienteUpdateDto): Promise<ApiResponse<ClienteDto>> => {
     const { data } = await apiClient.put<ApiResponse<ClienteDto>>(
-      CLIENTE_URL,
+      `${CLIENTE_URL}/${dto.id}`,
       dto
     );
     return data;
   },
 
-  // DELETE /api/v1/cliente/{id}
+  // DELETE /api/v1/clientes/{id}
   delete: async (id: number): Promise<ApiResponse<void>> => {
     const { data } = await apiClient.delete<ApiResponse<void>>(
       `${CLIENTE_URL}/${id}`
@@ -55,55 +63,11 @@ export const clientesService = {
     return data;
   },
 
-  // GET /api/v1/cliente/search/documento/{numeroDocumento}
-  getByNumeroDocumento: async (
-    numeroDocumento: string
-  ): Promise<ApiResponse<ClienteDto>> => {
-    const { data } = await apiClient.get<ApiResponse<ClienteDto>>(
-      `${CLIENTE_URL}/search/documento/${numeroDocumento}`
-    );
-    return data;
-  },
-
-  // GET /api/v1/cliente/search/page?nombre=...&documento=...
-  searchPage: async (params: {
-    nombre?: string;
-    documento?: string;
-    page?: number;
-    size?: number;
-  }): Promise<ApiResponse<any>> => {
-    // Retorna Page<ClienteDto>
-    const { data } = await apiClient.get<ApiResponse<any>>(
-      `${CLIENTE_URL}/search/page`,
-      { params }
-    );
-    return data;
-  },
-
-  // GET /api/v1/cliente/search/list?nombre=...&documento=...
-  searchList: async (params: {
-    nombre?: string;
-    documento?: string;
-  }): Promise<ApiResponse<ClienteDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<ClienteDto[]>>(
-      `${CLIENTE_URL}/search/list`,
-      { params }
-    );
-    return data;
-  },
-
-  // GET /api/v1/cliente/lookup/ruc/{ruc}
-  lookupRuc: async (ruc: string): Promise<ApiResponse<ClienteLookupResult>> => {
-    const { data } = await apiClient.get<ApiResponse<ClienteLookupResult>>(
-      `${CLIENTE_URL}/lookup/ruc/${ruc}`
-    );
-    return data;
-  },
-
-  // GET /api/v1/cliente/lookup/dni/{dni}
-  lookupDni: async (dni: string): Promise<ApiResponse<ClienteLookupResult>> => {
-    const { data } = await apiClient.get<ApiResponse<ClienteLookupResult>>(
-      `${CLIENTE_URL}/lookup/dni/${dni}`
+  // GET /api/v1/clientes/consulta?numero={numero}
+  consultar: async (numero: string): Promise<ClienteLookupResult> => {
+    const { data } = await apiClient.get<ClienteLookupResult>(
+      `${CLIENTE_URL}/consulta`,
+      { params: { numero } }
     );
     return data;
   },

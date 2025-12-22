@@ -1,11 +1,11 @@
 import apiClient from "@/config/api";
-import { LoginRequest, RegisterRequest, AuthResponse } from "@/types/models";
+import { AuthRequest, RegisterRequest, AuthResponse } from "@/types/models";
 
 const AUTH_URL = "/auth";
 
 export const authService = {
   // POST /auth/login
-  login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+  login: async (credentials: AuthRequest): Promise<AuthResponse> => {
     const { data } = await apiClient.post<AuthResponse>(
       `${AUTH_URL}/login`,
       credentials
