@@ -1,12 +1,10 @@
-// src/services/api/afectacionIgv.service.ts
-
 import apiClient from "@/config/api";
 import { ApiResponse } from "@/types/api";
 import { AfectacionIGVDto, AfectacionIGVCreateDto } from "@/types/models";
 
 const AFECIGV_URL = "/api/v1/afecigv";
 
-export const afectacionIGVService = {
+export const afectacionIgvService = {
   // GET /api/v1/afecigv
   listAll: async (): Promise<ApiResponse<AfectacionIGVDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<AfectacionIGVDto[]>>(

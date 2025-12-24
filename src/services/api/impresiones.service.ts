@@ -1,5 +1,10 @@
 import apiClient from "@/config/api";
-import { ApiResponse } from "@/types/api";
+import {
+  ApiResponse,
+  ApiPaginatedResponse,
+  DEFAULT_PAGINATION,
+  PaginationOptions,
+} from "@/types/api";
 import {
   ImpresionDto,
   ImpresionCreateDto,
@@ -10,7 +15,9 @@ import {
 const IMPRESION_URL = "/api/v1/impresiones";
 
 export const impresionesService = {
-  // --- CRUD BÁSICO ---
+  // ===========================================================================
+  // CRUD BÁSICO
+  // ===========================================================================
 
   // GET /api/v1/impresiones
   listAll: async (): Promise<ApiResponse<ImpresionDto[]>> => {
@@ -58,15 +65,26 @@ export const impresionesService = {
     return data;
   },
 
-  // GET /api/v1/impresiones/search/formato?formato=...
+  // ===========================================================================
+  // BÚSQUEDAS POR FORMATO
+  // ===========================================================================
+
+  // GET /api/v1/impresiones/search/formato?formato=...&page=...&size=...
   findByFormatoPage: async (
     formato: FormatoImpresion,
-    params?: { page?: number; size?: number }
-  ): Promise<ApiResponse<any>> => {
-    // Retorna Page<ImpresionDto>
-    const { data } = await apiClient.get<ApiResponse<any>>(
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<ImpresionDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
+    const { data } = await apiClient.get<ApiPaginatedResponse<ImpresionDto>>(
       `${IMPRESION_URL}/search/formato`,
-      { params: { formato, ...params } }
+      {
+        params: {
+          formato,
+          page: params.page,
+          size: params.size,
+          sort: params.sort,
+        },
+      }
     );
     return data;
   },
@@ -93,14 +111,19 @@ export const impresionesService = {
     return data;
   },
 
-  // GET /api/v1/impresiones/search/usuario/{usuarioId}
+  // ===========================================================================
+  // BÚSQUEDAS POR USUARIO (ID)
+  // ===========================================================================
+
+  // GET /api/v1/impresiones/search/usuario/{usuarioId}?page=...
   findByUsuarioIdPage: async (
     usuarioId: number,
-    params?: { page?: number; size?: number }
-  ): Promise<ApiResponse<any>> => {
-    const { data } = await apiClient.get<ApiResponse<any>>(
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<ImpresionDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
+    const { data } = await apiClient.get<ApiPaginatedResponse<ImpresionDto>>(
       `${IMPRESION_URL}/search/usuario/${usuarioId}`,
-      { params }
+      { params: { page: params.page, size: params.size, sort: params.sort } }
     );
     return data;
   },
@@ -125,14 +148,26 @@ export const impresionesService = {
     return data;
   },
 
+  // ===========================================================================
+  // BÚSQUEDAS POR USUARIO (NOMBRE)
+  // ===========================================================================
+
   // GET /api/v1/impresiones/search/usuario/nombre?q=...
   findByUsuarioNombrePage: async (
     nombre: string,
-    params?: { page?: number; size?: number }
-  ): Promise<ApiResponse<any>> => {
-    const { data } = await apiClient.get<ApiResponse<any>>(
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<ImpresionDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
+    const { data } = await apiClient.get<ApiPaginatedResponse<ImpresionDto>>(
       `${IMPRESION_URL}/search/usuario/nombre`,
-      { params: { q: nombre, ...params } }
+      {
+        params: {
+          q: nombre,
+          page: params.page,
+          size: params.size,
+          sort: params.sort,
+        },
+      }
     );
     return data;
   },

@@ -88,3 +88,15 @@ export interface UsuarioSummaryDto {
   razonSocial: string;
   email: string;
 }
+
+// Basado en el .map() del método getUsuarios()
+export interface UsuarioResponse {
+  usuarioID: number;
+  email: string;
+  aliasVentas: string;
+  estado: string; // "Bloqueado" | "Activo"
+}
+
+// Basado en el @RequestBody AddUserRequest
+// (Usualmente es similar al CreateDto, usamos ese como base o 'any' si difiere mucho)
+export type AddUserRequest = UsuarioCreateDto;

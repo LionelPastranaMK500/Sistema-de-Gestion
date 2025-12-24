@@ -42,6 +42,10 @@ export const seriesService = {
     return data;
   },
 
+  // ===========================================================================
+  // MÉTODOS DE BÚSQUEDA ESPECÍFICOS
+  // ===========================================================================
+
   // GET /api/v1/series/buscar?serie={serie}
   buscarPorSerie: async (serie: string): Promise<ApiResponse<SerieDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<SerieDto[]>>(

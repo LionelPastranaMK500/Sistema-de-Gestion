@@ -49,6 +49,10 @@ export const direccionesService = {
     return data;
   },
 
+  // ===========================================================================
+  // MÉTODOS DE BÚSQUEDA ESPECÍFICOS
+  // ===========================================================================
+
   // GET /api/v1/direcciones/buscar/adicional/{texto}
   buscarPorAdicional: async (texto: string): Promise<DireccionDto[]> => {
     const { data } = await apiClient.get<DireccionDto[]>(

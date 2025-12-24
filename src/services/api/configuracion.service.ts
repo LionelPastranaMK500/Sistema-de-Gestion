@@ -57,6 +57,10 @@ export const configuracionService = {
     return data;
   },
 
+  // ===========================================================================
+  // MÉTODOS ESPECÍFICOS DE CONFIGURACIÓN
+  // ===========================================================================
+
   // GET /api/v1/configuracion-empresa/usuario/{usuarioId}
   findByUsuario: async (
     usuarioId: number
@@ -68,7 +72,6 @@ export const configuracionService = {
   },
 
   // GET /api/v1/configuracion-empresa/me
-  // Busca la configuración del usuario logueado actualmente (basado en el Token)
   findByCurrentUser: async (): Promise<
     ApiResponse<ConfiguracionEmpresaDto>
   > => {

@@ -1,5 +1,10 @@
 import apiClient from "@/config/api";
-import { ApiResponse } from "@/types/api";
+import {
+  ApiResponse,
+  ApiPaginatedResponse,
+  PaginationOptions,
+  DEFAULT_PAGINATION,
+} from "@/types/api";
 import {
   ProductoDto,
   ProductoDetailDto,
@@ -11,6 +16,10 @@ import {
 const PRODUCTO_URL = "/api/v1/producto";
 
 export const productosService = {
+  // ===========================================================================
+  // CRUD BÁSICO
+  // ===========================================================================
+
   // GET /api/v1/producto
   listAll: async (): Promise<ApiResponse<ProductoDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<ProductoDto[]>>(
@@ -37,6 +46,7 @@ export const productosService = {
   },
 
   // PUT /api/v1/producto
+  // Update sin ID en URL, el ID viaja dentro del DTO
   update: async (dto: ProductoUpdateDto): Promise<ApiResponse<ProductoDto>> => {
     const { data } = await apiClient.put<ApiResponse<ProductoDto>>(
       PRODUCTO_URL,
@@ -53,17 +63,28 @@ export const productosService = {
     return data;
   },
 
-  // GET /api/v1/producto/reporte?q={query}&page={page}&size={size}
-  getReporte: async (params?: {
-    q?: string;
-    page?: number;
-    size?: number;
-    sort?: string;
-  }): Promise<ApiResponse<any>> => {
-    // Usamos 'any' o una interfaz Page<T> genérica
-    const { data } = await apiClient.get<ApiResponse<any>>(
+  // ===========================================================================
+  // REPORTES Y VISTAS ESPECÍFICAS
+  // ===========================================================================
+
+  // GET /api/v1/producto/reporte?q={q}&page={page}&size={size}&sort={sort}
+  getReporte: async (
+    // Filtro opcional
+    filters: { q?: string } = {},
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<ProductoDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
+
+    const { data } = await apiClient.get<ApiPaginatedResponse<ProductoDto>>(
       `${PRODUCTO_URL}/reporte`,
-      { params }
+      {
+        params: {
+          q: filters.q,
+          page: params.page,
+          size: params.size,
+          sort: params.sort,
+        },
+      }
     );
     return data;
   },

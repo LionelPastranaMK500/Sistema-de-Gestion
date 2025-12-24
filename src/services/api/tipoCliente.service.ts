@@ -1,20 +1,22 @@
 import apiClient from "@/config/api";
 import { ApiResponse } from "@/types/api";
-import { TipoClienteDto, TipoClienteCreateDto } from "@/types/models/maestras";
+import { TipoClienteDto, TipoClienteCreateDto } from "@/types/models";
 
-const URL = "/api/v1/tipcliente";
+const TIPOCLIENTE_URL = "/api/v1/tipcliente";
 
 export const tipoClienteService = {
   // GET /api/v1/tipcliente
   listAll: async (): Promise<ApiResponse<TipoClienteDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<TipoClienteDto[]>>(URL);
+    const { data } = await apiClient.get<ApiResponse<TipoClienteDto[]>>(
+      TIPOCLIENTE_URL
+    );
     return data;
   },
 
   // GET /api/v1/tipcliente/{id}
   getById: async (id: number): Promise<ApiResponse<TipoClienteDto>> => {
     const { data } = await apiClient.get<ApiResponse<TipoClienteDto>>(
-      `${URL}/${id}`
+      `${TIPOCLIENTE_URL}/${id}`
     );
     return data;
   },
@@ -24,7 +26,7 @@ export const tipoClienteService = {
     dto: TipoClienteCreateDto
   ): Promise<ApiResponse<TipoClienteDto>> => {
     const { data } = await apiClient.post<ApiResponse<TipoClienteDto>>(
-      URL,
+      TIPOCLIENTE_URL,
       dto
     );
     return data;
@@ -32,13 +34,18 @@ export const tipoClienteService = {
 
   // PUT /api/v1/tipcliente
   update: async (dto: TipoClienteDto): Promise<ApiResponse<TipoClienteDto>> => {
-    const { data } = await apiClient.put<ApiResponse<TipoClienteDto>>(URL, dto);
+    const { data } = await apiClient.put<ApiResponse<TipoClienteDto>>(
+      TIPOCLIENTE_URL,
+      dto
+    );
     return data;
   },
 
   // DELETE /api/v1/tipcliente/{id}
   delete: async (id: number): Promise<ApiResponse<void>> => {
-    const { data } = await apiClient.delete<ApiResponse<void>>(`${URL}/${id}`);
+    const { data } = await apiClient.delete<ApiResponse<void>>(
+      `${TIPOCLIENTE_URL}/${id}`
+    );
     return data;
   },
 };

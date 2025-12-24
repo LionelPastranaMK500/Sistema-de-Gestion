@@ -31,3 +31,19 @@ export interface Page<T> {
  * Uso: const response: ApiPaginatedResponse<Producto>
  */
 export type ApiPaginatedResponse<T> = ApiResponse<Page<T>>;
+
+/**
+ * Parámetros estándar para cualquier petición paginada.
+ * Coincide con lo que espera Spring Data (Pageable).
+ */
+export interface PaginationOptions {
+  page?: number;
+  size?: number;
+  sort?: string; // Opcional: para "campo,asc"
+}
+
+// Valores por defecto globales (para no hardcodearlos en cada servicio)
+export const DEFAULT_PAGINATION: PaginationOptions = {
+  page: 0,
+  size: 20,
+};

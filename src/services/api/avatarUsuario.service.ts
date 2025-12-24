@@ -1,22 +1,13 @@
 import apiClient from "@/config/api";
 import { ApiResponse } from "@/types/api";
-import { AvatarUsuarioDto, AvatarUsuarioCreateDto } from "@/types/models";
+import { fileToBase64 } from "@/utils/files";
+import {
+  AvatarUsuarioDto,
+  AvatarUsuarioCreateDto,
+  TipoOrigenImagen,
+} from "@/types/models";
 
 const AVATAR_URL = "/api/v1/avusuario";
-
-// Helper para convertir File a Base64
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(",")[1];
-      resolve(base64);
-    };
-    reader.onerror = (error) => reject(error);
-  });
-};
 
 export const avatarUsuarioService = {
   // GET /api/v1/avusuario
@@ -39,14 +30,13 @@ export const avatarUsuarioService = {
   create: async (file: File): Promise<ApiResponse<AvatarUsuarioDto>> => {
     const base64Data = await fileToBase64(file);
 
-    // Armamos el DTO manualmente como lo espera el backend
     const dto: AvatarUsuarioCreateDto = {
       nombreArchivo: file.name,
       dataArchivo: base64Data,
       tipoArchivo: file.type,
       pesoArchivo: `${file.size} bytes`,
       fechaSubida: new Date().toISOString(),
-      tipoOrigenImagen: "DB",
+      tipoOrigenImagen: TipoOrigenImagen.PERSONALIZADO,
     };
 
     const { data } = await apiClient.post<ApiResponse<AvatarUsuarioDto>>(

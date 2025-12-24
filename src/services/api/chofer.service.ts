@@ -1,21 +1,58 @@
 import apiClient from "@/config/api";
-import { ApiResponse } from "@/types/api";
+import {
+  ApiResponse,
+  ApiPaginatedResponse,
+  PaginationOptions,
+  DEFAULT_PAGINATION,
+} from "@/types/api";
 import { ChoferDto, ChoferCreateDto, ChoferUpdateDto } from "@/types/models";
 
 const CHOFER_URL = "/api/v1/chofer";
 
 export const choferService = {
-  // CRUD Estándar (Coinciden perfecto)
-  listAll: async () =>
-    (await apiClient.get<ApiResponse<ChoferDto[]>>(CHOFER_URL)).data,
-  getById: async (id: number) =>
-    (await apiClient.get<ApiResponse<ChoferDto>>(`${CHOFER_URL}/${id}`)).data,
-  create: async (dto: ChoferCreateDto) =>
-    (await apiClient.post<ApiResponse<ChoferDto>>(CHOFER_URL, dto)).data,
-  update: async (dto: ChoferUpdateDto) =>
-    (await apiClient.put<ApiResponse<ChoferDto>>(CHOFER_URL, dto)).data,
-  delete: async (id: number) =>
-    (await apiClient.delete<ApiResponse<void>>(`${CHOFER_URL}/${id}`)).data,
+  // GET /api/v1/chofer
+  listAll: async (): Promise<ApiResponse<ChoferDto[]>> => {
+    const { data } = await apiClient.get<ApiResponse<ChoferDto[]>>(CHOFER_URL);
+    return data;
+  },
+
+  // GET /api/v1/chofer/{id}
+  getById: async (id: number): Promise<ApiResponse<ChoferDto>> => {
+    const { data } = await apiClient.get<ApiResponse<ChoferDto>>(
+      `${CHOFER_URL}/${id}`
+    );
+    return data;
+  },
+
+  // POST /api/v1/chofer
+  create: async (dto: ChoferCreateDto): Promise<ApiResponse<ChoferDto>> => {
+    const { data } = await apiClient.post<ApiResponse<ChoferDto>>(
+      CHOFER_URL,
+      dto
+    );
+    return data;
+  },
+
+  // PUT /api/v1/chofer
+  update: async (dto: ChoferUpdateDto): Promise<ApiResponse<ChoferDto>> => {
+    const { data } = await apiClient.put<ApiResponse<ChoferDto>>(
+      CHOFER_URL,
+      dto
+    );
+    return data;
+  },
+
+  // DELETE /api/v1/chofer/{id}
+  delete: async (id: number): Promise<ApiResponse<void>> => {
+    const { data } = await apiClient.delete<ApiResponse<void>>(
+      `${CHOFER_URL}/${id}`
+    );
+    return data;
+  },
+
+  // ===========================================================================
+  // BÚSQUEDAS ESPECÍFICAS
+  // ===========================================================================
 
   // GET /api/v1/chofer/search/dni/{dni}
   getByDni: async (dni: string): Promise<ApiResponse<ChoferDto>> => {
@@ -25,22 +62,32 @@ export const choferService = {
     return data;
   },
 
-  // GET /api/v1/chofer/search/page
-  searchPage: async (params: {
-    nombre?: string;
-    dni?: string;
-    page?: number;
-    size?: number;
-  }) => {
-    const { data } = await apiClient.get<ApiResponse<any>>( // O ApiResponse<Page<ChoferDto>>
+  // GET /api/v1/chofer/search/page?nombre=...&dni=...
+  searchPage: async (
+    filters: { nombre?: string; dni?: string },
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<ChoferDto>> => {
+    const pagination = { ...DEFAULT_PAGINATION, ...options };
+
+    const { data } = await apiClient.get<ApiPaginatedResponse<ChoferDto>>(
       `${CHOFER_URL}/search/page`,
-      { params }
+      {
+        params: {
+          ...filters,
+          page: pagination.page,
+          size: pagination.size,
+          sort: pagination.sort,
+        },
+      }
     );
     return data;
   },
 
-  // GET /api/v1/chofer/search/list
-  listByNombreOrDni: async (params: { nombre?: string; dni?: string }) => {
+  // GET /api/v1/chofer/search/list?nombre=...&dni=...
+  listByNombreOrDni: async (params: {
+    nombre?: string;
+    dni?: string;
+  }): Promise<ApiResponse<ChoferDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<ChoferDto[]>>(
       `${CHOFER_URL}/search/list`,
       { params }

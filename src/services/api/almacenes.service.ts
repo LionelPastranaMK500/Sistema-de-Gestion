@@ -1,5 +1,10 @@
 import apiClient from "@/config/api";
-import { ApiResponse } from "@/types/api";
+import {
+  ApiResponse,
+  ApiPaginatedResponse,
+  PaginationOptions,
+  DEFAULT_PAGINATION,
+} from "@/types/api";
 import {
   AlmacenDto,
   AlmacenCreateDto,
@@ -51,16 +56,28 @@ export const almacenesService = {
     return data;
   },
 
-  // GET /api/v1/almacen/search?q={query}
-  search: async (query: string): Promise<ApiResponse<AlmacenDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<AlmacenDto[]>>(
-      `${ALMACEN_URL}/search?q=${query}`
+  // GET /api/v1/almacen/search?q={query}&page={page}&size={size}&sort={sort}
+  search: async (
+    query: string,
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<AlmacenDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
+    const { data } = await apiClient.get<ApiPaginatedResponse<AlmacenDto>>(
+      `${ALMACEN_URL}/search`,
+      {
+        params: {
+          q: query,
+          page: params.page,
+          size: params.size,
+          sort: params.sort,
+        },
+      }
     );
     return data;
   },
 
   // GET /api/v1/almacen/{id}/productos
-  getProductos: async (
+  obtenerAlmacenConProductos: async (
     id: number
   ): Promise<ApiResponse<AlmacenConProductosDto>> => {
     const { data } = await apiClient.get<ApiResponse<AlmacenConProductosDto>>(
@@ -70,7 +87,7 @@ export const almacenesService = {
   },
 
   // GET /api/v1/almacen/nombre/{nombre}/productos
-  getProductosByNombre: async (
+  obtenerAlmacenConProductosByNombre: async (
     nombre: string
   ): Promise<ApiResponse<AlmacenConProductosDto>> => {
     const { data } = await apiClient.get<ApiResponse<AlmacenConProductosDto>>(
@@ -80,11 +97,14 @@ export const almacenesService = {
   },
 
   // GET /api/v1/almacen/productos/buscar?q={query}
-  buscarProductos: async (
+  obtenerAlmacenesConProductosByNombre: async (
     query: string
   ): Promise<ApiResponse<AlmacenConProductosDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<AlmacenConProductosDto[]>>(
-      `${ALMACEN_URL}/productos/buscar?q=${query}`
+      `${ALMACEN_URL}/productos/buscar`,
+      {
+        params: { q: query },
+      }
     );
     return data;
   },

@@ -5,31 +5,33 @@ import {
   TipoDocNotaCreateDto,
   TipoDocNotaUpdateDto,
   TipoDocNotaDetailDto,
-} from "@/types/models"; // Ajusta la ruta si es necesario
+} from "@/types/models";
 
-const URL = "/api/v1/tip-doc-nota";
+const TIPO_DOC_NOTA_URL = "/api/v1/tip-doc-nota";
 
 export const tipoDocNotaService = {
   // GET /api/v1/tip-doc-nota
   listAll: async (): Promise<ApiResponse<TipoDocNotaDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<TipoDocNotaDto[]>>(URL);
+    const { data } = await apiClient.get<ApiResponse<TipoDocNotaDto[]>>(
+      TIPO_DOC_NOTA_URL
+    );
     return data;
   },
 
   // GET /api/v1/tip-doc-nota/{id}
   getById: async (id: number): Promise<ApiResponse<TipoDocNotaDto>> => {
     const { data } = await apiClient.get<ApiResponse<TipoDocNotaDto>>(
-      `${URL}/${id}`
+      `${TIPO_DOC_NOTA_URL}/${id}`
     );
     return data;
   },
 
-  // GET /api/v1/tip-doc-nota/{id}/detail (Nuevo endpoint específico de este controller)
+  // GET /api/v1/tip-doc-nota/{id}/detail
   getDetailById: async (
     id: number
   ): Promise<ApiResponse<TipoDocNotaDetailDto>> => {
     const { data } = await apiClient.get<ApiResponse<TipoDocNotaDetailDto>>(
-      `${URL}/${id}/detail`
+      `${TIPO_DOC_NOTA_URL}/${id}/detail`
     );
     return data;
   },
@@ -39,7 +41,7 @@ export const tipoDocNotaService = {
     dto: TipoDocNotaCreateDto
   ): Promise<ApiResponse<TipoDocNotaDto>> => {
     const { data } = await apiClient.post<ApiResponse<TipoDocNotaDto>>(
-      URL,
+      TIPO_DOC_NOTA_URL,
       dto
     );
     return data;
@@ -49,13 +51,18 @@ export const tipoDocNotaService = {
   update: async (
     dto: TipoDocNotaUpdateDto
   ): Promise<ApiResponse<TipoDocNotaDto>> => {
-    const { data } = await apiClient.put<ApiResponse<TipoDocNotaDto>>(URL, dto);
+    const { data } = await apiClient.put<ApiResponse<TipoDocNotaDto>>(
+      TIPO_DOC_NOTA_URL,
+      dto
+    );
     return data;
   },
 
   // DELETE /api/v1/tip-doc-nota/{id}
   delete: async (id: number): Promise<ApiResponse<void>> => {
-    const { data } = await apiClient.delete<ApiResponse<void>>(`${URL}/${id}`);
+    const { data } = await apiClient.delete<ApiResponse<void>>(
+      `${TIPO_DOC_NOTA_URL}/${id}`
+    );
     return data;
   },
 };

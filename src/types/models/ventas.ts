@@ -136,3 +136,65 @@ export interface VentaResponse {
   estadoSunat: string;
   linkPdf?: string;
 }
+
+// =============================================================================
+// 4. DTOs DE REPORTES (Espejo EXACTO de los Java DTOs de reporte)
+// =============================================================================
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.filter.VentaReporteFilterDto
+ */
+export interface VentaReporteFilterDto {
+  tipoDocumentoId?: number; // Java: Long
+  sucursalId?: number; // Java: Long
+  usuarioId?: number; // Java: Long
+  monedaId?: number; // Java: Long
+  clienteId?: number; // Java: Long
+  fechaInicio?: string; // Java: LocalDate -> string (yyyy-MM-dd)
+  fechaFin?: string; // Java: LocalDate -> string (yyyy-MM-dd)
+}
+
+/**
+ * Espejo de: studios.tkoh.billing.dto.report.VentaReporteDto
+ */
+export interface VentaReporteDto {
+  serie: string;
+  numero: string;
+  sucursal: string;
+  clienteDoc: string;
+  clienteNombre: string;
+  fechaEmision: string; // LocalDateTime -> ISO String
+  fechaVencimiento: string; // LocalDateTime -> ISO String
+  fechaCreacion: string; // LocalDateTime -> ISO String
+  usuario: string;
+  placaVehiculo: string;
+  ordenCompra: string;
+  guiasRemision: string;
+  condicionPago: string;
+  metodoPago: string;
+  referencia: string;
+  cuotas: string;
+  observaciones: string;
+  otros: string;
+  moneda: string;
+
+  // Montos (BigDecimal -> number)
+  detraccion: number;
+  retencion: number;
+  percepcion: number;
+  rc: number;
+  descuento: number;
+  gravado: number;
+  exonerado: number;
+  inafecto: number;
+  exportacion: number;
+  gratuito: number;
+  igv: number;
+  isc: number;
+  icbper: number;
+  total: number;
+
+  anulado: string; // "SI"/"NO"
+  estadoSunat: string;
+  mensajeSunat: string;
+}

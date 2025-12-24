@@ -1,5 +1,10 @@
 import apiClient from "@/config/api";
-import { ApiResponse } from "@/types/api";
+import {
+  ApiResponse,
+  ApiPaginatedResponse,
+  PaginationOptions,
+  DEFAULT_PAGINATION,
+} from "@/types/api";
 import {
   GuiaRemisionDto,
   GuiaRemisionDetailDto,
@@ -19,8 +24,8 @@ export const guiasService = {
   },
 
   // GET /api/v1/guia-remision/{id}
-  getById: async (id: number): Promise<ApiResponse<GuiaRemisionDetailDto>> => {
-    const { data } = await apiClient.get<ApiResponse<GuiaRemisionDetailDto>>(
+  getById: async (id: number): Promise<ApiResponse<GuiaRemisionDto>> => {
+    const { data } = await apiClient.get<ApiResponse<GuiaRemisionDto>>(
       `${GUIA_URL}/${id}`
     );
     return data;
@@ -56,33 +61,41 @@ export const guiasService = {
     return data;
   },
 
-  // --- ACCIONES ESPECÍFICAS DE GUÍA ---
+  // ===========================================================================
+  // MÉTODOS DE BÚSQUEDA
+  // ===========================================================================
 
-  // POST /api/v1/guia-remision/emitir/{id}
-  emitir: async (id: number): Promise<ApiResponse<any>> => {
-    const { data } = await apiClient.post<ApiResponse<any>>(
-      `${GUIA_URL}/emitir/${id}`
+  // GET /api/v1/guia-remision/search/detailed/{id}
+  getDetailedById: async (
+    id: number
+  ): Promise<ApiResponse<GuiaRemisionDetailDto>> => {
+    const { data } = await apiClient.get<ApiResponse<GuiaRemisionDetailDto>>(
+      `${GUIA_URL}/search/detailed/${id}`
     );
     return data;
   },
 
-  // GET /api/v1/guia-remision/imprimir/{id}
-  imprimir: async (id: number): Promise<Blob> => {
-    const response = await apiClient.get(`${GUIA_URL}/imprimir/${id}`, {
-      responseType: "blob",
-    });
-    return response.data;
-  },
+  // GET /api/v1/guia-remision/search/page
+  searchPage: async (
+    filters: {
+      usuarioId: number;
+      sucursalId: number;
+      clienteId?: number;
+    },
+    options: PaginationOptions = {}
+  ): Promise<ApiPaginatedResponse<GuiaRemisionDto>> => {
+    const params = { ...DEFAULT_PAGINATION, ...options };
 
-  // GET /api/v1/guia-remision/buscar?serie=...&numero=...
-  buscar: async (params: {
-    serie?: string;
-    numero?: string;
-    cliente?: string;
-  }): Promise<ApiResponse<GuiaRemisionDto[]>> => {
-    const { data } = await apiClient.get<ApiResponse<GuiaRemisionDto[]>>(
-      `${GUIA_URL}/buscar`,
-      { params }
+    const { data } = await apiClient.get<ApiPaginatedResponse<GuiaRemisionDto>>(
+      `${GUIA_URL}/search/page`,
+      {
+        params: {
+          ...filters,
+          page: params.page,
+          size: params.size,
+          sort: params.sort,
+        },
+      }
     );
     return data;
   },

@@ -1,5 +1,4 @@
 import { EstadoDocumento, EstadoEnvioSunat } from "./comunes";
-
 import { UsuarioDto } from "./usuario";
 import { DetalleVentaDto, DetalleVentaCreateDto } from "./ventas";
 import {

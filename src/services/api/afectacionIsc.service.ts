@@ -1,12 +1,10 @@
-// src/services/api/afectacionIsc.service.ts
-
 import apiClient from "@/config/api";
 import { ApiResponse } from "@/types/api";
 import { AfectacionISCDto, AfectacionISCCreateDto } from "@/types/models";
 
 const AFECISC_URL = "/api/v1/afecisc";
 
-export const afectacionISCService = {
+export const afectacionIscService = {
   // GET /api/v1/afecisc
   listAll: async (): Promise<ApiResponse<AfectacionISCDto[]>> => {
     const { data } = await apiClient.get<ApiResponse<AfectacionISCDto[]>>(

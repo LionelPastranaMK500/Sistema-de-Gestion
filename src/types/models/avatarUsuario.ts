@@ -2,8 +2,10 @@
 import { UsuarioDto } from "./usuario";
 
 // Si este Enum lo tienes en 'comunes.ts', impórtalo de allá.
-// Si no, déjalo aquí tal cual lo tenías.
-export type TipoOrigenImagen = "FILE_SYSTEM" | "DB" | "URL";
+export enum TipoOrigenImagen {
+  PREDETERMINADO = "PREDETERMINADO",
+  PERSONALIZADO = "PERSONALIZADO",
+}
 
 // =============================================================================
 // DTOs DE AVATAR (Espejos del Java)
