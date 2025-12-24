@@ -1,10 +1,27 @@
-export { documentosService } from "./documentos.service";
+// Exportación de servicios API
+export { afectacionIgvService } from "./afectacionIgv.service";
+export { afectacionIscService } from "./afectacionIsc.service";
+export { almacenesService } from "./almacenes.service";
+export { authService } from "./auth.service";
+export { avatarUsuarioService } from "./avatarUsuario.service";
+export { choferService } from "./chofer.service";
 export { clientesService } from "./clientes.service";
+export { configuracionService } from "./configuracion.service";
+export { direccionesService } from "./direcciones.service";
+export { documentosService } from "./documentos.service";
+export { guiasService } from "./guias.service";
+export { impresionesService } from "./impresiones.service";
+export { monedasService } from "./monedas.service";
+export { passwordRecoveryService } from "./passwordRecovery.service";
 export { productosService } from "./productos.service";
 export { seriesService } from "./series.service";
-export { monedasService } from "./monedas.service";
-export { tipoDocNotaService } from "./tipoDocNota.service";
 export { sucursalesService } from "./sucursales.service";
-export { impresionesService } from "./impresiones.service";
-export { authService } from "./auth.service";
-// ...otros (guias, transporte, etc.) si los conservas
+export { tipoClienteService } from "./tipoCliente.service";
+export { tipoDocNotaService } from "./tipoDocNota.service";
+export { tipoDocumentoService } from "./tipoDocumento.service";
+export { tipoEnvioService } from "./tipoEnvio.service";
+export { ubigeoService } from "./ubigeo.service";
+export { unidadMedidaService } from "./unidadMedida.service";
+export { usuariosService } from "./usuarios.service";
+export { vehiculosService } from "./vehiculos.service";
+export { ventaReporteService } from "./ventaReporte.service";
