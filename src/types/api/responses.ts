@@ -47,3 +47,21 @@ export const DEFAULT_PAGINATION: PaginationOptions = {
   page: 0,
   size: 20,
 };
+
+// =========================================================================
+// 💡 EJEMPLO DE PERSONALIZACIÓN (DEFAULT LOCAL)
+// =========================================================================
+// Caso 1: Usar el default global (20) -> Lo que tenemos ahora
+// const params = { ...DEFAULT_PAGINATION, ...options };
+//
+// Caso 2: Forzar un default de 10 SOLO para este método
+// const params = { ...DEFAULT_PAGINATION, size: 10, ...options };
+//
+// Caso 3: Forzar un default de 50 y ordenar por nombre
+// const params = { ...DEFAULT_PAGINATION, size: 50, sort: 'nombre,asc', ...options };
+//
+// ¿POR QUÉ FUNCIONA?
+// 1. Primero se cargan los defaults globales (...DEFAULT_PAGINATION).
+// 2. Luego tú sobrescribes con tu default local (ej: size: 10).
+// 3. Al final va ...options. Si el componente React envía { size: 100 },
+// =========================================================================
