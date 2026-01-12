@@ -1,38 +1,46 @@
-import { validarRegister, RegisterData } from "@/services/auth/validations";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthMutations } from "@/hooks/auth/useAuthMutations";
+import {
+  registerSchema,
+  RegisterSchemaType,
+} from "@/schemas/auth/Register.schema";
 import ErrorText from "@/components/common/ErrorText";
-import { useRegisterLogic } from "@/services/auth/authLogic";
-import { useFormHandler } from "@/hooks/useFormHandler";
 
 const RegisterForm = () => {
-  const { mutate: register, isPending } = useRegisterLogic();
+  const { registerUser, isRegisterPending } = useAuthMutations();
 
-  const initialValues: RegisterData = {
-    nombres: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    correo: "",
-    clave: "",
-    aceptaTerminos: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterSchemaType>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      nombres: "",
+      apellidoPa: "",
+      apellidoMa: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      aceptaTerminos: false,
+    },
+  });
+
+  const onSubmit = (data: RegisterSchemaType) => {
+    registerUser({
+      nombres: data.nombres,
+      apellidoPa: data.apellidoPa,
+      apellidoMa: data.apellidoMa,
+      email: data.email,
+      password: data.password,
+    });
   };
-
-  const { values, err, handleChange, handleSubmit } =
-    useFormHandler<RegisterData>(
-      initialValues,
-      validarRegister,
-      async (form) => {
-        register({
-          nombres: (form.nombres || "").trim(),
-          apellidoPa: (form.apellidoPaterno || "").trim(),
-          apellidoMa: (form.apellidoMaterno || "").trim(),
-          email: (form.correo || "").trim().toLowerCase(),
-          password: (form.clave || "").trim(),
-        });
-      }
-    );
 
   return (
     <main className="relative flex min-h-screen overflow-hidden">
+      {/* --- ASIDE (Sin cambios visuales) --- */}
       <aside className="hidden relative md:flex flex-col justify-center items-center bg-blue-700 w-1/2 overflow-hidden text-white">
         <div className="top-6 left-6 z-10 absolute">
           <img
@@ -60,100 +68,145 @@ const RegisterForm = () => {
         />
       </aside>
 
+      {/* --- FORM SECTION --- */}
       <section className="flex flex-col justify-center items-center bg-white p-8 w-full md:w-1/2">
         <div className="w-full max-w-sm">
           <h2 className="mb-6 font-semibold text-blue-800 text-2xl text-center">
             Crear cuenta
           </h2>
 
-          <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-4"
+          >
+            {/* Nombres */}
             <div>
               <input
                 type="text"
-                name="nombres"
                 placeholder="Nombres"
-                onChange={handleChange}
-                value={values.nombres}
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                {...register("nombres")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.nombres
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
-              {err.nombres && <ErrorText>{err.nombres}</ErrorText>}
+              {errors.nombres && (
+                <ErrorText>{errors.nombres.message}</ErrorText>
+              )}
             </div>
 
+            {/* Apellido Paterno */}
             <div>
               <input
                 type="text"
-                name="apellidoPaterno"
                 placeholder="Apellido paterno"
-                onChange={handleChange}
-                value={values.apellidoPaterno}
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                {...register("apellidoPa")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.apellidoPa
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
-              {err.apellidoPaterno && (
-                <ErrorText>{err.apellidoPaterno}</ErrorText>
+              {errors.apellidoPa && (
+                <ErrorText>{errors.apellidoPa.message}</ErrorText>
               )}
             </div>
 
+            {/* Apellido Materno */}
             <div>
               <input
                 type="text"
-                name="apellidoMaterno"
                 placeholder="Apellido materno"
-                onChange={handleChange}
-                value={values.apellidoMaterno}
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                {...register("apellidoMa")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.apellidoMa
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
-              {err.apellidoMaterno && (
-                <ErrorText>{err.apellidoMaterno}</ErrorText>
+              {errors.apellidoMa && (
+                <ErrorText>{errors.apellidoMa.message}</ErrorText>
               )}
             </div>
 
+            {/* Email */}
             <div>
               <input
                 type="email"
-                name="correo"
                 placeholder="Email"
-                onChange={handleChange}
-                value={values.correo}
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                {...register("email")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
-              {err.correo && <ErrorText>{err.correo}</ErrorText>}
+              {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
             </div>
 
+            {/* Password */}
             <div>
               <input
                 type="password"
-                name="clave"
                 placeholder="Contraseña"
-                onChange={handleChange}
-                value={values.clave}
-                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                {...register("password")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.password
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
-              {err.clave && <ErrorText>{err.clave}</ErrorText>}
+              {errors.password && (
+                <ErrorText>{errors.password.message}</ErrorText>
+              )}
             </div>
 
+            {/* Confirm Password (Nuevo campo visual) */}
+            <div>
+              <input
+                type="password"
+                placeholder="Confirmar Contraseña"
+                {...register("confirmPassword")}
+                className={`p-3 border rounded-lg focus:outline-none focus:ring-2 w-full ${
+                  errors.confirmPassword
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
+              />
+              {errors.confirmPassword && (
+                <ErrorText>{errors.confirmPassword.message}</ErrorText>
+              )}
+            </div>
+
+            {/* Términos y Condiciones */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                name="aceptaTerminos"
-                checked={values.aceptaTerminos}
-                onChange={handleChange}
+                {...register("aceptaTerminos")}
+                id="terms"
+                className="w-4 h-4"
               />
-              <label className="text-gray-600 text-sm">
+              <label htmlFor="terms" className="text-gray-600 text-sm">
                 Acepto los términos y condiciones
               </label>
             </div>
-            {err.aceptaTerminos && <ErrorText>{err.aceptaTerminos}</ErrorText>}
+            {errors.aceptaTerminos && (
+              <ErrorText>{errors.aceptaTerminos.message}</ErrorText>
+            )}
 
+            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isRegisterPending}
               className={`w-full p-3 rounded-lg text-white transition ${
-                isPending
+                isRegisterPending
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {isPending ? "REGISTRANDO..." : "REGISTRARSE"}
+              {isRegisterPending ? "REGISTRANDO..." : "REGISTRARSE"}
             </button>
 
             <div className="text-gray-500 text-sm text-center">

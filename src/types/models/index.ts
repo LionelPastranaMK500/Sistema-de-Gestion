@@ -23,7 +23,6 @@ export * from "./ubigeo"; // NUEVO
 export * from "./direccion";
 
 // 3. Actores Principales
-export * from "./usuario";
 export * from "./avatarUsuario";
 export * from "./cliente";
 export * from "./sucursal";
@@ -38,4 +37,3 @@ export * from "./vehiculo"; // NUEVO (Reemplaza a transporte)
 // 5. Ventas y Documentos
 export * from "./ventas"; // (Incluye cabecera, detalles y helpers)
 export * from "./documento";
-export * from "./reportes"; // NUEVO

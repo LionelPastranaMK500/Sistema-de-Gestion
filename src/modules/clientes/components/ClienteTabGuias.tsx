@@ -18,7 +18,11 @@ const ClienteTabGuias = () => {
   return (
     <div className="border rounded-md overflow-hidden">
       <TabHeader columns={columns} />
-      {data.length === 0 ? <EmptyTabContent /> : <div></div>}
+      {data.length === 0 ? (
+        <EmptyTabContent />
+      ) : (
+        <div>{/* Tabla futura */}</div>
+      )}
     </div>
   );
 };

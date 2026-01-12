@@ -1,51 +1,42 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { AuthState } from "@/types/stores";
 import apiClient from "@/config/api";
+import { AuthStoreType, AuthState } from "@/types/stores/authstore";
 
-// 1. Definimos las acciones
-interface AuthActions {
-  setSession: (accessToken: string, refreshToken: string) => void;
-  logout: () => void;
-}
+const initialState: AuthState = {
+  accessToken: null,
+  refreshToken: null,
+  user: null,
+  isAuthenticated: false,
+};
 
-// 2. Unimos el Estado + Acciones
-type AuthStore = AuthState & AuthActions;
-
-// 3. Creamos el Store
 export const useAuthStore = create(
-  persist<AuthStore>(
+  persist<AuthStoreType>(
     (set) => ({
-      // --- ESTADO INICIAL ---
-      accessToken: null,
-      refreshToken: null,
-      user: null,
-      isAuthenticated: false,
+      ...initialState,
 
       // --- ACCIONES ---
+
       setSession: (accessToken, refreshToken) => {
         set({
           accessToken,
           refreshToken,
           isAuthenticated: true,
-          user: null,
         });
 
-        // Configuración global
+        // Configurar Axios y localStorage
         apiClient.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
         localStorage.setItem("authToken", accessToken);
       },
 
-      logout: () => {
-        set({
-          accessToken: null,
-          refreshToken: null,
-          user: null,
-          isAuthenticated: false,
-        });
+      setUser: (user) => {
+        set({ user });
+      },
 
+      logout: () => {
+        set(initialState);
         localStorage.removeItem("authToken");
         delete apiClient.defaults.headers.common["Authorization"];
       },
@@ -57,7 +48,8 @@ export const useAuthStore = create(
           accessToken: state.accessToken,
           refreshToken: state.refreshToken,
           isAuthenticated: state.isAuthenticated,
-        } as AuthStore),
+          user: state.user,
+        } as AuthStoreType),
     }
   )
 );

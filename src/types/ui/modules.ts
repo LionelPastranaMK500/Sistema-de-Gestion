@@ -1,18 +1,10 @@
-import {
-  Cliente,
-  Producto,
-  // Venta, // ELIMINADO: No existe en models
-  Usuario,
-  Sucursal,
-  Almacen,
-  Documento,
-  GuiaRemision,
-} from "../models";
-
+// src/types/ui/modules.ts
+import { ClienteDto } from "@/types/models/cliente";
 // --- CLIENTES UI ---
 export interface ClienteCardProps {
-  cliente: Cliente;
-  index: number;
+  cliente: ClienteDto;
+  onEdit?: (cliente: ClienteDto) => void;
+  onDelete?: (id: number) => void;
 }
 
 export interface ClienteNuevoProps {
