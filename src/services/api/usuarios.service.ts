@@ -4,7 +4,7 @@ import {
   UsuarioSummaryDto,
   UsuarioResponse,
   AddUserRequest,
-} from "@/types/models";
+} from "@/types/models/usuario";
 
 const USUARIOS_URL = "/api/v1/usuarios";
 
@@ -24,7 +24,7 @@ export const usuariosService = {
   // Retorna un string directo
   getUserStatus: async (id: number): Promise<string> => {
     const { data } = await apiClient.get<string>(
-      `${USUARIOS_URL}/${id}/status`
+      `${USUARIOS_URL}/${id}/status`,
     );
     return data;
   },
@@ -32,7 +32,7 @@ export const usuariosService = {
   // GET /api/v1/usuarios/{id}/summary
   getUserSummary: async (id: number): Promise<UsuarioSummaryDto> => {
     const { data } = await apiClient.get<UsuarioSummaryDto>(
-      `${USUARIOS_URL}/${id}/summary`
+      `${USUARIOS_URL}/${id}/summary`,
     );
     return data;
   },

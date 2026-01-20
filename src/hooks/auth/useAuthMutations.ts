@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import {
+  notifySuccess,
+  notifyError,
+  notifyInfo,
+} from "@/utils/notifications/notify";
 import { authService } from "@/services/api/auth.service";
 import { passwordRecoveryService } from "@/services/api/passwordRecovery.service";
 import useAuthStore from "@/stores/authStore";
@@ -19,13 +23,13 @@ export const useAuthMutations = () => {
     mutationFn: (credentials: AuthRequest) => authService.login(credentials),
     onSuccess: (data) => {
       setSession(data.access_token, data.refresh_token);
-      toast.success("Bienvenido al sistema");
+      notifySuccess("Bienvenido al sistema"); //
       navigate("/dashboard");
     },
     onError: (error: any) => {
       const message =
         error.response?.data?.message || "Error al iniciar sesión";
-      toast.error(message);
+      notifyError(message); //
     },
   });
 
@@ -33,13 +37,13 @@ export const useAuthMutations = () => {
   const registerMutation = useMutation({
     mutationFn: (data: RegisterRequest) => authService.register(data),
     onSuccess: () => {
-      toast.success("Cuenta creada exitosamente. Por favor inicia sesión.");
+      notifySuccess("Cuenta creada exitosamente. Por favor inicia sesión."); //
       navigate("/");
     },
     onError: (error: any) => {
       const message =
         error.response?.data?.message || "Error al registrar el usuario";
-      toast.error(message);
+      notifyError(message);
     },
   });
 
@@ -48,42 +52,38 @@ export const useAuthMutations = () => {
     mutationFn: (email: string) =>
       passwordRecoveryService.initiateRecovery({ email }),
     onSuccess: () => {
-      toast.info("Código enviado. Revisa tu correo.");
+      notifyInfo("Código enviado. Revisa tu correo.");
     },
     onError: (error: any) => {
       const message =
         error.response?.data?.message || "Error al solicitar código";
-      toast.error(message);
+      notifyError(message);
     },
   });
 
   // --- PASSWORD: CONFIRM RESET (Paso 2) ---
   const confirmResetMutation = useMutation({
-    // Recibimos exactamente el DTO, ya no un objeto genérico
     mutationFn: (data: ResetPasswordRequest) =>
       passwordRecoveryService.resetPassword(data),
     onSuccess: () => {
-      toast.success("Contraseña actualizada correctamente.");
+      notifySuccess("Contraseña actualizada correctamente.");
       navigate("/");
     },
     onError: (error: any) => {
       const message =
         error.response?.data?.message || "Error al cambiar contraseña";
-      toast.error(message);
+      notifyError(message);
     },
   });
 
   return {
-    // Login
     login: loginMutation.mutate,
     isLoginPending: loginMutation.isPending,
     isLoginError: loginMutation.isError,
 
-    // Register
     registerUser: registerMutation.mutate,
     isRegisterPending: registerMutation.isPending,
 
-    // Reset Password
     requestReset: requestResetMutation.mutate,
     isRequestPending: requestResetMutation.isPending,
 
