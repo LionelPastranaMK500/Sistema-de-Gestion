@@ -9,7 +9,6 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import * as FileSaver from "file-saver";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { handleReportes } from "@/services/reportes/reportesLogic";
 import { buildExcel } from "@/services/reportes/excelBuilder";
 import { SheetsData } from "@/types/services/reportes";
@@ -78,8 +77,8 @@ const ReporteClientesProveedores = () => {
           acc[headerKey] = cell !== undefined && cell !== null ? cell : "-";
           return acc;
         },
-        { id: rowIndex }
-      )
+        { id: rowIndex },
+      ),
     );
   };
 
@@ -88,7 +87,7 @@ const ReporteClientesProveedores = () => {
       try {
         const blob = (await buildExcel(
           sheetsData,
-          "reporte_clientes.xlsx"
+          "reporte_clientes.xlsx",
         )) as any;
         FileSaver.saveAs(blob);
       } catch (err) {

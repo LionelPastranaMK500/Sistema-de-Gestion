@@ -21,20 +21,15 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginSchemaType) => {
-    login({
-      email: data.email,
-      password: data.password,
-    });
+    login(data);
   };
 
   return (
     <main className="relative flex min-h-screen overflow-hidden">
-      {/* --- ASIDE --- */}
       <aside className="hidden relative md:flex flex-col justify-center items-center bg-blue-700 w-1/2 overflow-hidden text-white">
         <div className="top-6 left-6 z-10 absolute">
           <img src="/images/Logo_WolfFur.webp" alt="Logo" className="h-20" />
         </div>
-
         <div className="z-10 relative px-10 text-center -translate-x-6 transform">
           <h2 className="mb-4 font-bold text-3xl">¿No tienes una cuenta?</h2>
           <Link
@@ -44,28 +39,22 @@ const LoginForm = () => {
             CREA UNA CUENTA AHORA
           </Link>
         </div>
-
         <div
           className="top-0 right-0 absolute bg-white w-24 md:w-20 h-full pointer-events-none"
-          style={{
-            clipPath: "ellipse(80% 60% at 90% 50%)",
-          }}
+          style={{ clipPath: "ellipse(80% 60% at 90% 50%)" }}
         />
       </aside>
 
-      {/* --- FORM SECTION --- */}
       <section className="flex flex-col justify-center items-center bg-white p-8 w-full md:w-1/2">
         <div className="w-full max-w-sm">
           <h2 className="mb-6 font-semibold text-blue-800 text-2xl text-center">
             Iniciar Sesión
           </h2>
-
           <form
             onSubmit={handleSubmit(onSubmit)}
             noValidate
             className="space-y-4"
           >
-            {/* Input Email */}
             <div>
               <input
                 type="email"
@@ -79,8 +68,6 @@ const LoginForm = () => {
               />
               {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
             </div>
-
-            {/* Input Password */}
             <div>
               <input
                 type="password"
@@ -96,8 +83,6 @@ const LoginForm = () => {
                 <ErrorText>{errors.password.message}</ErrorText>
               )}
             </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoginPending}
@@ -109,13 +94,12 @@ const LoginForm = () => {
             >
               {isLoginPending ? "INGRESANDO..." : "INGRESA"}
             </button>
-
-            <a
-              href="/reset-password"
+            <Link
+              to="/reset-password"
               className="block text-gray-500 hover:text-blue-600 text-sm text-center"
             >
               ¿Olvidaste tu contraseña?
-            </a>
+            </Link>
           </form>
         </div>
       </section>
