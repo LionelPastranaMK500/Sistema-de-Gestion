@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "react-toastify"; // Asumo que tienes esto configurado
 
-// Imports de infraestructura
+// Imports de infraestructura existente
 import useAuthStore from "@/stores/authStore";
 import { useSidebar } from "@/utils/navigation/sidebarState";
-import { configuracionService } from "@/services/api/configuracion.service";
 import ErrorText from "@/components/common/ErrorText";
-import { ConfiguracionEmpresaCreateDto } from "@/types/models"; // Asegúrate de importar esto
 
-// --- SCHEMA (Se mantiene igual para validar que el usuario escriba bien) ---
+// =============================================================================
+// 1. ZONA DE DEFINICIÓN LOCAL (DTOs y Schemas Mock)
+// =============================================================================
+// Mantenemos esto aquí para no ensuciar la arquitectura global hasta que el Backend responda.
+
 const sunatSchema = z.object({
   ruc: z
     .string()
@@ -24,14 +25,36 @@ const sunatSchema = z.object({
 
 type SunatSchemaType = z.infer<typeof sunatSchema>;
 
+// =============================================================================
+// 2. COMPONENTE PRINCIPAL
+// =============================================================================
+
 const SunatForm = () => {
   const navigate = useNavigate();
   const { setSidebarReady } = useSidebar();
+  const [shouldRender, setShouldRender] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Obtenemos el usuario del store
-  const { user } = useAuthStore();
+  // Store de Auth
+  const { user, logout: logoutAction } = useAuthStore();
 
+  // --- Lógica de Protección de Ruta ---
+  useEffect(() => {
+    // Si no hay usuario, devolver al login
+    if (!useAuthStore.getState().isAuthenticated) {
+      navigate("/");
+      return;
+    }
+
+    // Si ya tuviera empresa configurada (hipotético), saltar al dashboard
+    if (user && (user as any).empresa) {
+      navigate("/dashboard");
+    } else {
+      setShouldRender(true);
+    }
+  }, [navigate, user]);
+
+  // --- React Hook Form + Zod ---
   const {
     register,
     handleSubmit,
@@ -45,61 +68,48 @@ const SunatForm = () => {
     },
   });
 
+  // --- Handler del Submit (MOCK) ---
   const onSubmit = async (data: SunatSchemaType) => {
-    // CORRECCIÓN AQUÍ: Usamos user.id en lugar de user.usuarioID
-    if (!user?.id) {
-      toast.error("Error crítico: No hay sesión de usuario activa.");
-      return;
-    }
-
     setIsSubmitting(true);
 
-    try {
-      const payloadBackend: ConfiguracionEmpresaCreateDto = {
-        usuarioId: user.id, // <--- CAMBIO AQUÍ (user.id)
-        defaultMonedaId: 1,
-        defaultAfectacionIgvId: 10,
-        allowSalesWithoutStock: true,
-      };
+    // SIMULACIÓN DE LLAMADA AL BACKEND
+    // Aquí "guardaríamos" las credenciales y habilitaríamos la empresa
+    console.log("⚡ [MOCK] Enviando credenciales SUNAT al backend:", data);
 
-      console.log(
-        "⚠️ Backend Limitado - Enviando payload compatible:",
-        payloadBackend,
-      );
+    setTimeout(() => {
+      // 1. Simulamos éxito
+      // 2. Habilitamos el Sidebar (estado global de navegación)
+      setSidebarReady(true);
 
-      const response = await configuracionService.create(payloadBackend);
-
-      if (response.success) {
-        toast.success("¡Empresa configurada exitosamente!");
-        setSidebarReady(true);
-        navigate("/dashboard");
-      } else {
-        toast.error(response.message || "Error al configurar empresa.");
-      }
-    } catch (error: any) {
-      console.error("Error API:", error);
-      const msg =
-        error.response?.data?.message || "Ocurrió un error de conexión.";
-      toast.error(msg);
-    } finally {
+      // 3. Redirigimos al Dashboard
+      navigate("/dashboard");
       setIsSubmitting(false);
-    }
+    }, 1500); // Pequeño delay para realismo
   };
+
+  // --- Handler de Logout ---
+  const handleLogout = () => {
+    logoutAction();
+    navigate("/");
+  };
+
+  if (!shouldRender) return null;
 
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm">
       <div className="relative bg-white shadow-2xl p-8 rounded-2xl w-full max-w-lg">
+        {/* Encabezado */}
         <h2 className="mb-2 font-bold text-gray-800 text-2xl text-center">
           INGRESE SU CLAVE SOL
         </h2>
         <p className="mb-6 text-gray-500 text-sm text-center">
-          Al ingresar tu <strong>CLAVE SOL</strong> se habilitará el sistema.
-          <br />
-          <span className="text-xs text-yellow-600">
-            (Nota: Tus credenciales se validarán localmente por ahora)
-          </span>
+          Al ingresar tu <strong>CLAVE SOL</strong> se está autorizando su uso
+          para dar de alta automáticamente a{" "}
+          <span className="font-semibold text-blue-600">WOLFFUR</span> como su
+          PSE en SUNAT.
         </p>
 
+        {/* Formulario */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* RUC */}
           <div>
@@ -108,10 +118,10 @@ const SunatForm = () => {
               placeholder="RUC"
               maxLength={11}
               {...register("ruc")}
-              className={`px-3 py-2 border rounded-lg w-full transition-all ${
+              className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 w-full text-gray-600 placeholder-gray-400 transition-all ${
                 errors.ruc
-                  ? "border-red-500 ring-1 ring-red-500"
-                  : "focus:ring-2 focus:ring-blue-500 outline-none"
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-blue-500"
               }`}
             />
             {errors.ruc && <ErrorText>{errors.ruc.message}</ErrorText>}
@@ -123,10 +133,10 @@ const SunatForm = () => {
               type="text"
               placeholder="Usuario SOL"
               {...register("usuarioSol")}
-              className={`px-3 py-2 border rounded-lg w-full transition-all ${
+              className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 w-full text-gray-600 placeholder-gray-400 transition-all ${
                 errors.usuarioSol
-                  ? "border-red-500 ring-1 ring-red-500"
-                  : "focus:ring-2 focus:ring-blue-500 outline-none"
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-blue-500"
               }`}
             />
             {errors.usuarioSol && (
@@ -140,10 +150,10 @@ const SunatForm = () => {
               type="password"
               placeholder="Clave SOL"
               {...register("claveSol")}
-              className={`px-3 py-2 border rounded-lg w-full transition-all ${
+              className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 w-full text-gray-600 placeholder-gray-400 transition-all ${
                 errors.claveSol
-                  ? "border-red-500 ring-1 ring-red-500"
-                  : "focus:ring-2 focus:ring-blue-500 outline-none"
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-blue-500"
               }`}
             />
             {errors.claveSol && (
@@ -151,6 +161,7 @@ const SunatForm = () => {
             )}
           </div>
 
+          {/* Botones de Acción */}
           <div className="flex justify-between gap-4 pt-4">
             <button
               type="submit"
@@ -161,7 +172,16 @@ const SunatForm = () => {
                   : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {isSubmitting ? "Configurando..." : "Ingresar al Sistema"}
+              {isSubmitting ? "Validando..." : "Registrar"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={isSubmitting}
+              className="hover:bg-blue-50 py-2 border border-blue-600 rounded-lg w-full font-medium text-blue-600 transition"
+            >
+              Regresar
             </button>
           </div>
         </form>
